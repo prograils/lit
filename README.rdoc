@@ -1,0 +1,9 @@
+= Lit
+
+Translate your apps with pleasure (sort of...) and for free ;)
+
+
+
+Highly inspired by Copycopter
+
+This project rocks and uses MIT-LICENSE.

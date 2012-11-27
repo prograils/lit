@@ -1,0 +1,7 @@
+pl:
+  scope:
+    hello_world: "Witaj świecie"
+    catan:
+      settlers: "Osadnicy z Catanu"
+
+

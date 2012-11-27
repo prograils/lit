@@ -1,0 +1,27 @@
+%h3= t('.header', :default=>"Localization keys")
+
+= search_form_for @q do |f|
+  = f.label :localization_key_cont
+  = f.text_field :localization_key_cont
+  = f.submit :vaue=>t('.search', :default=>"Search"), :type=>"button", :class=>"btn"
+%hr/
+%table.table
+  - @localization_keys.each do |lk|
+    %tr.localization_key_row{'data-id'=>lk.id}
+      %td
+        %strong
+          = lk.localization_key
+        %div.localization_keys_options
+          = link_to lk, :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")}, :remote=>true do
+            = draw_icon 'trash'
+        %div.detail_wrapper
+          %table.table.table-bordered
+            - I18n.backend.available_locales.each do |locale|
+              %tr
+                - localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first
+                - lk.clone_localization unless localization 
+                %td.localization_row{'data-id'=>localization.id, 'data-edit'=>edit_localization_key_localization_path(lk, localization), 'data-editing'=>'0'}
+                  = Lit.init.cache["#{locale}.#{lk.localization_key}"]
+                %td.locale_row
+                  = locale
+= paginate @localization_keys, :theme=>"lit"

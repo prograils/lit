@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+pl:
+  locale: pl
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+en:
+  locale: en
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

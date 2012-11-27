@@ -1,0 +1,6 @@
+en:
+  scope:
+    hello_world: "Hello World"
+    catan:
+      settlers: "Settlers of Catan"
+

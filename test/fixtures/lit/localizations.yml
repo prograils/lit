@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  locale: 
+  localization_key: 
+  value: MyText
+
+two:
+  locale: 
+  localization_key: 
+  value: MyText
