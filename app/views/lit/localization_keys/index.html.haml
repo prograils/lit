@@ -19,7 +19,7 @@
             - I18n.backend.available_locales.each do |locale|
               %tr
                 - localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first
-                - lk.clone_localization unless localization 
+                - lk.clone_localizations unless localization 
                 %td.localization_row{'data-id'=>localization.id, 'data-edit'=>edit_localization_key_localization_path(lk, localization), 'data-editing'=>'0'}
                   = Lit.init.cache["#{locale}.#{lk.localization_key}"]
                 %td.locale_row
