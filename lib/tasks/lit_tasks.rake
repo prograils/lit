@@ -2,3 +2,12 @@
 # task :lit do
 #   # Task goes here
 # end
+namespace :lit do
+  task :export => :environment do
+    if yml = Lit.init.cache.export
+      PATH = "config/locales/lit.yml"
+      File.new("#{Rails.root}/#{PATH}", 'w').write(yml)
+      puts "Successfully exported #{PATH}."
+    end
+  end
+end

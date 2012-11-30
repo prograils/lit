@@ -72,6 +72,28 @@ module Lit
       @locale_cache[locale_key]
     end
 
+
+    # this comes directly from copycopter.
+    def export
+      keys = {}
+      reset
+      @localizations.sort.each do |(l_key, value)|
+        current = keys
+        yaml_keys = l_key.split('.')
+
+        0.upto(yaml_keys.size - 2) do |i|
+          key = yaml_keys[i]
+          # Overwrite en.key with en.sub.key
+          unless current[key].class == Hash
+            current[key] = {}
+          end
+          current = current[key]
+        end
+        current[yaml_keys.last] = value
+      end
+      keys.to_yaml
+    end
+
     private
 
       def find_localization(locale, key_without_locale, value=nil)
