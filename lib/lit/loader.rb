@@ -12,5 +12,6 @@ module Lit
       self.cache ||= Cache.new
       I18n.backend = I18nBackend.new(self.cache)
     end
+
   end
 end

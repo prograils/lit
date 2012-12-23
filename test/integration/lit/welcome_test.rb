@@ -6,18 +6,21 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   #   assert true
   # end
   test "should properly display 'Hello world' in english" do
+    Redis.new.flushall
     Lit.init.cache.reset
     visit('/en/welcome')
     assert page.has_content?('Hello World')
   end
 
   test "should properly display 'Hello world' in polish" do
+    Redis.new.flushall
     Lit.init.cache.reset
     visit('/pl/welcome')
     assert page.has_content?('Witaj świecie')
   end
 
   test "should properly display 'Hello world' in polish after change" do
+    Redis.new.flushall
     Lit.init.cache.reset
     I18n.backend.reload!
     visit('/pl/welcome')

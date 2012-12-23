@@ -2,7 +2,7 @@ module Lit
   class Cache
 
     def initialize
-      @localizations = {}
+      @localizations = Lit.get_key_value_engine
     end
 
     def [](key)
@@ -14,7 +14,7 @@ module Lit
     end
 
     def sync
-      @localizations = []
+      @localizations.clear
     end
 
     def keys
@@ -56,8 +56,8 @@ module Lit
 
     def reset
       @locale_cache = {}
-      @localizations = {}
-      @localization_keys = {}
+      @localizations = Lit.get_key_value_engine
+      @localization_keys = Lit.get_key_value_engine
       load_all_translations
     end
 
@@ -65,9 +65,10 @@ module Lit
       @locale_cache ||= {}
       unless @locale_cache.has_key?(locale_key)
         Lit.init.logger.info "looking for locale: #{locale_key}"
-        @locale_cache[locale_key] = Lit::Locale.where(:locale=>locale_key).first_or_create do |l|
+        locale = Lit::Locale.where(:locale=>locale_key).first_or_create! do |l|
           # fill in locale... ?!?
         end
+        @locale_cache[locale_key] = locale
       end
       @locale_cache[locale_key]
     end
@@ -110,15 +111,19 @@ module Lit
       end
 
       def find_localization_key(key_without_locale)
-        @localization_keys ||= {}
+        @localization_keys ||= Lit.get_key_value_engine
         unless @localization_keys.has_key?(key_without_locale)
-          localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create do |lk|
+          localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! do |lk|
             # fill in localization key... ?!?
           end
           @localization_keys[key_without_locale] = localization_key.id
-          Lit.init.logger.info "creating key: #{key_without_locale}"
+          Lit.init.logger.info "creating key: #{key_without_locale} with id #{localization_key.id}"
           localization_key
         else
+          Lit.init.logger.info "current keys: #{@localization_keys.keys}"
+          Lit.init.logger.info "And I was looking for key: #{key_without_locale}"
+          Lit.init.logger.info "And store has currently #{@localization_keys[key_without_locale]}"
+          Lit.init.logger.info Lit::LocalizationKey.all
           Lit::LocalizationKey.find(@localization_keys[key_without_locale])
         end
       end
