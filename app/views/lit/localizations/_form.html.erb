@@ -1,0 +1,7 @@
+<%= form_for [@localization_key, @localization], :html=>{:remote=>true} do |f| %>
+  <%= f.label :translated_value %>
+  <%= f.text_area :translated_value, :size=>"40x2", :class=>"input-xxlarge" %>
+  <button class="btn" type="submit"><%= t('lit.common.update', :default=>"Update") %></button>
+  <button class="btn cancel"><%= t('lit.common.cancel', :default=>'Cancel') %></button>
+<% end %>
+

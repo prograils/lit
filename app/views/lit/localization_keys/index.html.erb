@@ -25,7 +25,7 @@
                   <%- lk.clone_localizations %>
                   <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
                 <% end %>
-                <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0>
+                <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="<%= ejs(Lit.init.cache["#{locale}.#{lk.localization_key}"])%>">
                   <%= Lit.init.cache["#{locale}.#{lk.localization_key}"] %>
                 </td>
                 <td class="locale_row">
@@ -41,5 +41,5 @@
   <% end %>
 
 </table>
-<%= paginate @localization_keys, :theme=>"lit" >
+<%= paginate @localization_keys, :theme=>"lit" %>
 

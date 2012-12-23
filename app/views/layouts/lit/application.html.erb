@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lost in translation</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <%= stylesheet_link_tag    "lit/application", :media => "all" %>
+    <%= javascript_include_tag "lit/application" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body class="<%= params[:controller] %>">
+    <div class="navbar navbar-fixed-top navbar-inverse">
+      <nav class="navbar-inner">
+        <div class="container">
+          <%= render 'layouts/lit/navigation' %>
+        </div>
+      </nav>
+    </div>
+    <div id="main" class="container <%= params[:action] %>" role="main">
+      <div class="row">
+        <div class="span12">
+          <%= render 'layouts/lit/messages' %>
+          <%= yield %>
+        </div>
+      </div>
+      <footer>
+        <hr/>
+        <p>
+          Brought to you by
+          <a href="http://prograils.com/" target="_blank">Prograils.com</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
