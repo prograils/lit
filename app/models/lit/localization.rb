@@ -1,6 +1,9 @@
 module Lit
   class Localization < ActiveRecord::Base
 
+    ## SCOPES
+    scope :changed, where(:is_changed=>true)
+
     ## ASSOCIATIONS
     belongs_to :locale
     belongs_to :localization_key

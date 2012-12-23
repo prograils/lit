@@ -1,6 +1,6 @@
 // Set the correct sprite paths
-$iconSpritePath: asset-url('glyphicons-halflings.png', image);
-$iconWhiteSpritePath: asset-url('glyphicons-halflings-white.png', image);
+$iconSpritePath: asset-path('glyphicons-halflings.png', image);
+$iconWhiteSpritePath: asset-path('glyphicons-halflings-white.png', image);
 $baseFontSize: 13px;
 $baseLineHeight: 18px;
 @import "bootstrap";

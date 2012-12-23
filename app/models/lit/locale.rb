@@ -18,5 +18,9 @@ module Lit
     def to_s
       self.locale
     end
+
+    def get_translated_percentage
+      self.localizations.changed.count(:id) * 100 / self.localizations.count(:id)
+    end
   end
 end

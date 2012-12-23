@@ -1,2 +1,6 @@
-<h1>Dashboard#index</h1>
-<p>Find me in app/views/lit/dashboard/index.html.erb</p>
+<h1>Dashboard</h1>
+<strong>All localization keys</strong> <%= Lit::LocalizationKey.count(:id) %><br/>
+<% @locales.each do |l| %>
+  <strong><%= image_tag "lit/famfamfam_flags/#{l.locale[0,2]}.png" %> <%= t("lit.locale_to_languages.#{l.locale}", :default=>l.locale) %>:</strong> <%= l.get_translated_percentage %>%<br/>
+<% end %>
+
