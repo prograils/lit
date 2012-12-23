@@ -4,13 +4,13 @@ module Lit
     def initialize
       @r = ::Redis.new
     end
-    
+
     def [](key)
       @r.get(key)
     end
 
     def []=(k, v)
-      @r.set(k, v)
+      @r.set(k, v.to_s)
     end
 
     def clear

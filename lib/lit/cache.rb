@@ -23,9 +23,9 @@ module Lit
 
     def update_locale(key, value)
       locale_key, key_without_locale = split_key(key)
-      Lit.init.logger.info "key: #{key}"
+      #Lit.init.logger.info "key: #{key}"
       #Lit.init.logger.info "key_without_locale: #{key_without_locale}"
-      Lit.init.logger.info "value: #{value}"
+      #Lit.init.logger.info "value: #{value}"
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value)
       @localizations[key] = localization.get_value
@@ -64,10 +64,8 @@ module Lit
     def find_locale(locale_key)
       @locale_cache ||= {}
       unless @locale_cache.has_key?(locale_key)
-        Lit.init.logger.info "looking for locale: #{locale_key}"
-        locale = Lit::Locale.where(:locale=>locale_key).first_or_create! do |l|
-          # fill in locale... ?!?
-        end
+        #Lit.init.logger.info "looking for locale: #{locale_key}"
+        locale = Lit::Locale.where(:locale=>locale_key).first_or_create!
         @locale_cache[locale_key] = locale
       end
       @locale_cache[locale_key]
@@ -102,8 +100,27 @@ module Lit
         create = false
         localization = Lit::Localization.where(:locale_id=>locale.id).
                           where(:localization_key_id=>localization_key.id).first_or_create do |l|
+          if value.is_a?(Array)
+            if value.length > 1
+              new_value = nil
+              while v = value.pop
+                lk = Lit::LocalizationKey.where(:localization_key=>v).first
+                if lk
+                  loca = Lit::Localization.where(:locale_id=>locale.id).
+                              where(:localization_key_id=>lk.id).first
+                  new_value = loca.get_value if loca and loca.get_value.present?
+
+                end
+              end
+              value = new_value.nil? ? value.last : new_value
+            else
+              value = value.first
+            end
+          end
           l.default_value = value
           Lit.init.logger.info "creating new localization: #{key_without_locale}"
+          Lit.init.logger.info "creating new localization with value: #{value}"
+          Lit.init.logger.info "creating new localization with value: #{value.class}"
           create = true
         end
         localization_key.clone_localizations if create and localization_key.localizations.count(:id)==1
@@ -113,17 +130,15 @@ module Lit
       def find_localization_key(key_without_locale)
         @localization_keys ||= Lit.get_key_value_engine
         unless @localization_keys.has_key?(key_without_locale)
-          localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! do |lk|
-            # fill in localization key... ?!?
-          end
+          localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create!
           @localization_keys[key_without_locale] = localization_key.id
-          Lit.init.logger.info "creating key: #{key_without_locale} with id #{localization_key.id}"
+          #Lit.init.logger.info "creating key: #{key_without_locale} with id #{localization_key.id}"
           localization_key
         else
-          Lit.init.logger.info "current keys: #{@localization_keys.keys}"
-          Lit.init.logger.info "And I was looking for key: #{key_without_locale}"
-          Lit.init.logger.info "And store has currently #{@localization_keys[key_without_locale]}"
-          Lit.init.logger.info Lit::LocalizationKey.all
+          #Lit.init.logger.info "current keys: #{@localization_keys.keys}"
+          #Lit.init.logger.info "And I was looking for key: #{key_without_locale}"
+          #Lit.init.logger.info "And store has currently #{@localization_keys[key_without_locale]}"
+          #Lit.init.logger.info Lit::LocalizationKey.all
           Lit::LocalizationKey.find(@localization_keys[key_without_locale])
         end
       end

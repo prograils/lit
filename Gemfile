@@ -8,8 +8,6 @@ gemspec
 # jquery-rails is used by the dummy application
 gem "jquery-rails"
 gem "haml", ">= 3.0.0"
-gem 'ransack'
-gem 'kaminari'
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
@@ -28,6 +26,9 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'redis'
+  gem 'simple_form'
+  gem 'ransack'
+  gem 'kaminari'
 end
 
 group :development, :test do
