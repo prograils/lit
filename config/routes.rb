@@ -1,6 +1,9 @@
 Lit::Engine.routes.draw do
 
-  resources :localization_keys do
+  resources :localization_keys, :actions=>[:index, :destroy] do
+    collection do
+      get :starred
+    end
     resources :localizations
   end
 

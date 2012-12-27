@@ -119,8 +119,8 @@ module Lit
           end
           l.default_value = value
           Lit.init.logger.info "creating new localization: #{key_without_locale}"
-          Lit.init.logger.info "creating new localization with value: #{value}"
-          Lit.init.logger.info "creating new localization with value: #{value.class}"
+          #Lit.init.logger.info "creating new localization with value: #{value}"
+          #Lit.init.logger.info "creating new localization with value: #{value.class}"
           create = true
         end
         localization_key.clone_localizations if create and localization_key.localizations.count(:id)==1

@@ -19,10 +19,20 @@
     </div>
     <div id="main" class="container <%= params[:action] %>" role="main">
       <div class="row">
-        <div class="span12">
-          <%= render 'layouts/lit/messages' %>
-          <%= yield %>
-        </div>
+        <% if content_for?(:sidebar) %>
+          <div class="span3">
+            <%= yield(:sidebar) %>
+          </div>
+          <div class="span9">
+            <%= render 'layouts/lit/messages' %>
+            <%= yield %>
+          </div>
+        <% else %>
+          <div class="span12">
+            <%= render 'layouts/lit/messages' %>
+            <%= yield %>
+          </div>
+        <% end %>
       </div>
       <footer>
         <hr/>

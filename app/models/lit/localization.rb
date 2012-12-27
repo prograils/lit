@@ -17,6 +17,7 @@ module Lit
 
     ## BEFORE & AFTER
     before_update :update_is_changed
+    after_update :mark_localization_key_completed
 
     def to_s
       self.value
@@ -33,6 +34,10 @@ module Lit
     private
       def update_is_changed
         self.is_changed = true unless is_changed?
+      end
+
+      def mark_localization_key_completed
+        self.localization_key.mark_completed!
       end
   end
 end

@@ -8,8 +8,8 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_self
  *= require './bootstrap_and_overrides.css'
+ *= require_self
  */
 .detail_wrapper{
   padding: 10px 0 0 50px;
@@ -23,4 +23,11 @@
 }
 .localization_key_row:hover .localization_keys_options{
   display: block;
-};
+}
+
+li.key_prefix .icon-chevron-right {
+  float: right;
+  margin-top: 2px;
+  margin-right: -6px;
+  opacity: .25;
+}
