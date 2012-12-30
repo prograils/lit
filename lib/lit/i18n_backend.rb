@@ -40,8 +40,8 @@ module Lit
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
       content = cache[key_with_locale] || super
-      Lit.init.logger.info "options[:default]: #{options[:default].class}"
-      Lit.init.logger.info "options[:default]: #{options[:default]}"
+      #Lit.init.logger.info "options[:default]: #{options[:default].class}"
+      #Lit.init.logger.info "options[:default]: #{options[:default]}"
       cache[key_with_locale] = (options[:default] || "") if content.nil?
       content
     end

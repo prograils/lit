@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121223141035) do
+ActiveRecord::Schema.define(:version => 20121225112100) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -39,8 +39,10 @@ ActiveRecord::Schema.define(:version => 20121223141035) do
 
   create_table "lit_localization_keys", :force => true do |t|
     t.string   "localization_key"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "is_completed",     :default => false
+    t.boolean  "is_starred",       :default => false
   end
 
   add_index "lit_localization_keys", ["localization_key"], :name => "index_lit_localization_keys_on_localization_key", :unique => true

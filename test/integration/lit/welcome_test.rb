@@ -12,6 +12,13 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Hello World')
   end
 
+  test "should properly display saturday abbr in polish" do
+    Redis.new.flushall
+    Lit.init.cache.reset
+    visit('/pl/welcome')
+    assert page.has_content?('sob')
+  end
+
   test "should properly display 'Hello world' in polish" do
     Redis.new.flushall
     Lit.init.cache.reset

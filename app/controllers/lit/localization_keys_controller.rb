@@ -7,7 +7,11 @@ module Lit
     end
 
     def starred
-      @scope = @scope.where(:is_starred=>true).page(params[:page])
+      @scope = @scope.where(:is_starred=>true)
+
+      if @scope.respond_to?(:page)
+        @scope = @scope.page(params[:page])
+      end
       get_localization_keys
       render :action=>:index
     end
@@ -39,7 +43,11 @@ module Lit
           parts = @search_options[:key_prefix].split('.')
           @parent_prefix = parts[0,parts.length-1].join('.')
         end
-        @localization_keys = @scope.page(params[:page])
+        if @scope.respond_to?(:page)
+          @localization_keys = @scope.page(params[:page])
+        else
+          @localization_keys = @scope.all
+        end
       end
 
       def valid_keys

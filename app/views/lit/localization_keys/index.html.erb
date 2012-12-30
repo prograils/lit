@@ -35,7 +35,10 @@
   <% end %>
 
 </table>
-<%= paginate @localization_keys, :theme=>"lit" %>
+<% begin  %>
+  <%= paginate @localization_keys, :theme=>"lit" %>
+<% rescue %>
+<% end %>
 <% content_for(:sidebar) do %>
   <div class="well">
     <%= form_tag '', :class=>"form-search", :method=>:get do |f| %>

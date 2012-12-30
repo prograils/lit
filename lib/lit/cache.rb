@@ -103,7 +103,8 @@ module Lit
           if value.is_a?(Array)
             if value.length > 1
               new_value = nil
-              while v = value.pop
+              value_clone = value.dup
+              while v = value_clone.pop
                 lk = Lit::LocalizationKey.where(:localization_key=>v).first
                 if lk
                   loca = Lit::Localization.where(:locale_id=>locale.id).

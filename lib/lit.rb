@@ -8,7 +8,10 @@ module Lit
     attr_accessor :loader
   end
   def self.init
-    self.loader ||= Loader.new
+    if self.loader.nil?
+      self.loader ||= Loader.new
+      self.loader.cache.load_all_translations
+    end
     self.loader
   end
 
