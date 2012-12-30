@@ -43,6 +43,8 @@ module Lit
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale)
+      puts @localizations.class
+      Lit.init.logger.info @localizations.class
       @localizations[key] = localization.get_value
     end
 

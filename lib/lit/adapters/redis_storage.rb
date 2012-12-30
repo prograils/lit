@@ -1,31 +1,35 @@
 require 'redis'
 module Lit
+  extend self
+  def redis
+    return @redis if @redis
+    @redis = Redis.connect(:thread_safe => true)
+    @redis
+  end
   class RedisStorage
     def initialize
-      @r = ::Redis.new
+      Lit.redis
     end
 
     def [](key)
-      @r.get(key)
+      Lit.redis.get(key)
     end
 
     def []=(k, v)
-      ret = @r.set(k, v.to_s)
-      @r.save
-      ret
+      Lit.redis.set(k.to_s, v.to_s)
     end
 
     def clear
-      @r.flushall
+      Lit.redis.flushall
       save
     end
 
     def keys
-      @r.keys
+      Lit.redis.keys
     end
 
     def has_key?(key)
-      @r.exists(key)
+      Lit.redis.exists(key)
     end
   end
 end

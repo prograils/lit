@@ -8,6 +8,7 @@ Highly inspired by Copycopter
 
 ### ToDo
 
+* Rewrite initializer
 * Support for array types (ie. ```date.abbr_day_names```)
 * Better cache
 * Support for other key value providers (ie. Redis does not support Array types in easy way)

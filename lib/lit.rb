@@ -21,10 +21,10 @@ module Lit
     case Lit.key_value_engine
         when 'redis'
           require 'lit/adapters/redis_storage'
-          RedisStorage.new
+          return RedisStorage.new
         else
           require 'lit/adapters/hash_storage'
-          HashStorage.new
+          return HashStorage.new
     end
   end
 end

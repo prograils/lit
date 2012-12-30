@@ -39,10 +39,10 @@ module Lit
       Lit.init.logger.info "lookup translation: #{key}, scope: #{scope}, options: #{options}"
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
-      content = cache[key_with_locale] || super
+      content = @cache[key_with_locale] || super
       #Lit.init.logger.info "options[:default]: #{options[:default].class}"
       #Lit.init.logger.info "options[:default]: #{options[:default]}"
-      cache[key_with_locale] = (options[:default] || "") if content.nil?
+      @cache[key_with_locale] = (options[:default] || "") if content.nil?
       content
     end
 
@@ -53,13 +53,13 @@ module Lit
         end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
-        cache[key] = data
+        @cache[key] = data
       end
     end
 
     def load_translations(*filenames)
       super
-      cache.load_all_translations
+      @cache.load_all_translations
     end
 
     def default(locale, object, subject, options = {})
@@ -67,7 +67,7 @@ module Lit
       if content.respond_to?(:to_str)
         parts = I18n.normalize_keys(locale, object, options[:scope], options[:separator])
         key = parts.join('.')
-        cache[key] = content
+        @cache[key] = content
       end
       content
     end
