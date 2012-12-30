@@ -11,7 +11,7 @@ module Lit
 
     def []=(k, v)
       ret = @r.set(k, v.to_s)
-      save
+      @r.save
       ret
     end
 
