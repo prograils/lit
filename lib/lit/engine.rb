@@ -5,7 +5,7 @@ module Lit
 
 
     initializer "lit.assets.precompile" do |app|
-      Rails.application.config.assets.precompile += %w(lit/application.css lit/application.js)
+      app.config.assets.precompile += %w(lit/application.css lit/application.js)
     end
   end
 end
