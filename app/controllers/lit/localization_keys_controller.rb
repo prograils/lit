@@ -16,6 +16,13 @@ module Lit
       render :action=>:index
     end
 
+    def star
+      @localization_key = LocalizationKey.find params[:id]
+      @localization_key.is_starred = ! @localization_key.is_starred?
+      @localization_key.save
+      respond_to :js
+    end
+
     def destroy
       @localization_key = LocalizationKey.find params[:id]
       @localization_key.destroy

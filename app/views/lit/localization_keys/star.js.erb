@@ -1,0 +1,1 @@
+$('tr.localization_key_row[data-id="<%= @localization_key.id %>"] a.star_icon').html("<%= ejs(draw_icon(@localization_key.is_starred? ? 'star' : 'star-empty')) %>");
