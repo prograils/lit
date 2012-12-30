@@ -23,7 +23,7 @@
                   <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
                 <% end %>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="<%= ejs(Lit.init.cache["#{locale}.#{lk.localization_key}"])%>">
-                  <%= Lit.init.cache["#{locale}.#{lk.localization_key}"] %>
+                  <%= Lit.init.cache["#{locale}.#{lk.localization_key}"] || localization.get_value %>
                 </td>
                 <td class="locale_row">
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
