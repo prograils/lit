@@ -10,7 +10,9 @@ module Lit
   def self.init
     if self.loader.nil?
       self.loader ||= Loader.new
-      self.loader.cache.load_all_translations
+      #if loading all translations on start, migrations have to be performed
+      #already, fails on first deploy
+      #self.loader.cache.load_all_translations
     end
     self.loader
   end
