@@ -10,11 +10,14 @@ module Lit
     end
 
     def []=(k, v)
-      @r.set(k, v.to_s)
+      ret = @r.set(k, v.to_s)
+      save
+      ret
     end
 
     def clear
       @r.flushall
+      save
     end
 
     def keys
