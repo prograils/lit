@@ -5,6 +5,12 @@ Translate your apps with pleasure (sort of...) and for free
 
 Highly inspired by Copycopter
 
+### Instalation
+
+Add ```lit``` gem to your ```Gemfile```
+```[ruby]
+gem "lit"
+```
 
 ### ToDo
 
