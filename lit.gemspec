@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["maciej@litwiniuk.net"]
   s.homepage    = "https://github.com/prograils/lit"
   s.summary     = "Database powered i18n backend with web gui"
-  s.description = ""
+  s.description = "Translate your apps with pleasure (sort of...) and for free. It's simple i18n web interface, build on top of twitter bootstrap, that one may find helpful in translating app by non-technicals. "
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
