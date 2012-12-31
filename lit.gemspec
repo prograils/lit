@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Translate your apps with pleasure (sort of...) and for free. It's simple i18n web interface, build on top of twitter bootstrap, that one may find helpful in translating app by non-technicals. "
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
-  s.test_files = Dir["test/**/*"]
+  #s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "> 3.1.0"
   s.add_dependency "jquery-rails"
