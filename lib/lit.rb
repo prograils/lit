@@ -4,6 +4,7 @@ require 'lit/loader'
 module Lit
   mattr_accessor :authentication_function
   mattr_accessor :key_value_engine
+  mattr_accessor :storage_options
   class << self
     attr_accessor :loader
   end
@@ -13,6 +14,7 @@ module Lit
       #if loading all translations on start, migrations have to be performed
       #already, fails on first deploy
       #self.loader.cache.load_all_translations
+      Lit.storage_options ||= {}
     end
     self.loader
   end
