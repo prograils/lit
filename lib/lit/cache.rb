@@ -96,36 +96,43 @@ module Lit
     private
 
       def find_localization(locale, key_without_locale, value=nil)
-        localization_key = find_localization_key(key_without_locale)
-        create = false
-        localization = Lit::Localization.where(:locale_id=>locale.id).
-                          where(:localization_key_id=>localization_key.id).first_or_create do |l|
-          if value.is_a?(Array)
-            if value.length > 1
-              new_value = nil
-              value_clone = value.dup
-              while v = value_clone.pop
-                lk = Lit::LocalizationKey.where(:localization_key=>v).first
-                if lk
-                  loca = Lit::Localization.where(:locale_id=>locale.id).
-                              where(:localization_key_id=>lk.id).first
-                  new_value = loca.get_value if loca and loca.get_value.present?
+        unless value.is_a?(Hash)
+          localization_key = find_localization_key(key_without_locale)
+          create = false
+          localization = Lit::Localization.where(:locale_id=>locale.id).
+                            where(:localization_key_id=>localization_key.id).first_or_create do |l|
+            if value.is_a?(Array)
+              if value.length > 1
+                new_value = nil
+                value_clone = value.dup
+                while v = value_clone.pop
+                  lk = Lit::LocalizationKey.where(:localization_key=>v).first
+                  if lk
+                    loca = Lit::Localization.where(:locale_id=>locale.id).
+                                where(:localization_key_id=>lk.id).first
+                    new_value = loca.get_value if loca and loca.get_value.present?
 
+                  end
                 end
+                value = new_value.nil? ? value.last : new_value
+              else
+                value = value.first
               end
-              value = new_value.nil? ? value.last : new_value
-            else
-              value = value.first
             end
+            l.default_value = value.to_s
+            #Lit.init.logger.info "creating new localization: #{key_without_locale}"
+            #Lit.init.logger.info "creating new localization with value: #{value}"
+            #Lit.init.logger.info "creating new localization with value: #{value.class}"
+            create = true
           end
-          l.default_value = value.to_s
-          #Lit.init.logger.info "creating new localization: #{key_without_locale}"
-          #Lit.init.logger.info "creating new localization with value: #{value}"
-          #Lit.init.logger.info "creating new localization with value: #{value.class}"
-          create = true
+          localization_key.clone_localizations if create and localization_key.localizations.count(:id)==1
+          localization
+        else
+          Lit.init.logger.info "returning value for hash: #{key_without_locale}: #{value.to_s}"
+          l = Localization.new
+          l.default_value = value
+          l
         end
-        localization_key.clone_localizations if create and localization_key.localizations.count(:id)==1
-        localization
       end
 
       def find_localization_key(key_without_locale)
