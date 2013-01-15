@@ -8,7 +8,7 @@ class ProjectsTest < ActionDispatch::IntegrationTest
     Lit.init.cache.reset
     visit('/en/projects/new')
     locale = Lit::Locale.first
-    localization_key = Lit::LocalizationsKey.find_by_localization_key! 'simple_form.placeholders.project.new.name'
+    localization_key = Lit::LocalizationKey.find_by_localization_key! 'simple_form.placeholders.project.new.name'
     localization = locale.localizations.where(:localization_key_id=>localization_key.id).first
     assert localization.default_value == 'Name'
   end
