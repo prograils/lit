@@ -1,6 +1,6 @@
 Lit::Engine.routes.draw do
 
-  resources :localization_keys, :actions=>[:index, :destroy] do
+  resources :localization_keys, :only=>[:index, :destroy] do
     member do
       get :star
     end
