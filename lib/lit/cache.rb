@@ -43,8 +43,6 @@ module Lit
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale)
-      puts @localizations.class
-      Lit.init.logger.info @localizations.class
       @localizations[key] = localization.get_value
     end
 
@@ -121,7 +119,7 @@ module Lit
             end
           end
           l.default_value = value
-          Lit.init.logger.info "creating new localization: #{key_without_locale}"
+          #Lit.init.logger.info "creating new localization: #{key_without_locale}"
           #Lit.init.logger.info "creating new localization with value: #{value}"
           #Lit.init.logger.info "creating new localization with value: #{value.class}"
           create = true

@@ -28,7 +28,7 @@ module Lit
     # @param [Hash] options unused part of the I18n API
     def store_translations(locale, data, options = {})
       super
-      Lit.init.logger.info "store translation: #{locale}, data: #{data}, options: #{options}"
+      #Lit.init.logger.info "store translation: #{locale}, data: #{data}, options: #{options}"
       store_item(locale, data)
     end
 
@@ -36,7 +36,7 @@ module Lit
     private
 
     def lookup(locale, key, scope = [], options = {})
-      Lit.init.logger.info "lookup translation: #{key}, scope: #{scope}, options: #{options}"
+      #Lit.init.logger.info "lookup translation: #{key}, scope: #{scope}, options: #{options}"
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
       content = @cache[key_with_locale] || super
