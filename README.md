@@ -32,6 +32,10 @@ mount Lit::Engine => "/lit"
     ## Tested with devise, seems to work
     # Lit.authentication_function = :authenticate_admin!
     
+    ## Pass extra options to storage engine
+    ## You may find it useful ie. while using redis in shared environment.
+   	# Lit.storage_options = { :prefix=>"my_project" }
+   	
     ## Which storage engine use. Please remember that in production environment
     ## memory is not shared between processes, and hash may not be correct choice
     ## (as changes will not be visible for all processes). But for any production
