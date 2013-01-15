@@ -2,10 +2,10 @@ module Lit
   class LocalizationKey < ActiveRecord::Base
 
     ## SCOPES
-    scope :completed, where(:is_completed=>true)
-    scope :not_completed, where(:is_completed=>false)
-    scope :starred, where(:is_starred=>true)
-    scope :ordered, order('localization_key asc')
+    scope :completed, proc{ where(:is_completed=>true) }
+    scope :not_completed, proc{ where(:is_completed=>false) }
+    scope :starred, proc{ where(:is_starred=>true) }
+    scope :ordered, proc{ order('localization_key asc') }
 
     ## ASSOCIATIONS
     has_many :localizations, :dependent=>:destroy
@@ -15,8 +15,10 @@ module Lit
               :presence=>true,
               :uniqueness=>true
 
-    ## ACCESSIBLE
-    attr_accessible :localization_key
+    if ::Rails::VERSION::MAJOR<4
+      ## ACCESSIBLE
+      attr_accessible :localization_key
+    end
 
     def to_s
       self.localization_key

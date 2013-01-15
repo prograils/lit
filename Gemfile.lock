@@ -1,14 +1,11 @@
 PATH
   remote: .
   specs:
-    lit (0.0.1)
+    lit (0.0.4)
       bootstrap-sass (~> 2.1)
-      haml
       jquery-rails
-      kaminari
       rails (> 3.1.0)
-      ransack
-      sass-rails (~> 3.1)
+      sass-rails (> 3.1)
 
 GEM
   remote: http://rubygems.org/
@@ -43,7 +40,8 @@ GEM
     addressable (2.3.2)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
-    bootstrap-sass (2.1.1.0)
+    bootstrap-sass (2.2.2.0)
+      sass (~> 3.2)
     builder (3.0.4)
     capybara (1.1.2)
       mime-types (>= 1.16)
@@ -128,8 +126,8 @@ GEM
       json (~> 1.4)
     redis (3.0.2)
     rubyzip (0.9.9)
-    sass (3.2.1)
-    sass-rails (3.2.5)
+    sass (3.2.5)
+    sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)

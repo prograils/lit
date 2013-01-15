@@ -2,7 +2,7 @@ module Lit
   class Localization < ActiveRecord::Base
 
     ## SCOPES
-    scope :changed, where(:is_changed=>true)
+    scope :changed, proc{ where(:is_changed=>true) }
 
     ## ASSOCIATIONS
     belongs_to :locale
@@ -12,8 +12,10 @@ module Lit
     validates :locale_id,
               :presence=>true
 
-    ## ACCESSIBLE
-    attr_accessible :translated_value, :locale_id
+    if ::Rails::VERSION::MAJOR<4
+      ## ACCESSIBLE
+      attr_accessible :translated_value, :locale_id
+    end
 
     ## BEFORE & AFTER
     before_update :update_is_changed

@@ -2,7 +2,7 @@ module Lit
   class Locale < ActiveRecord::Base
 
     ## SCOPES
-    scope :ordered, order('locale ASC')
+    scope :ordered, proc{ order('locale ASC') }
 
     ## ASSOCIATIONS
     has_many :localizations, :dependent=>:destroy
@@ -12,8 +12,10 @@ module Lit
               :presence=>true,
               :uniqueness=>true
 
-    ## ACCESSIBLE
-    attr_accessible :locale
+    if ::Rails::VERSION::MAJOR<4
+      ## ACCESSIBLE
+      attr_accessible :locale
+    end
 
     def to_s
       self.locale

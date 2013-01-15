@@ -9,7 +9,7 @@ module Lit
     end
 
     def update
-      if @localization.update_attributes(params[:localization])
+      if @localization.update_attributes(clear_params)
         Lit.init.cache.refresh_key @localization.full_key
       end
       respond_to :js
@@ -22,6 +22,14 @@ module Lit
 
       def find_localization
         @localization = @localization_key.localizations.find(params[:id])
+      end
+
+      def clear_params
+        if ::Rails::VERSION::MAJOR>=4
+          params[:localization].permit(:translated_value, :locale_id)
+        else
+          params[:localization]
+        end
       end
   end
 end
