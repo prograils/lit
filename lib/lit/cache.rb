@@ -28,7 +28,7 @@ module Lit
       #Lit.init.logger.info "value: #{value}"
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value)
-      @localizations[key] = localization.get_value
+      @localizations[key] = localization.get_value if localization
     end
 
     def load_all_translations
@@ -43,7 +43,7 @@ module Lit
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale)
-      @localizations[key] = localization.get_value
+      @localizations[key] = localization.get_value if localization
     end
 
     def delete_key(key)
@@ -129,9 +129,7 @@ module Lit
           localization
         else
           Lit.init.logger.info "returning value for hash: #{key_without_locale}: #{value.to_s}"
-          l = Localization.new
-          l.default_value = value
-          l
+          nil
         end
       end
 
