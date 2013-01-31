@@ -19,6 +19,10 @@ module Lit
       Lit.redis.set(_prefixed_key(k).to_s, v.to_s)
     end
 
+    def delete(k)
+      Lit.redis.del k
+    end
+
     def clear
       Lit.redis.del self.keys
       save
