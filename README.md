@@ -60,7 +60,7 @@ mount Lit::Engine => "/lit"
 * Better cache
 * Support for other key value providers (ie. Redis does not support Array types in easy way)
 * Integration with ActiveAdmin
-
+* Add versioning 
 
 ### License
 
