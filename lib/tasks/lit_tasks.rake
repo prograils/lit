@@ -4,6 +4,7 @@
 # end
 namespace :lit do
   task :export => :environment do
+    Lit.init.cache.load_all_translations
     if yml = Lit.init.cache.export
       PATH = "config/locales/lit.yml"
       File.new("#{Rails.root}/#{PATH}", 'w').write(yml)
