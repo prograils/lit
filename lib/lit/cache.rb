@@ -80,7 +80,11 @@ module Lit
     def export
       keys = {}
       reset
-      @localizations.sort.each do |(l_key, value)|
+      db_localizations = {}
+      Lit::Localization.find_each do |l|
+        db_localizations[l.full_key] = l.get_value
+      end
+      db_localizations.sort.each do |(l_key, value)|
         current = keys
         yaml_keys = l_key.split('.')
 

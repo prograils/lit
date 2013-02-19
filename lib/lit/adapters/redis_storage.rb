@@ -36,6 +36,12 @@ module Lit
       Lit.redis.exists(_prefixed_key(key))
     end
 
+    def sort
+      Lit.redis.keys.sort.map do |k|
+        [k, self.[](k)]
+      end
+    end
+
     private
       def _prefixed_key(key="")
         prefix = "lit:"
