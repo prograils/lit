@@ -1,5 +1,6 @@
 module Lit
   class LocalizationKey < ActiveRecord::Base
+    attr_accessor :interpolated_key
 
     ## SCOPES
     scope :completed, proc{ where(:is_completed=>true) }
@@ -25,11 +26,10 @@ module Lit
     end
 
     def clone_localizations
-      first_localization = self.localizations.first
       new_created = false
       Lit::Locale.find_each do |locale|
         self.localizations.where(:locale_id=>locale.id).first_or_create do |l|
-          l.default_value = first_localization.get_value
+          l.default_value = interpolated_key
           new_created = true
         end
       end
