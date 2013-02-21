@@ -135,7 +135,10 @@ module Lit
             #Lit.init.logger.info "creating new localization with value: #{value.class}"
             create = true
           end
-          localization_key.clone_localizations if create and localization_key.localizations.count(:id)==1
+          if create and localization_key.localizations.count(:id)==1
+            localization_key.interpolated_key = localization.default_value
+            localization_key.clone_localizations 
+          end
           localization
         else
           Lit.init.logger.info "returning value for hash: #{key_without_locale}: #{value.to_s}"
@@ -165,12 +168,7 @@ module Lit
 
       def find_or_create_localization_key(key_without_locale)
         #Lit.init.logger.info "creating key: #{key_without_locale} with id #{localization_key.id}"
-        created = false
-        localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! do |lk|
-          lk.interpolated_key = key_without_locale.split('.').last.humanize
-          created = true
-        end
-        localization_key.clone_localizations if created
+        localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! 
         @localization_keys[key_without_locale] = localization_key.id
         localization_key
       end

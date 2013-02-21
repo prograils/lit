@@ -22,7 +22,22 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Text without default')
     visit('/pl/welcome')
     visit('/pl/welcome')
+    puts page.body
     assert page.has_content?('Text without default')
+  end
+
+  test "should properly display text with default" do
+    Redis.new.flushall
+    Lit.init.cache.reset
+    I18n.backend.reload!
+    # for some reason for first time text is not fetched from backend. To be
+    # investigated
+    visit('/en/welcome')
+    visit('/en/welcome')
+    assert page.has_content?('Default content')
+    visit('/pl/welcome')
+    visit('/pl/welcome')
+    assert page.has_content?('Default content')
   end
 
   test "should properly display saturday abbr in polish" do

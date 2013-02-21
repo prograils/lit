@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sass-rails', '> 3.1'
   s.add_dependency 'bootstrap-sass', '~> 2.1'
 
-  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "pg"
   s.add_development_dependency "devise"
   #s.add_test_dependency "capybara"
 end

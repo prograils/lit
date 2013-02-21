@@ -8,3 +8,5 @@ en:
     - Thu
     - Fri
     - Sat
+  scope:
+    hello_world: Hello World
