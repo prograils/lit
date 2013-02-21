@@ -19,6 +19,7 @@
               <tr>
                 <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
                 <% unless localization %>
+                  <%- lk.interpolated_key = lk.localization_key.split('.').last.humanize %>
                   <%- lk.clone_localizations %>
                   <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
                 <% end %>

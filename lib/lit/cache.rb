@@ -165,9 +165,12 @@ module Lit
 
       def find_or_create_localization_key(key_without_locale)
         #Lit.init.logger.info "creating key: #{key_without_locale} with id #{localization_key.id}"
+        created = false
         localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! do |lk|
           lk.interpolated_key = key_without_locale.split('.').last.humanize
+          created = true
         end
+        localization_key.clone_localizations if created
         @localization_keys[key_without_locale] = localization_key.id
         localization_key
       end
