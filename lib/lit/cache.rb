@@ -127,6 +127,7 @@ module Lit
                 value = value.first
               end
             end
+            value = key_without_locale.split('.').last.humanize if value.blank?
             l.default_value = value
             #Lit.init.logger.info "creating new localization: #{key_without_locale}"
             #Lit.init.logger.info "creating new localization with value: #{value}"

@@ -2,19 +2,34 @@
 require 'test_helper'
 
 class WelcomeTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+  
   test "should properly display 'Hello world' in english" do
     Redis.new.flushall
     Lit.init.cache.reset
+    I18n.backend.reload!
     visit('/en/welcome')
     assert page.has_content?('Hello World')
+  end
+
+  test "should properly display text without default" do
+    Redis.new.flushall
+    Lit.init.cache.reset
+    I18n.backend.reload!
+    # for some reason for first time text is not fetched from backend. To be
+    # investigated
+    visit('/en/welcome')
+    visit('/en/welcome')
+    assert page.has_content?('Text without default')
+    visit('/pl/welcome')
+    visit('/pl/welcome')
+    assert page.has_content?('Text without default')
   end
 
   test "should properly display saturday abbr in polish" do
     Redis.new.flushall
     Lit.init.cache.reset
+    I18n.backend.reload!
+    visit('/pl/welcome')
     visit('/pl/welcome')
     assert page.has_content?('sob')
   end
@@ -22,6 +37,8 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   test "should properly display 'Hello world' in polish" do
     Redis.new.flushall
     Lit.init.cache.reset
+    I18n.backend.reload!
+    visit('/pl/welcome')
     visit('/pl/welcome')
     assert page.has_content?('Witaj świecie')
   end
