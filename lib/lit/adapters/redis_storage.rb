@@ -2,9 +2,8 @@ require 'redis'
 module Lit
   extend self
   def redis
-    return @redis if @redis
-    @redis = Redis.connect(:thread_safe => true)
-    @redis
+    $redis = Redis.connect unless $redis
+    $redis
   end
   class RedisStorage
     def initialize
