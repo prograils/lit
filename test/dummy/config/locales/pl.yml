@@ -3,3 +3,4 @@ pl:
     hello_world: "Witaj świecie"
     catan:
       settlers: "Osadnicy z Catanu"
+    some_strange_key: "Abrakadabra dwa kije"

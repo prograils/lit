@@ -23,8 +23,7 @@ module Lit
     end
 
     def clear
-      Lit.redis.del self.keys
-      save
+      Lit.redis.del(self.keys) if self.keys.length > 0
     end
 
     def keys

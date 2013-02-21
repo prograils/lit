@@ -22,7 +22,6 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Text without default')
     visit('/pl/welcome')
     visit('/pl/welcome')
-    puts page.body
     assert page.has_content?('Text without default')
   end
 
@@ -47,6 +46,17 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     visit('/pl/welcome')
     visit('/pl/welcome')
     assert page.has_content?('sob')
+  end
+
+  test "should use interpolation instead of default value" do
+    Redis.new.flushall
+    Lit.init.cache.reset
+    I18n.backend.reload!
+    visit('/pl/welcome')
+    visit('/pl/welcome')
+    visit('/en/welcome')
+    visit('/en/welcome')
+    assert page.has_content?('Some strange key')
   end
 
   test "should properly display 'Hello world' in polish" do

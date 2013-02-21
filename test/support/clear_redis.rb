@@ -1,2 +1,2 @@
 require 'redis'
-Redis.new.flushall
+$redis.flushall

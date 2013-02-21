@@ -60,7 +60,9 @@ module Lit
     def reset
       @locale_cache = {}
       @localizations = Lit.get_key_value_engine
+      @localizations.clear
       @localization_keys = Lit.get_key_value_engine
+      @localization_keys.clear
       load_all_translations
     end
 
@@ -104,6 +106,7 @@ module Lit
     private
 
       def find_localization(locale, key_without_locale, value=nil)
+        org_value = value.present? ? value.dup : nil
         unless value.is_a?(Hash)
           localization_key = find_localization_key(key_without_locale)
           create = false
@@ -135,10 +138,10 @@ module Lit
             #Lit.init.logger.info "creating new localization with value: #{value.class}"
             create = true
           end
-          if create and localization_key.localizations.count(:id)==1
-            localization_key.interpolated_key = localization.default_value
-            localization_key.clone_localizations 
-          end
+          #if create and localization_key.localizations.count(:id)==1
+            #localization_key.interpolated_key = org_value || key_without_locale.split('.').last.humanize
+            #localization_key.clone_localizations 
+          #end
           localization
         else
           Lit.init.logger.info "returning value for hash: #{key_without_locale}: #{value.to_s}"
