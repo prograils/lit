@@ -113,23 +113,27 @@ module Lit
           localization = Lit::Localization.where(:locale_id=>locale.id).
                             where(:localization_key_id=>localization_key.id).first_or_create do |l|
             if value.is_a?(Array)
-              value = value.to_s
-              #if value.length > 1
-                #new_value = nil
-                #value_clone = value.dup
-                #while v = value_clone.pop
-                  #lk = Lit::LocalizationKey.where(:localization_key=>v.to_s).first
-                  #if lk
-                    #loca = Lit::Localization.where(:locale_id=>locale.id).
-                                #where(:localization_key_id=>lk.id).first
-                    #new_value = loca.get_value if loca and loca.get_value.present?
+              if value.length > 1
+                if value.first.class == Symbol
+                  new_value = nil
+                  value_clone = value.dup
+                  while (v = value_clone.pop) && v.present?
+                    lk = Lit::LocalizationKey.where(:localization_key=>v.to_s).first
+                    if lk
+                      loca = Lit::Localization.where(:locale_id=>locale.id).
+                                  where(:localization_key_id=>lk.id).first
+                      new_value = loca.get_value if loca and loca.get_value.present?
 
-                  #end
-                #end
-                #value = new_value.nil? ? value.last : new_value
-              #else
-                #value = value.first
-              #end
+                    end
+                  end
+                  value = new_value.nil? ? value.last : new_value
+                else
+                  ## here value should be serialized as yaml or json
+                  value = value.to_s
+                end
+              else
+                value = value.first
+              end
             end
             value = key_without_locale.split('.').last.humanize if value.blank?
             l.default_value = value
