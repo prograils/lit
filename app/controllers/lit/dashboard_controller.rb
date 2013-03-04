@@ -1,7 +1,7 @@
 require_dependency "lit/application_controller"
 
 module Lit
-  class DashboardController < ApplicationController
+  class DashboardController < ::Lit::ApplicationController
     def index
       @locales = Lit::Locale.ordered
     end

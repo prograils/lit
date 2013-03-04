@@ -1,5 +1,5 @@
 module Lit
-  class LocalizationsController < ApplicationController
+  class LocalizationsController < ::Lit::ApplicationController
     before_filter :find_localization_key
     before_filter :find_localization
 

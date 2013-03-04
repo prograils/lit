@@ -1,5 +1,5 @@
 module Lit
-  class LocalizationKeysController < ApplicationController
+  class LocalizationKeysController < ::Lit::ApplicationController
     before_filter :get_localization_scope, :except=>[:destroy]
 
     def index
