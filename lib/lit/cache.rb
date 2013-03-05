@@ -32,10 +32,20 @@ module Lit
       @localizations[key] = localization.get_value if localization
     end
 
-    def load_all_translations
+    def load_all_translations(oninit=false)
       Lit.init.logger.info "loading all translations"
-      Localization.includes([:locale, :localization_key]).find_each do |l|
-        @localizations[l.full_key] = l.get_value
+      doinit = false
+      first = Localization.order('id ASC').first
+      last = Localization.order('id DESC').first
+      if not @localizations.has_key?(first.full_key) or
+        not @localizations.has_key?(last.full_key)
+        doinit = true
+      end
+
+      if oninit==false || doinit==true
+        Localization.includes([:locale, :localization_key]).find_each do |l|
+          @localizations[l.full_key] = l.get_value
+        end
       end
     end
 
