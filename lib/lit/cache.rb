@@ -6,7 +6,8 @@ module Lit
     end
 
     def [](key)
-      @localizations[key]
+      update_hits_count(key)
+      @localizations[key] 
     end
 
     def []=(key, value)
@@ -37,8 +38,8 @@ module Lit
       doinit = false
       first = Localization.order('id ASC').first
       last = Localization.order('id DESC').first
-      if not @localizations.has_key?(first.full_key) or
-        not @localizations.has_key?(last.full_key)
+      if not first or not last or (not @localizations.has_key?(first.full_key) or
+        not @localizations.has_key?(last.full_key))
         doinit = true
       end
 
@@ -111,6 +112,14 @@ module Lit
         current[yaml_keys.last] = value
       end
       keys.to_yaml
+    end
+
+    def global_hits_counter(key)
+      @global_hits_counter['_counter.'+key]
+    end
+
+    def hits_counter(key)
+      @hits_counter['_counter.'+key]
     end
 
     private
@@ -188,6 +197,12 @@ module Lit
         localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! 
         @localization_keys[key_without_locale] = localization_key.id
         localization_key
+      end
+
+      def update_hits_count(key)
+        _lo_key, key_without_locale = split_key(key)
+        @localizations.incr('_counter.'+key_without_locale)
+        @localizations.incr('_counter.'+key)
       end
 
   end

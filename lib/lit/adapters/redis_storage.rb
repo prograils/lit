@@ -34,6 +34,10 @@ module Lit
       Lit.redis.exists(_prefixed_key(key))
     end
 
+    def incr(key)
+      Lit.redis.incr(key)
+    end
+
     def sort
       Lit.redis.keys.sort.map do |k|
         [k, self.[](k)]
