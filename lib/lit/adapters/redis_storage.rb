@@ -35,7 +35,7 @@ module Lit
     end
 
     def incr(key)
-      Lit.redis.incr(key)
+      Lit.redis.incr(_prefixed_key(key))
     end
 
     def sort

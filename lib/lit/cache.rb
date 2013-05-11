@@ -3,6 +3,8 @@ module Lit
 
     def initialize
       @localizations = Lit.get_key_value_engine
+      @hits_counter = Lit.get_key_value_engine
+      @hits_counter_working = true
     end
 
     def [](key)
@@ -114,12 +116,20 @@ module Lit
       keys.to_yaml
     end
 
-    def global_hits_counter(key)
-      @global_hits_counter['_counter.'+key]
+    def get_global_hits_counter(key)
+      @hits_counter['global_hits_counter.'+key]
     end
 
-    def hits_counter(key)
-      @hits_counter['_counter.'+key]
+    def get_hits_counter(key)
+      @hits_counter['hits_counter.'+key]
+    end
+
+    def stop_hits_counter
+      @hits_counter_working = false
+    end
+
+    def restore_hits_counter
+      @hits_counter_working = true
     end
 
     private
@@ -200,9 +210,11 @@ module Lit
       end
 
       def update_hits_count(key)
-        _lo_key, key_without_locale = split_key(key)
-        @localizations.incr('_counter.'+key_without_locale)
-        @localizations.incr('_counter.'+key)
+        if @hits_counter_working 
+          _lo_key, key_without_locale = split_key(key)
+          @hits_counter.incr('hits_counter.'+key)
+          @hits_counter.incr('global_hits_counter.'+key_without_locale)
+        end
       end
 
   end

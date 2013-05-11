@@ -5,7 +5,7 @@
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
         <strong><%= lk.localization_key %></strong>
-        <span class="badge"><%= Lit.init.cache.global_hits_counter[lk.localization_key) %></span>
+        <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
             <%= draw_icon lk.is_starred? ? 'star' : 'star-empty' %>
