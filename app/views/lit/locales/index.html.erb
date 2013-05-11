@@ -1,0 +1,20 @@
+<h1>Listing locales</h1>
+
+<table class="table table-stripped">
+  <tr>
+    <th>Locale</th>
+    <th width="100">Options</th>
+  </tr>
+
+<% @locales.each do |locale| %>
+  <tr>
+    <td><%= locale %></td>
+    <td>
+      <span id="hide_link_<%= locale.id %>"><%= render :partial=>"hide_link", :locals=>{:locale=>locale} %></span>
+      <%= link_to 'Destroy', locale, method: :delete, data: { confirm: 'Are you sure?' } %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+

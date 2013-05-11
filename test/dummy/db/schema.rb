@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121225112100) do
+ActiveRecord::Schema.define(:version => 20130511111904) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -33,8 +33,9 @@ ActiveRecord::Schema.define(:version => 20121225112100) do
 
   create_table "lit_locales", :force => true do |t|
     t.string   "locale"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "is_hidden",  :default => false
   end
 
   create_table "lit_localization_keys", :force => true do |t|

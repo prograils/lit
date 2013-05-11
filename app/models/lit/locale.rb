@@ -3,6 +3,7 @@ module Lit
 
     ## SCOPES
     scope :ordered, proc{ order('locale ASC') }
+    scope :visible, proc{ where(:is_hidden=>false) }
 
     ## ASSOCIATIONS
     has_many :localizations, :dependent=>:destroy
