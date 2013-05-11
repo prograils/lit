@@ -1,15 +1,12 @@
 Rails.application.routes.draw do
-
-
-
   mount Lit::Engine => "/lit"
 
   devise_for :admins
 
 
-  Possible_locales = /en|pl|de/
+  PossibleLocales = /en|pl|de/
 
-  scope "(:locale)", :locale => Possible_locales do
+  scope "(:locale)", :locale => PossibleLocales do
     resources :projects
     match 'welcome'=>"welcome#index", :as=>:welcome
     match 'catan'=>"welcome#catan", :as=>:welcome
