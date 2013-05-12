@@ -27,9 +27,6 @@ module Lit
     def update_locale(key, value)
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
-      #Lit.init.logger.info "key: #{key}"
-      #Lit.init.logger.info "key_without_locale: #{key_without_locale}"
-      #Lit.init.logger.info "value: #{value}"
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value)
       @localizations[key] = localization.get_value if localization
@@ -138,43 +135,33 @@ module Lit
         org_value = value.present? ? value.dup : nil
         unless value.is_a?(Hash)
           localization_key = find_localization_key(key_without_locale)
-          create = false
           localization = Lit::Localization.where(:locale_id=>locale.id).
                             where(:localization_key_id=>localization_key.id).first_or_create do |l|
             if value.is_a?(Array)
-              if value.length > 1
-                if value.first.class == Symbol
-                  new_value = nil
-                  value_clone = value.dup
-                  while (v = value_clone.pop) && v.present?
-                    lk = Lit::LocalizationKey.where(:localization_key=>v.to_s).first
-                    if lk
-                      loca = Lit::Localization.where(:locale_id=>locale.id).
-                                  where(:localization_key_id=>lk.id).first
-                      new_value = loca.get_value if loca and loca.get_value.present?
-
-                    end
-                  end
-                  value = new_value.nil? ? value.last : new_value
-                else
-                  ## here value should be serialized as yaml or json
-                  value = value.to_s
-                end
-              else
-                value = value.first
+              new_value = nil
+              value_clone = value.dup
+              while (v = value_clone.pop) && v.present?
+                pv = parse_value(v, locale)
+                new_value = pv unless pv.nil?
               end
+              value = new_value
+            else
+              value = parse_value(value, locale) if value
             end
-            value = key_without_locale.split('.').last.humanize if value.blank?
+            if value.nil?
+              if Lit.fallback
+                @locale_cache.keys.each do |lc|
+                  if lc != locale.locale
+                    nk = "#{lc}.#{key_without_locale}"
+                    v = @localizations[nk]
+                    value = v if v.present? and value.nil?
+                  end
+                end
+              end
+              value = key_without_locale.split('.').last.humanize if value.nil?
+            end
             l.default_value = value
-            #Lit.init.logger.info "creating new localization: #{key_without_locale}"
-            #Lit.init.logger.info "creating new localization with value: #{value}"
-            #Lit.init.logger.info "creating new localization with value: #{value.class}"
-            create = true
           end
-          #if create and localization_key.localizations.count(:id)==1
-            #localization_key.interpolated_key = org_value || key_without_locale.split('.').last.humanize
-            #localization_key.clone_localizations 
-          #end
           localization
         else
           Lit.init.logger.info "returning value for hash: #{key_without_locale}: #{value.to_s}"
@@ -182,15 +169,36 @@ module Lit
         end
       end
 
+      ## checks parameter type and returns value basing on it
+      ## symbols are beeing looked up in db
+      ## string are returned directly
+      ## procs are beeing called (once)
+      ## hashes are converted do string (for now)
+      def parse_value(v, locale)
+        new_value = nil
+        case v.class
+          when Symbol then
+            lk = Lit::LocalizationKey.where(:localization_key=>v.to_s).first
+            if lk
+              loca = Lit::Localization.where(:locale_id=>locale.id).
+                          where(:localization_key_id=>lk.id).first
+              new_value = loca.get_value if loca and loca.get_value.present?
+            end
+          when String then
+            new_value = v
+          when Proc then
+            new_value = v.call
+          else
+            new_value = v.to_s
+        end
+        new_value
+      end
+
       def find_localization_key(key_without_locale)
         @localization_keys ||= Lit.get_key_value_engine
         unless @localization_keys.has_key?(key_without_locale)
           find_or_create_localization_key(key_without_locale)
         else
-          #Lit.init.logger.info "current keys: #{@localization_keys.keys}"
-          #Lit.init.logger.info "And I was looking for key: #{key_without_locale}"
-          #Lit.init.logger.info "And store has currently #{@localization_keys[key_without_locale]}"
-          #Lit.init.logger.info Lit::LocalizationKey.all
           localization_key = Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) || find_or_create_localization_key(key_without_locale)
         end
       end

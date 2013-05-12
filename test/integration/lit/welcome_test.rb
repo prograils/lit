@@ -15,12 +15,8 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Redis.new.flushall
     Lit.init.cache.reset
     I18n.backend.reload!
-    # for some reason for first time text is not fetched from backend. To be
-    # investigated
-    visit('/en/welcome')
     visit('/en/welcome')
     assert page.has_content?('Text without default')
-    visit('/pl/welcome')
     visit('/pl/welcome')
     assert page.has_content?('Text without default')
   end
@@ -29,12 +25,8 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Redis.new.flushall
     Lit.init.cache.reset
     I18n.backend.reload!
-    # for some reason for first time text is not fetched from backend. To be
-    # investigated
-    visit('/en/welcome')
     visit('/en/welcome')
     assert page.has_content?('Default content')
-    visit('/pl/welcome')
     visit('/pl/welcome')
     assert page.has_content?('Default content')
   end
@@ -44,17 +36,16 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Lit.init.cache.reset
     I18n.backend.reload!
     visit('/pl/welcome')
-    visit('/pl/welcome')
     assert page.has_content?('sob')
   end
 
   test "should use interpolation instead of default value" do
+    Lit.fallback = false
     Redis.new.flushall
     Lit.init.cache.reset
     I18n.backend.reload!
     visit('/pl/welcome')
-    visit('/pl/welcome')
-    visit('/en/welcome')
+    assert page.has_content?('Abrakadabra dwa kije')
     visit('/en/welcome')
     assert page.has_content?('Some strange key')
   end
@@ -63,7 +54,6 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Redis.new.flushall
     Lit.init.cache.reset
     I18n.backend.reload!
-    visit('/pl/welcome')
     visit('/pl/welcome')
     assert page.has_content?('Witaj świecie')
   end
@@ -84,5 +74,27 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Lit.init.cache.refresh_key(localization.full_key)
     visit('/pl/welcome')
     assert page.has_content?(text)
+  end
+
+  test "should not fallback if not asked to" do
+    Lit.fallback = false
+    Redis.new.flushall
+    Lit.init.cache.reset
+    I18n.backend.reload!
+    visit('/en/welcome')
+    assert page.has_content?('English translation')
+    visit('/pl/welcome')
+    assert page.has_content?('Text with translation in english')
+  end
+
+  test "should properly fallback" do
+    Lit.fallback = true
+    Redis.new.flushall
+    Lit.init.cache.reset
+    I18n.backend.reload!
+    visit('/en/welcome')
+    assert page.has_content?('English translation')
+    visit('/pl/welcome')
+    assert page.has_content?('English translation')
   end
 end

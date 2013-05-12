@@ -10,3 +10,4 @@ en:
     - Sat
   scope:
     hello_world: Hello World
+    text_with_translation_in_english: English translation

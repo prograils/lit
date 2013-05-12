@@ -5,6 +5,7 @@ module Lit
   mattr_accessor :authentication_function
   mattr_accessor :key_value_engine
   mattr_accessor :storage_options
+  mattr_accessor :fallback
   class << self
     attr_accessor :loader
   end

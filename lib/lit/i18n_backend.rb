@@ -25,7 +25,6 @@ module Lit
     #
     # @param [String] locale the locale (ie "en") to store translations for
     # @param [Hash] data nested key-value pairs to be added as blurbs
-    # @param [Hash] options unused part of the I18n API
     def store_translations(locale, data, options = {})
       super
       #Lit.init.logger.info "store translation: #{locale}, data: #{data}, options: #{options}"
@@ -36,13 +35,18 @@ module Lit
     private
 
     def lookup(locale, key, scope = [], options = {})
-      #Lit.init.logger.info "lookup translation: #{key}, scope: #{scope}, options: #{options}"
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
+      
+      ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
-      #Lit.init.logger.info "options[:default]: #{options[:default].class}"
-      #Lit.init.logger.info "options[:default]: #{options[:default]}"
-      @cache[key_with_locale] = (options[:default] || "") if content.nil?
+      
+      ## store value if not found
+      if content.nil?
+        @cache[key_with_locale] = options[:default] 
+        content = @cache[key_with_locale] 
+      end
+      ## return translated content
       content
     end
 
