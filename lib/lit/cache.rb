@@ -62,7 +62,7 @@ module Lit
       key = key.to_s
       Lit.init.logger.info "deleting key: #{key}"
       @localizations.delete(key)
-      locale_key, key_without_locale = split_key(key)
+      key_without_locale = split_key(key).last
       @localization_keys.delete(key_without_locale)
       I18n.backend.reload!
     end
@@ -132,7 +132,6 @@ module Lit
     private
 
       def find_localization(locale, key_without_locale, value=nil)
-        org_value = value.present? ? value.dup : nil
         unless value.is_a?(Hash)
           localization_key = find_localization_key(key_without_locale)
           localization = Lit::Localization.where(:locale_id=>locale.id).
@@ -146,7 +145,7 @@ module Lit
               end
               value = new_value
             else
-              value = parse_value(value, locale) if value
+              value = parse_value(value, locale) unless value.nil?
             end
             if value.nil?
               if Lit.fallback
@@ -158,7 +157,8 @@ module Lit
                   end
                 end
               end
-              value = key_without_locale.split('.').last.humanize if value.nil?
+              value = key_without_locale.split('.').last.humanize if value.nil? && 
+                                                                    Lit.humanize_key
             end
             l.default_value = value
           end
@@ -199,7 +199,7 @@ module Lit
         unless @localization_keys.has_key?(key_without_locale)
           find_or_create_localization_key(key_without_locale)
         else
-          localization_key = Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) || find_or_create_localization_key(key_without_locale)
+          Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) || find_or_create_localization_key(key_without_locale)
         end
       end
 
@@ -219,7 +219,7 @@ module Lit
 
       def update_hits_count(key)
         if @hits_counter_working 
-          _lo_key, key_without_locale = split_key(key)
+          key_without_locale = split_key(key).last
           @hits_counter.incr('hits_counter.'+key)
           @hits_counter.incr('global_hits_counter.'+key_without_locale)
         end

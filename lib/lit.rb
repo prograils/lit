@@ -5,6 +5,7 @@ module Lit
   mattr_accessor :authentication_function
   mattr_accessor :key_value_engine
   mattr_accessor :storage_options
+  mattr_accessor :humanize_key
   mattr_accessor :fallback
   class << self
     attr_accessor :loader
@@ -13,6 +14,7 @@ module Lit
     @@table_exists ||= Lit::Locale.table_exists?
     if self.loader.nil? && @@table_exists
       self.loader ||= Loader.new
+      Lit.humanize_key = true if Lit.humanize_key.nil?
       #if loading all translations on start, migrations have to be performed
       #already, fails on first deploy
       #self.loader.cache.load_all_translations
