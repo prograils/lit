@@ -10,7 +10,8 @@ module Lit
     attr_accessor :loader
   end
   def self.init
-    if self.loader.nil?
+    @@table_exists ||= Lit::Locale.table_exists?
+    if self.loader.nil? && @@table_exists
       self.loader ||= Loader.new
       #if loading all translations on start, migrations have to be performed
       #already, fails on first deploy
