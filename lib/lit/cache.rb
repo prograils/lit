@@ -139,7 +139,7 @@ module Lit
             if value.is_a?(Array)
               new_value = nil
               value_clone = value.dup
-              while (v = value_clone.pop) && v.present?
+              while (v = value_clone.shift) && v.present?
                 pv = parse_value(v, locale)
                 new_value = pv unless pv.nil?
               end
@@ -176,7 +176,7 @@ module Lit
       ## hashes are converted do string (for now)
       def parse_value(v, locale)
         new_value = nil
-        case v.class
+        case v
           when Symbol then
             lk = Lit::LocalizationKey.where(:localization_key=>v.to_s).first
             if lk
