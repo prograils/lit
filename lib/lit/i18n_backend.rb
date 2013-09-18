@@ -27,7 +27,6 @@ module Lit
     # @param [Hash] data nested key-value pairs to be added as blurbs
     def store_translations(locale, data, options = {})
       super
-      #Lit.init.logger.info "store translation: #{locale}, data: #{data}, options: #{options}"
       store_item(locale, data)
     end
 
@@ -37,14 +36,20 @@ module Lit
     def lookup(locale, key, scope = [], options = {})
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
-      
+
       ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
-      
-      ## store value if not found
+
+      unless @cache.has_key?(key_with_locale)
+        @cache.init_key_with_value(key_with_locale, content)
+        content = @cache[key_with_locale]
+      end
+      ## store value if not found - updating in DB would always return '' (empty
+      ## string), so we can safely assume, that possible default has bigger
+      ## "priority"
       if content.nil?
-        @cache[key_with_locale] = options[:default] 
-        content = @cache[key_with_locale] 
+        @cache[key_with_locale] = options[:default]
+        content = @cache[key_with_locale]
       end
       ## return translated content
       content

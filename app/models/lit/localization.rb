@@ -1,5 +1,7 @@
 module Lit
   class Localization < ActiveRecord::Base
+    serialize :translated_value
+    serialize :default_value
 
     ## SCOPES
     scope :changed, proc{ where(:is_changed=>true) }
@@ -22,7 +24,7 @@ module Lit
     after_update :mark_localization_key_completed
 
     def to_s
-      self.value
+      self.get_value
     end
 
     def full_key

@@ -1,4 +1,13 @@
 pl:
+  date:
+    abbr_day_names:
+    - Nie
+    - Pon
+    - Wto
+    - Śro
+    - Czw
+    - Pią
+    - Sob
   scope:
     hello_world: "Witaj świecie"
     catan:

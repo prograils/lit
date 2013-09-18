@@ -2,7 +2,7 @@
 require 'test_helper'
 
 class WelcomeTest < ActionDispatch::IntegrationTest
-  
+
   test "should properly display 'Hello world' in english" do
     Redis.new.flushall
     Lit.init.cache.reset
@@ -26,6 +26,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Lit.init.cache.reset
     I18n.backend.reload!
     visit('/en/welcome')
+    Lit.init.logger.info page.body
     assert page.has_content?('Default content')
     visit('/pl/welcome')
     assert page.has_content?('Default content')
@@ -36,7 +37,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     Lit.init.cache.reset
     I18n.backend.reload!
     visit('/pl/welcome')
-    assert page.has_content?('sob')
+    assert page.has_content?('Sob')
   end
 
   test "should use interpolation instead of default value" do

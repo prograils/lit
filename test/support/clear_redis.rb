@@ -1,2 +1,2 @@
 require 'redis'
-$redis.flushall
+$redis.flushall if defined?($redis) and not $redis.nil?
