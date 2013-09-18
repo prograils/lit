@@ -27,7 +27,7 @@ module Lit
         end
       else
         Lit.redis.del(_prefixed_key_for_array(k))
-        Lit.redis.set(_prefixed_key(k), v.to_s)
+        Lit.redis.set(_prefixed_key(k), v) unless v.nil?
       end
     end
 

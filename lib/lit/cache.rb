@@ -38,7 +38,7 @@ module Lit
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
-      localization = find_localization(locale, key_without_locale, value, force_array)
+      localization = find_localization(locale, key_without_locale, value, force_array, true)
       @localizations[key] = localization.get_value if localization
     end
 
@@ -137,11 +137,12 @@ module Lit
 
     private
 
-      def find_localization(locale, key_without_locale, value=nil, force_array=false)
+      def find_localization(locale, key_without_locale, value=nil, force_array=false, update_value=false)
         unless value.is_a?(Hash)
           localization_key = find_localization_key(key_without_locale)
           localization = Lit::Localization.where(:locale_id=>locale.id).
-                            where(:localization_key_id=>localization_key.id).first_or_create do |l|
+                            where(:localization_key_id=>localization_key.id).first_or_initialize
+          if update_value || localization.new_record?
             if value.is_a?(Array)
               unless force_array
                 new_value = nil
@@ -168,9 +169,10 @@ module Lit
               value = key_without_locale.split('.').last.humanize if value.nil? &&
                                                                     Lit.humanize_key
             end
-            l.default_value = value
+            localization.default_value = value
+            localization.save!
           end
-          localization
+          return localization
         else
           nil
         end

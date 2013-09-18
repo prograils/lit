@@ -39,15 +39,12 @@ module Lit
 
       ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
-
+      newly_created = false
       unless @cache.has_key?(key_with_locale)
         @cache.init_key_with_value(key_with_locale, content)
-        content = @cache[key_with_locale]
+        newly_created = true
       end
-      ## store value if not found - updating in DB would always return '' (empty
-      ## string), so we can safely assume, that possible default has bigger
-      ## "priority"
-      if content.nil?
+      if content.nil? || (newly_created && options[:default].present?)
         @cache[key_with_locale] = options[:default]
         content = @cache[key_with_locale]
       end

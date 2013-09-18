@@ -32,7 +32,7 @@ module Lit
     end
 
     def get_value
-      is_changed? ? self.translated_value : self.default_value
+      (is_changed? && (not self.translated_value.nil?)) ? self.translated_value : self.default_value
     end
 
     private
