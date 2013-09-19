@@ -1,6 +1,14 @@
 <%= form_for [@localization_key, @localization], :html=>{:remote=>true} do |f| %>
   <%= f.label :translated_value %>
-  <%= f.text_area :translated_value, :size=>"40x2", :class=>"input-xxlarge" %>
+  <% if @localization.translated_value.is_a?(Array) %>
+    <ul style="list-style: none;">
+      <% @localization.translated_value.each do |l| %>
+        <li><%= text_field_tag 'localization[translated_value][]', l, :class=>"input-xlarge" %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <%= f.text_area :translated_value, :size=>"40x2", :class=>"input-xxlarge" %>
+  <% end %>
   <button class="btn" type="submit"><%= t('lit.common.update', :default=>"Update") %></button>
   <button class="btn cancel"><%= t('lit.common.cancel', :default=>'Cancel') %></button>
 <% end %>

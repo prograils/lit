@@ -1,0 +1,11 @@
+<%- la = localization -%>
+<% if la.is_a?(Array) %>
+  <ul>
+    <% la.each do |l| %>
+      <li><%= l %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <%= la %>
+<% end %>
+
