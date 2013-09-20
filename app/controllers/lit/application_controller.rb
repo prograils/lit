@@ -6,7 +6,7 @@ module Lit
 
     private
       def authenticate
-        if Lit.authentication_function
+        if Lit.authentication_function.present?
           send(Lit.authentication_function)
         end
       end
