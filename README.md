@@ -14,53 +14,37 @@ Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
 
 ### Instalation
 
-1. Add ```lit``` gem to your ```Gemfile```
+1. Add `lit` gem to your `Gemfile`
 ```ruby
 gem "lit"
-```
+````
 
-2. Install required migrations: ```bundle exec rake lit:install:migrations``` and run migrations ```bundle exec rake db:migrate```
+2. run `bundle install`
 
-3. Mount engine in ```config/routes.rb```
-```ruby
-mount Lit::Engine => "/lit"
-```
+3. run installation generator `bundle exec rails g lit:install`
 
-4. Last step is initializer, that should be places ie in ```config/initializers/lit.rb```
-    ```ruby
-    ## Add extra authentication, symbol, that is provided as param to before_filter
-    ## Tested with devise, seems to work
-    # Lit.authentication_function = :authenticate_admin!
-    
-    ## Pass extra options to storage engine
-    ## You may find it useful ie. while using redis in shared environment.
-   	# Lit.storage_options = { :prefix=>"my_project" }
-   	
-    ## Which storage engine use. Please remember that in production environment
-    ## memory is not shared between processes, and hash may not be correct choice
-    ## (as changes will not be visible for all processes). But for any production
-    ## environment with finished translation, 'hash' is preferred choice.
-    ## Possible values: 'redis' or 'hash'
-    Lit.key_value_engine = 'redis'
-    
-    ## Initialize engine
-    Lit.init
-    ```
+4. After doing above and restarting app, point your browser to ```http://app/lit```
 
-5. After doing above and restarting app, point your browser to ```http://app/lit```
+5. Profit!
 
+
+You may want to take a look at generated initializer in `config/initializers/lit.rb` and change some default configuration options.
 
 
 ### ToDo
 
+* Versioning 
+* API
+* Synchronization between environments
 * Rewrite initializer
 * Rewrite exporter (which is now code from copycopter)
-* Support for array types (ie. ```date.abbr_day_names```)
+* ~~Support for array types (ie. `date.abbr_day_names`)~~
+* ~~Generator~~
 * Support for wysiwyg
 * Better cache
-* Support for other key value providers (ie. Redis does not support Array types in easy way)
+* ~~Support for other key value providers (ie. Redis does not support Array types in easy way)~~ (not applicable, as array storage works now with redis).
 * Integration with ActiveAdmin
-* Add versioning 
+
 
 ### License
 
