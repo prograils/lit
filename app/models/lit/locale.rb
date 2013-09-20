@@ -23,7 +23,8 @@ module Lit
     end
 
     def get_translated_percentage
-      self.get_changed_localizations_count * 100 / self.get_all_localizations_count
+      total = self.get_all_localizations_count
+      total > 0 ? (self.get_changed_localizations_count * 100 / total) : 0
     end
 
     def get_changed_localizations_count

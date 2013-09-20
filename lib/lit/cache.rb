@@ -9,11 +9,21 @@ module Lit
 
     def [](key)
       update_hits_count(key)
-      @localizations[key] 
+      ret = @localizations[key]
+      ret
     end
 
     def []=(key, value)
       update_locale(key, value)
+    end
+
+    def init_key_with_value(key, value)
+      update_locale(key, value, true)
+    end
+
+    def has_key?(key)
+      # @TODO: change into correct has_key? call
+      @localizations.has_key?(key)
     end
 
     def sync
@@ -24,16 +34,15 @@ module Lit
       @localizations.keys
     end
 
-    def update_locale(key, value)
+    def update_locale(key, value, force_array=false)
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
-      localization = find_localization(locale, key_without_locale, value)
+      localization = find_localization(locale, key_without_locale, value, force_array, true)
       @localizations[key] = localization.get_value if localization
     end
 
     def load_all_translations(oninit=false)
-      Lit.init.logger.info "loading all translations"
       doinit = false
       first = Localization.order('id ASC').first
       last = Localization.order('id DESC').first
@@ -51,7 +60,6 @@ module Lit
 
     def refresh_key(key)
       key = key.to_s
-      Lit.init.logger.info "refreshing key: #{key}"
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale)
@@ -60,7 +68,6 @@ module Lit
 
     def delete_key(key)
       key = key.to_s
-      Lit.init.logger.info "deleting key: #{key}"
       @localizations.delete(key)
       key_without_locale = split_key(key).last
       @localization_keys.delete(key_without_locale)
@@ -80,7 +87,6 @@ module Lit
       locale_key = locale_key.to_s
       @locale_cache ||= {}
       unless @locale_cache.has_key?(locale_key)
-        #Lit.init.logger.info "looking for locale: #{locale_key}"
         locale = Lit::Locale.where(:locale=>locale_key).first_or_create!
         @locale_cache[locale_key] = locale
       end
@@ -131,19 +137,22 @@ module Lit
 
     private
 
-      def find_localization(locale, key_without_locale, value=nil)
+      def find_localization(locale, key_without_locale, value=nil, force_array=false, update_value=false)
         unless value.is_a?(Hash)
           localization_key = find_localization_key(key_without_locale)
           localization = Lit::Localization.where(:locale_id=>locale.id).
-                            where(:localization_key_id=>localization_key.id).first_or_create do |l|
+                            where(:localization_key_id=>localization_key.id).first_or_initialize
+          if update_value || localization.new_record?
             if value.is_a?(Array)
-              new_value = nil
-              value_clone = value.dup
-              while (v = value_clone.shift) && v.present?
-                pv = parse_value(v, locale)
-                new_value = pv unless pv.nil?
+              unless force_array
+                new_value = nil
+                value_clone = value.dup
+                while (v = value_clone.shift) && v.present?
+                  pv = parse_value(v, locale)
+                  new_value = pv unless pv.nil?
+                end
+                value = new_value
               end
-              value = new_value
             else
               value = parse_value(value, locale) unless value.nil?
             end
@@ -157,14 +166,14 @@ module Lit
                   end
                 end
               end
-              value = key_without_locale.split('.').last.humanize if value.nil? && 
+              value = key_without_locale.split('.').last.humanize if value.nil? &&
                                                                     Lit.humanize_key
             end
-            l.default_value = value
+            localization.default_value = value
+            localization.save!
           end
-          localization
+          return localization
         else
-          Lit.init.logger.info "returning value for hash: #{key_without_locale}: #{value.to_s}"
           nil
         end
       end
@@ -211,14 +220,13 @@ module Lit
       end
 
       def find_or_create_localization_key(key_without_locale)
-        #Lit.init.logger.info "creating key: #{key_without_locale} with id #{localization_key.id}"
-        localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create! 
+        localization_key = Lit::LocalizationKey.where(:localization_key=>key_without_locale).first_or_create!
         @localization_keys[key_without_locale] = localization_key.id
         localization_key
       end
 
       def update_hits_count(key)
-        if @hits_counter_working 
+        if @hits_counter_working
           key_without_locale = split_key(key).last
           @hits_counter.incr('hits_counter.'+key)
           @hits_counter.incr('global_hits_counter.'+key_without_locale)

@@ -9,16 +9,16 @@ class LocalesTest < ActionDispatch::IntegrationTest
     Lit.init.cache.reset
     visit('/pl/welcome')
     visit('/lit/localization_keys')
-    within('td.locale_row:last-child') do
-      assert page.has_content?('pl')
-    end
+    #within('td.locale_row:last-child') do
+      #Lit.init.logger.info page.body
+      #assert has_content?('pl')
+    #end
+    assert( all('td.locale_row').last.text =~ /pl/ )
     l = Lit::Locale.where(:locale=>'pl').first
     l.is_hidden = true
     l.save
     visit('/lit/localization_keys')
-    within('td.locale_row:last-child') do
-      assert !page.has_content?('pl')
-    end
+    assert( !(all('td.locale_row').last.text =~ /pl/) )
 
   end
 

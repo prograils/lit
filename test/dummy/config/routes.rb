@@ -4,9 +4,8 @@ Rails.application.routes.draw do
   devise_for :admins
 
 
-  PossibleLocales = /en|pl|de/
 
-  scope "(:locale)", :locale => PossibleLocales do
+  scope "(:locale)", :locale => /en|pl|de/ do
     resources :projects
     match 'welcome'=>"welcome#index", :as=>:welcome
     match 'catan'=>"welcome#catan", :as=>:welcome

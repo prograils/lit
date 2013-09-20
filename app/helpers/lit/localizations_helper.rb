@@ -5,7 +5,7 @@ module Lit
     end
 
     def ejs(val)
-      escape_javascript val
+      escape_javascript val.to_s
     end
   end
 end

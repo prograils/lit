@@ -11,15 +11,29 @@ module Lit
     end
 
     def [](key)
-      Lit.redis.get(_prefixed_key(key))
+      if Lit.redis.exists(_prefixed_key_for_array(key))
+        Lit.redis.lrange(_prefixed_key(key), 0, -1)
+      else
+        Lit.redis.get(_prefixed_key(key))
+      end
     end
 
     def []=(k, v)
-      Lit.redis.set(_prefixed_key(k).to_s, v.to_s)
+      if v.is_a?(Array)
+        delete(k)
+        Lit.redis.set(_prefixed_key_for_array(k), "1")
+        v.each do |ve|
+          Lit.redis.rpush(_prefixed_key(k), ve.to_s)
+        end
+      else
+        Lit.redis.del(_prefixed_key_for_array(k))
+        Lit.redis.set(_prefixed_key(k), v) unless v.nil?
+      end
     end
 
     def delete(k)
-      Lit.redis.del k
+      Lit.redis.del(_prefixed_key_for_array(k))
+      Lit.redis.del(_prefixed_key(k))
     end
 
     def clear
@@ -45,12 +59,18 @@ module Lit
     end
 
     private
-      def _prefixed_key(key="")
+      def _prefix
         prefix = "lit:"
         if Lit.storage_options.is_a?(Hash)
           prefix += "#{Lit.storage_options[:prefix]}:" if Lit.storage_options.has_key?(:prefix)
         end
-        prefix+key
+        prefix
+      end
+      def _prefixed_key(key="")
+        _prefix+key.to_s
+      end
+      def _prefixed_key_for_array(key="")
+        _prefix+"array_flags:"+key.to_s
       end
   end
 end
