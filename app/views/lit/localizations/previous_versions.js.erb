@@ -1,0 +1,3 @@
+var row = $('.localization_versions_row[data-id="<%= @localization.id %>"]');
+row.removeClass('hidden');
+row.children('td').html("<%= j render(:partial=>'previous_versions_rows', :locals=>{:localization=>@localization, :versions=>@versions}) %>");

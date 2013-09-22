@@ -17,8 +17,8 @@
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
             <%- I18n.backend.available_locales.each do |locale| %>
+              <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
               <tr>
-                <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
                 <% unless localization %>
                   <% Lit.init.cache.refresh_key("#{locale}.#{lk.localization_key}") %>
                   <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
@@ -29,7 +29,15 @@
                 <td class="locale_row">
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
                   <%= locale %>
+                  <% if localization %>
+                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization), :class=>"show_prev_versions #{'hidden' if localization.versions.empty?}", :remote=>true do %>
+                      <%= draw_icon 'random', :title=>t('lit.common.previous_versions', :default=>"Previous versions") %>
+                    <% end %>
+                  <% end %>
                 </td>
+              </tr>
+              <tr class="hidden localization_versions_row" data-id="<%= localization.id %>">
+                <td colspan="2" class="localization_versions"></td>
               </tr>
             <% end %>
           </table>

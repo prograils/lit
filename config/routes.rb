@@ -10,7 +10,11 @@ Lit::Engine.routes.draw do
     collection do
       get :starred
     end
-    resources :localizations
+    resources :localizations, :only=>[:edit, :update] do
+      member do
+        get :previous_versions
+      end
+    end
   end
 
   root :to=>"dashboard#index"

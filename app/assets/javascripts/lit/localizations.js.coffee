@@ -14,3 +14,8 @@ $(document).ready ->
     $this.html edited_rows[$this.data('id')]
     e.preventDefault()
     false
+  $('tr.localization_versions_row').on 'click', '.close_versions', (e)->
+    $this = $(this)
+    $parent = $this.parents('tr.localization_versions_row')
+    $parent.addClass('hidden')
+    $parent.children('td').html('')

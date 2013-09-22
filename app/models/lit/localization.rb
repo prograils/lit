@@ -9,18 +9,21 @@ module Lit
     ## ASSOCIATIONS
     belongs_to :locale
     belongs_to :localization_key
+    has_many :localization_versions, dependent: :destroy
+    has_many :versions, class_name: '::Lit::LocalizationVersion'
 
     ## VALIDATIONS
     validates :locale_id,
               :presence=>true
 
-    if ::Rails::VERSION::MAJOR<4
+    unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
       attr_accessible :translated_value, :locale_id
     end
 
     ## BEFORE & AFTER
     before_update :update_is_changed
+    before_update :create_version
     after_update :mark_localization_key_completed
 
     def to_s
@@ -42,6 +45,13 @@ module Lit
 
       def mark_localization_key_completed
         self.localization_key.mark_completed!
+      end
+
+      def create_version
+        if self.translated_value.present? and (not self.translated_value.nil?)
+          l = self.localization_versions.new
+          l.translated_value = self.translated_value_was || self.default_value
+        end
       end
   end
 end

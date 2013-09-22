@@ -31,3 +31,7 @@ li.key_prefix .icon-chevron-right {
   margin-right: -6px;
   opacity: .25;
 }
+
+.hidden{
+  display: none;
+}

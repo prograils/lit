@@ -16,6 +16,11 @@ module Lit
       respond_to :js
     end
 
+    def previous_versions
+      @versions = @localization.versions.order('created_at DESC')
+      respond_to :js
+    end
+
     private
       def find_localization_key
         @localization_key = Lit::LocalizationKey.find(params[:localization_key_id])
@@ -26,8 +31,8 @@ module Lit
       end
 
       def clear_params
-        if ::Rails::VERSION::MAJOR>=4
-          params[:localization].permit(:translated_value, :locale_id)
+        if defined?(::ActionController::StrongParameters)
+          params.require(:localization).permit(:translated_value, :locale_id)
         else
           params[:localization]
         end

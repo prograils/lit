@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130511111904) do
+ActiveRecord::Schema.define(:version => 20130921071304) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -47,6 +47,15 @@ ActiveRecord::Schema.define(:version => 20130511111904) do
   end
 
   add_index "lit_localization_keys", ["localization_key"], :name => "index_lit_localization_keys_on_localization_key", :unique => true
+
+  create_table "lit_localization_versions", :force => true do |t|
+    t.text     "translated_value"
+    t.integer  "localization_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "lit_localization_versions", ["localization_id"], :name => "index_lit_localization_versions_on_localization_id"
 
   create_table "lit_localizations", :force => true do |t|
     t.integer  "locale_id"
