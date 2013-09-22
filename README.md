@@ -8,6 +8,14 @@ It's still under heave development!
 
 Highly inspired by Copycopter by thoughtbot.
 
+### Features
+
+1. Runs with your app - no need for external services
+2. Support for array types, (ie. `date.abbr_day_names`)
+3. Versioning translations - you can always check, how value did look like in past
+4. Easy to install - works as an engine, comes with simple generator
+5. You can always export all translations to plain old YAML file
+
 ### Screenshots
 
 Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
@@ -33,7 +41,7 @@ You may want to take a look at generated initializer in `config/initializers/lit
 
 ### ToDo
 
-* Versioning 
+* ~~Versioning~~ 
 * API
 * Synchronization between environments
 * Rewrite initializer
