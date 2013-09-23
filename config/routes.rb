@@ -1,5 +1,17 @@
 Lit::Engine.routes.draw do
 
+  if Lit.api_enabled
+    namespace :api do
+      namespace :v1 do
+        get '/last_change' => 'localizations#last_change'
+        resources :locales, :only=>[:index]
+        resources :localization_keys, :only=>[:index]
+        resources :localizations, :only=>[:index] do
+          get 'last_change', :on=>:collection
+        end
+      end
+    end
+  end
   resources :locales, :only=>[:index, :destroy] do
     put :hide, :on=>:member
   end

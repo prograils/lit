@@ -21,6 +21,13 @@ Lit.humanize_key = false
 # (same key, different language)
 Lit.fallback = true
 
+# API enabled? API allows third party browsing your translations, as well as
+# synchronizing them between environments
+Lit.api_enabled = false
+
+# API key is required to authorize third party, if API is enabled
+Lit.api_key = "<%= @api_key %>"
+
 # Initialize lit
 Lit.init
 

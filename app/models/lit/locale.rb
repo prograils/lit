@@ -13,7 +13,7 @@ module Lit
               :presence=>true,
               :uniqueness=>true
 
-    if ::Rails::VERSION::MAJOR<4
+    unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
       attr_accessible :locale
     end

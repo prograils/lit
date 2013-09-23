@@ -7,6 +7,8 @@ module Lit
   mattr_accessor :storage_options
   mattr_accessor :humanize_key
   mattr_accessor :fallback
+  mattr_accessor :api_enabled
+  mattr_accessor :api_key
   class << self
     attr_accessor :loader
   end

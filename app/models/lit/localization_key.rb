@@ -7,6 +7,7 @@ module Lit
     scope :not_completed, proc{ where(:is_completed=>false) }
     scope :starred, proc{ where(:is_starred=>true) }
     scope :ordered, proc{ order('localization_key asc') }
+    scope :after, proc{|dt| where('updated_at >= ?', dt) }
 
     ## ASSOCIATIONS
     has_many :localizations, :dependent=>:destroy
@@ -16,7 +17,7 @@ module Lit
               :presence=>true,
               :uniqueness=>true
 
-    if ::Rails::VERSION::MAJOR<4
+    unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
       attr_accessible :localization_key
     end

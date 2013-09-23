@@ -39,6 +39,10 @@ module Lit
         end
       end
 
+      def generate_api_key
+        @api_key = SecureRandom.base64 32
+      end
+
       def add_lit_initializer
         path = "#{::Rails.root}/config/initializers/lit.rb"
         if File.exists?(path)
@@ -54,6 +58,10 @@ module Lit
           puts "Running rake db:migrate"
           `rake db:migrate`
         end
+      end
+
+      def clear_cache
+        Lit.init.cache.reset
       end
 
       def mount_engine

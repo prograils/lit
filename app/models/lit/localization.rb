@@ -5,6 +5,7 @@ module Lit
 
     ## SCOPES
     scope :changed, proc{ where(:is_changed=>true) }
+    scope :after, proc{|dt| where('updated_at >= ?', dt) }
 
     ## ASSOCIATIONS
     belongs_to :locale
@@ -36,6 +37,18 @@ module Lit
 
     def get_value
       (is_changed? && (not self.translated_value.nil?)) ? self.translated_value : self.default_value
+    end
+
+    def value
+      get_value
+    end
+
+    def localization_key_str
+      self.localization_key.localization_key
+    end
+
+    def locale_str
+      self.locale.locale
     end
 
     private
