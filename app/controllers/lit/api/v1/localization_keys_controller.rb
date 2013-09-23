@@ -9,6 +9,7 @@ module Lit
       else
         @localization_keys = @localization_keys.all
       end
+      render :json=>@localization_keys.as_json(:root=>false, :only=>[:id, :localization_key])
     end
   end
 end

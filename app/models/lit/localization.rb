@@ -51,6 +51,10 @@ module Lit
       self.locale.locale
     end
 
+    def last_change
+      self.updated_at.to_s(:db)
+    end
+
     private
       def update_is_changed
         self.is_changed = true unless is_changed?
