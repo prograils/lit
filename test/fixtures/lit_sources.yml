@@ -1,0 +1,10 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+test:
+  identifier: test
+  url: http://testhost.com/lit
+  api_key: test
+  last_updated_at: 2013-09-23 18:21:41
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+

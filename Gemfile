@@ -29,6 +29,7 @@ group :test do
   gem 'simple_form'
   gem 'ransack'
   gem 'kaminari'
+  gem "fakeweb", "~> 1.3", :require=>false
 end
 
 group :development, :test do

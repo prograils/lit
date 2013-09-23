@@ -1,0 +1,21 @@
+<h1>Listing sources</h1>
+
+<table class="table">
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sources.each do |source| %>
+  <tr>
+    <td><%= link_to 'Show', lit.source_path(source) %></td>
+    <td><%= link_to 'Edit', lit.edit_source_path(source) %></td>
+    <td><%= link_to 'Destroy', lit.source_path(source), :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Source', new_source_path %>

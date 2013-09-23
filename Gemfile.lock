@@ -68,6 +68,7 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    fakeweb (1.3.0)
     ffi (1.1.5)
     haml (3.1.7)
     hike (1.2.1)
@@ -164,6 +165,7 @@ DEPENDENCIES
   coffee-rails (>= 3.0.0)
   database_cleaner
   devise
+  fakeweb (~> 1.3)
   haml (>= 3.0.0)
   jquery-rails
   kaminari

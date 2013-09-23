@@ -28,6 +28,9 @@ Lit::Engine.routes.draw do
       end
     end
   end
+  resources :sources do
+
+  end
 
   root :to=>"dashboard#index"
 end
