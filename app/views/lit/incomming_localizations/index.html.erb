@@ -1,0 +1,47 @@
+<h1>Incomming localizations</h1>
+<div class="row">
+  <span class="pull-right">
+    <%= link_to accept_all_source_incomming_localizations_path(@source), :class=>"btn btn-success", :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+      <%= t('lit.common.accept_all', :default=>"Accept all") %>
+    <% end %>
+    <%= link_to reject_all_source_incomming_localizations_path(@source), :class=>"btn btn-danger", :method=>:post, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+      <%= t('lit.common.reject_all', :default=>"Reject all") %>
+    <% end %>
+  </span>
+</div>
+
+<table class="table table-bordered table-striped">
+  <tr>
+    <th>Current value</th>
+    <th>Imported value</th>
+    <th width="200px"></th>
+  </tr>
+  <% @incomming_localizations.each do |il| %>
+    <tr>
+      <td colspan="3">
+        <%= image_tag "lit/famfamfam_flags/#{il.locale_str[0,2]}.png" %>
+        <strong><%= il.full_key %></strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <% if il.localization %>
+          <%= render :partial=>"/lit/localization_keys/localization_row", :locals=>{:localization=>il.localization.get_value} %>
+        <% end %>
+      </td>
+      <Td>
+        <%= render :partial=>"/lit/localization_keys/localization_row", :locals=>{:localization=>il.get_value} %>
+      </td>
+      <td>
+        <%= link_to accept_source_incomming_localization_path(@source, il), :class=>"btn btn-success" do %>
+          <%= draw_icon "ok", :class=>"icon-white" %>
+          <%= t('lit.common.accept', :default=>"Accept") %>
+        <% end %>
+        <%= link_to source_incomming_localization_path(@source, il), :class=>"btn btn-danger", :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+          <%= draw_icon "remove", :class=>"icon-white" %>
+          <%= t('lit.common.reject', :default=>"Reject") %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>

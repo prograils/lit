@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  translated_value: MyText
+  locale: 
+  localization_key: 
+  locale_str: MyString
+  localization_key_str: MyString
+  source: 
+
+two:
+  translated_value: MyText
+  locale: 
+  localization_key: 
+  locale_str: MyString
+  localization_key_str: MyString
+  source: 

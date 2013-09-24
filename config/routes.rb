@@ -1,5 +1,6 @@
 Lit::Engine.routes.draw do
 
+
   if Lit.api_enabled
     namespace :api do
       namespace :v1 do
@@ -29,7 +30,18 @@ Lit::Engine.routes.draw do
     end
   end
   resources :sources do
-
+    member do
+      get :synchronize
+    end
+    resources :incomming_localizations, :only=>[:index, :destroy] do
+      member do
+        get :accept
+      end
+      collection do
+        get :accept_all
+        post :reject_all
+      end
+    end
   end
 
   root :to=>"dashboard#index"

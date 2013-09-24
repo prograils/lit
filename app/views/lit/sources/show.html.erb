@@ -10,7 +10,7 @@
 <%= @source.api_key %>
 <br/>
 <strong>Last updated at:</strong>
-<%= l @source.last_updated_at %>
+<%= @source.last_updated_at.to_s(:db) unless @source.last_updated_at.nil? %>
 <br/>
 
 

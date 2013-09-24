@@ -18,6 +18,12 @@ module Lit
       @source = Source.find(params[:id])
     end
 
+    def synchronize
+      @source = Source.find(params[:id])
+      @source.synchronize
+      redirect_to lit.source_incomming_localizations_path(@source)
+    end
+
     def create
       @source = Source.new(clear_params)
       if @source.save

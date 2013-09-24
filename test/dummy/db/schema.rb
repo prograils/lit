@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923162141) do
+ActiveRecord::Schema.define(:version => 20130924151910) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -30,6 +30,25 @@ ActiveRecord::Schema.define(:version => 20130923162141) do
 
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "lit_incomming_localizations", :force => true do |t|
+    t.text     "translated_value"
+    t.integer  "locale_id"
+    t.integer  "localization_key_id"
+    t.integer  "localization_id"
+    t.string   "locale_str"
+    t.string   "localization_key_str"
+    t.integer  "source_id"
+    t.integer  "incomming_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "lit_incomming_localizations", ["incomming_id"], :name => "index_lit_incomming_localizations_on_incomming_id"
+  add_index "lit_incomming_localizations", ["locale_id"], :name => "index_lit_incomming_localizations_on_locale_id"
+  add_index "lit_incomming_localizations", ["localization_id"], :name => "index_lit_incomming_localizations_on_localization_id"
+  add_index "lit_incomming_localizations", ["localization_key_id"], :name => "index_lit_incomming_localizations_on_localization_key_id"
+  add_index "lit_incomming_localizations", ["source_id"], :name => "index_lit_incomming_localizations_on_source_id"
 
   create_table "lit_locales", :force => true do |t|
     t.string   "locale"
