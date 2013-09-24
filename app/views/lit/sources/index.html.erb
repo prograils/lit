@@ -2,16 +2,20 @@
 
 <table class="table">
   <tr>
-    <th></th>
-    <th></th>
+    <th>Identifier</th>
+    <th>Last updated at</th>
     <th></th>
   </tr>
 
 <% @sources.each do |source| %>
   <tr>
-    <td><%= link_to 'Show', lit.source_path(source) %></td>
-    <td><%= link_to 'Edit', lit.edit_source_path(source) %></td>
-    <td><%= link_to 'Destroy', lit.source_path(source), :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>
+    <td><%= source.identifier %></td>
+    <td><%= l(source.last_updated_at) unless source.last_updated_at.nil? %></td>
+    <td>
+      <%= link_to 'Show', lit.source_path(source) %>
+    <%= link_to 'Edit', lit.edit_source_path(source) %>
+    <%= link_to 'Destroy', lit.source_path(source), :method => :delete, :data => { :confirm => 'Are you sure?' } %>
+    </td>
   </tr>
 <% end %>
 </table>

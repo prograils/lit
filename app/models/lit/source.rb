@@ -22,9 +22,17 @@ module Lit
     private
       def check_if_url_is_valid
         if self.errors.empty? && (self.new_record? || self.url_changed?)
-          uri = URI(self.url+LAST_CHANGE_PATH)
-          res = Net::HTTP.get_response(uri)
-          self.errors.add(:url, "is not accessible") unless res.is_a?(Net::HTTPSuccess)
+          begin
+            uri = URI(self.url+LAST_CHANGE_PATH)
+            req = Net::HTTP::Get.new(uri.path)
+            req.add_field("Authorization", %(Token token="#{self.api_key}"))
+            res = Net::HTTP.new(uri.host, uri.port).start do |http|
+              http.request(req)
+            end
+            self.errors.add(:url, "is not accessible") unless res.is_a?(Net::HTTPSuccess)
+          rescue
+            self.errors.add(:url, "is not accessible")
+          end
         end
       end
   end

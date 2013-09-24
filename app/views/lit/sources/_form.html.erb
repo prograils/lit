@@ -10,6 +10,24 @@
       </ul>
     </div>
   <% end %>
+  <div class="control-group">
+    <%= f.label :identifier, :class=>"control-label" %>
+    <div class="controls">
+      <%= f.text_field :identifier %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :url, :class=>"control-label" %>
+    <div class="controls">
+      <%= f.text_field :url, :placeholder=>"http://your_other_env.host/lit" %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :api_key, :class=>"control-label" %>
+    <div class="controls">
+      <%= f.text_field :api_key %>
+    </div>
+  </div>
 
   <div class="actions">
     <%= f.submit t('lit.common.save'), :class=>"btn" %>

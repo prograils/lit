@@ -10,6 +10,8 @@ module Lit
         private
           def authenticate_requests!
             authenticate_or_request_with_http_token do |token, options|
+              puts "token: #{token}"
+
               Lit.api_key == token
             end
           end
