@@ -5,7 +5,8 @@ module Lit
 
     ## SCOPES
     scope :changed, proc{ where(:is_changed=>true) }
-    scope :after, proc{|dt| where('updated_at >= ?', dt) }
+    # @HACK: dirty, find a way to round date to full second
+    scope :after, proc{|dt| where('updated_at >= ?', dt+1.second) }
 
     ## ASSOCIATIONS
     belongs_to :locale
