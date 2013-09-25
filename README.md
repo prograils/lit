@@ -4,7 +4,6 @@
 Translate your apps with pleasure (sort of...) and for free. It's simple i18n 
 web interface, build on top of twitter bootstrap, that one may find helpful in 
 translating app by non-technicals. 
-It's still under heave development!
 
 Highly inspired by Copycopter by thoughtbot.
 
@@ -13,8 +12,9 @@ Highly inspired by Copycopter by thoughtbot.
 1. Runs with your app - no need for external services
 2. Support for array types, (ie. `date.abbr_day_names`)
 3. Versioning translations - you can always check, how value did look like in past
-4. Easy to install - works as an engine, comes with simple generator
-5. You can always export all translations to plain old YAML file
+4. Possibility to synchronize between environments or even apps
+5. Easy to install - works as an engine, comes with simple generator
+6. You can always export all translations to plain old YAML file
 
 ### Screenshots
 
@@ -42,8 +42,8 @@ You may want to take a look at generated initializer in `config/initializers/lit
 ### ToDo
 
 * ~~Versioning~~ 
-* API
-* Synchronization between environments
+* ~~API~~
+* ~~Synchronization between environments~~
 * Rewrite initializer
 * Rewrite exporter (which is now code from copycopter)
 * ~~Support for array types (ie. `date.abbr_day_names`)~~

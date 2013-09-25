@@ -1,3 +1,3 @@
 module Lit
-  VERSION = "0.0.4.3"
+  VERSION = "0.1.0.0"
 end
