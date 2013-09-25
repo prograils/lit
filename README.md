@@ -20,7 +20,7 @@ Highly inspired by Copycopter by thoughtbot.
 
 Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
 
-### Instalation
+### Installation
 
 1. Add `lit` gem to your `Gemfile`
 ```ruby
