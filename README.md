@@ -30,6 +30,7 @@ gem "lit"
 2. run `bundle install`
 
 3. run installation generator `bundle exec rails g lit:install`
+  (for production/staging environment `redis` is suggested as key value engine. `hash` will not work in multi process environment)
 
 4. After doing above and restarting app, point your browser to ```http://app/lit```
 
