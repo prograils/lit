@@ -16,7 +16,7 @@
         </div>
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
-            <%- I18n.backend.available_locales.each do |locale| %>
+            <%- I18n.available_locales.each do |locale| %>
               <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
               <tr>
                 <% unless localization %>
