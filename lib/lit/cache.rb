@@ -196,7 +196,7 @@ module Lit
           when String then
             new_value = v
           when Proc then
-            new_value = v.call
+            new_value = nil # was v.call - requires more love
           else
             new_value = v.to_s
         end
