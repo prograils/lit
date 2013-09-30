@@ -1,9 +1,9 @@
 # Lost in translation
 ### Rails i18n web interface
 
-Translate your apps with pleasure (sort of...) and for free. It's simple i18n 
-web interface, build on top of twitter bootstrap, that one may find helpful in 
-translating app by non-technicals. 
+Translate your apps with pleasure (sort of...) and for free. It's simple i18n
+web interface, build on top of twitter bootstrap, that one may find helpful in
+translating app by non-technicals.
 
 Highly inspired by Copycopter by thoughtbot.
 
@@ -42,7 +42,7 @@ You may want to take a look at generated initializer in `config/initializers/lit
 
 ### ToDo
 
-* ~~Versioning~~ 
+* ~~Versioning~~
 * ~~API~~
 * ~~Synchronization between environments~~
 * Rewrite initializer
@@ -53,6 +53,7 @@ You may want to take a look at generated initializer in `config/initializers/lit
 * Better cache
 * ~~Support for other key value providers (ie. Redis does not support Array types in easy way)~~ (not applicable, as array storage works now with redis).
 * Integration with ActiveAdmin
+* Support for Proc defaults (like in `I18n.t("not_exising_keys", :default=> lambda{|_, options| "text"})` )
 
 
 ### License
