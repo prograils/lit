@@ -59,13 +59,13 @@ module Lit
         end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
-        @cache[key] = data
+        @cache[key] ||= data
       end
     end
 
     def load_translations(*filenames)
-      super
       @cache.load_all_translations
+      super
     end
 
     def default(locale, object, subject, options = {})
