@@ -4,6 +4,8 @@ module Lit
   class I18nBackend
     include I18n::Backend::Simple::Implementation
 
+    attr_reader :cache
+
     def initialize(cache)
       @cache = cache
     end
@@ -39,6 +41,8 @@ module Lit
 
       ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
+      return content if parts.size <= 1
+
       newly_created = false
       unless @cache.has_key?(key_with_locale)
         @cache.init_key_with_value(key_with_locale, content)
@@ -60,6 +64,9 @@ module Lit
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
         @cache[key] ||= data
+      elsif data.nil?
+        key = ([locale] + scope).join('.')
+        @cache.delete_locale(key)
       end
     end
 
@@ -72,12 +79,13 @@ module Lit
       content = super(locale, object, subject, options)
       if content.respond_to?(:to_str)
         parts = I18n.normalize_keys(locale, object, options[:scope], options[:separator])
-        key = parts.join('.')
-        @cache[key] = content
+        if parts.size > 1
+          key = parts.join('.')
+          @cache[key] = content
+        end
       end
       content
     end
 
-    attr_reader :cache
   end
 end
