@@ -15,6 +15,7 @@ Highly inspired by Copycopter by thoughtbot.
 4. Possibility to synchronize between environments or even apps
 5. Easy to install - works as an engine, comes with simple generator
 6. You can always export all translations to plain old YAML file
+7. Has build in wysiwyg editor ([jQuery TE](http://jqueryte.com/))
 
 ### Screenshots
 
@@ -49,7 +50,7 @@ You may want to take a look at generated initializer in `config/initializers/lit
 * Rewrite exporter (which is now code from copycopter)
 * ~~Support for array types (ie. `date.abbr_day_names`)~~
 * ~~Generator~~
-* Support for wysiwyg
+* ~~Support for wysiwyg~~
 * Better cache
 * ~~Support for other key value providers (ie. Redis does not support Array types in easy way)~~ (not applicable, as array storage works now with redis).
 * Integration with ActiveAdmin
