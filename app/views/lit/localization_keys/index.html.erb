@@ -1,4 +1,5 @@
 <h3><%= t('.header', :default=>"Localization keys") %></h3>
+<% available_locales = I18n.backend.available_locales %>
 
 <table class="table">
   <%- @localization_keys.each do |lk| %>
@@ -16,13 +17,9 @@
         </div>
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
-            <%- I18n.backend.available_locales.each do |locale| %>
-              <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
+            <%- available_locales.each do |locale| %>
+              <%- localization = localization_for(locale, lk) %>
               <tr>
-                <% unless localization %>
-                  <% Lit.init.cache.refresh_key("#{locale}.#{lk.localization_key}") %>
-                  <%- localization = lk.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first %>
-                <% end %>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="">
                   <%= render :partial=>"localization_row", :locals=>{:localization=>Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
                 </td>
@@ -30,7 +27,7 @@
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
                   <%= locale %>
                   <% if localization %>
-                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization), :class=>"show_prev_versions #{'hidden' if localization.versions.empty?}", :remote=>true do %>
+                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization), :class=>"show_prev_versions #{'hidden' unless has_versions?(localization)}", :remote=>true do %>
                       <%= draw_icon 'random', :title=>t('lit.common.previous_versions', :default=>"Previous versions") %>
                     <% end %>
                   <% end %>
