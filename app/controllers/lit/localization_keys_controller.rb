@@ -26,7 +26,7 @@ module Lit
     def destroy
       @localization_key = LocalizationKey.find params[:id].to_i
       @localization_key.destroy
-      I18n.backend.available_locales.each do |l|
+      I18n.available_locales.each do |l|
         Lit.init.cache.delete_key "#{l}.#{@localization_key.localization_key}"
       end
       respond_to :js
