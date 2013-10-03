@@ -5,6 +5,8 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rails/test_help"
 require 'capybara/rails'
 require 'database_cleaner'
+require 'test_declarative'
+require 'mocha/setup'
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -20,12 +22,23 @@ end
 # from. We hence use DatabaseCleaner to truncate our test database.
 DatabaseCleaner.strategy = :truncation
 
+class ActiveSupport::TestCase
+  setup do
+    Redis.new.flushall
+    Lit.init.cache.reset
+  end
+end
+
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
 
   # Stop ActiveRecord from wrapping tests in transactions
   self.use_transactional_fixtures = false
+
+  setup do
+    I18n.backend.reload!
+  end
 
   teardown do
     DatabaseCleaner.clean       # Truncate the database

@@ -3,8 +3,6 @@ require 'test_helper'
 module Lit
   class Api::V1::LocalizationsControllerTest < ActionController::TestCase
     def setup
-      Redis.new.flushall
-      Lit.init.cache.reset
       Lit.api_enabled = true
       Lit.api_key = "test"
       Lit::Engine.routes.clear!

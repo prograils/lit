@@ -1,3 +1,21 @@
+module I18n
+  class << self
+    @@cache_store = nil
+
+    def cache_store
+      @@cache_store || I18n.backend.cache
+    end
+
+    def cache_store=(store)
+      @@cache_store = store
+    end
+
+    def perform_caching?
+      !cache_store.nil?
+    end
+  end
+end
+
 module Lit
   class Cache
 
@@ -42,6 +60,13 @@ module Lit
       @localizations[key] = localization.get_value if localization
     end
 
+    def delete_locale(key)
+      key = key.to_s
+      locale_key, key_without_locale = split_key(key)
+      locale = find_locale(locale_key)
+      delete_localization(locale, key_without_locale)
+    end
+
     def load_all_translations(oninit=false)
       doinit = false
       first = Localization.order('id ASC').first
@@ -82,6 +107,8 @@ module Lit
       @localization_keys.clear
       load_all_translations
     end
+
+    alias_method :clear, :reset
 
     def find_locale(locale_key)
       locale_key = locale_key.to_s
@@ -178,6 +205,15 @@ module Lit
         end
       end
 
+      def delete_localization(locale, key_without_locale)
+        localization = find_localization(locale, key_without_locale)
+        if localization.persisted?
+          @localizations.delete("#{locale.locale}.#{key_without_locale}")
+          @localization_keys.delete(key_without_locale)
+          localization.destroy # or localization.default_value = nil; localization.save!
+        end
+      end
+
       ## checks parameter type and returns value basing on it
       ## symbols are beeing looked up in db
       ## string are returned directly
@@ -213,10 +249,7 @@ module Lit
       end
 
       def split_key(key)
-        key_split = key.split('.')
-        locale_key = key_split.first
-        key_without_locale = key_split[1..-1].join('.')
-        [locale_key, key_without_locale]
+        key.split('.', 2)
       end
 
       def find_or_create_localization_key(key_without_locale)
