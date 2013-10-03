@@ -4,17 +4,11 @@ require 'test_helper'
 class WelcomeTest < ActionDispatch::IntegrationTest
 
   test "should properly display 'Hello world' in english" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     visit('/en/welcome')
     assert page.has_content?('Hello World')
   end
 
   test "should properly display text without default and humnize=false" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/en/welcome')
@@ -24,9 +18,6 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   end
 
   test "should properly display text without default and humnize=true" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     Lit.humanize_key = true
     Lit.fallback = false
     visit('/en/welcome')
@@ -36,9 +27,6 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   end
 
   test "should properly display text with default" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     visit('/en/welcome')
     assert page.has_content?('Default content')
     visit('/pl/welcome')
@@ -46,18 +34,11 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   end
 
   test "should properly display saturday abbr in polish" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     visit('/pl/welcome')
     assert page.has_content?('Sob')
   end
 
   test "should use interpolation instead of default value" do
-    Lit.fallback = false
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/pl/welcome')
@@ -67,17 +48,11 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   end
 
   test "should properly display 'Hello world' in polish" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     visit('/pl/welcome')
     assert page.has_content?('Witaj świecie')
   end
 
   test "should properly display 'Hello world' in polish after change" do
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     visit('/pl/welcome')
     locale = Lit::Locale.find_by_locale!('pl')
     localization_key = Lit::LocalizationKey.find_by_localization_key!('scope.hello_world')
@@ -95,10 +70,6 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   end
 
   test "should not fallback if not asked to" do
-    Lit.fallback = false
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/en/welcome')
@@ -109,9 +80,6 @@ class WelcomeTest < ActionDispatch::IntegrationTest
 
   test "should properly fallback" do
     Lit.fallback = true
-    Redis.new.flushall
-    Lit.init.cache.reset
-    I18n.backend.reload!
     visit('/en/welcome')
     assert page.has_content?('English translation')
     visit('/pl/welcome')
