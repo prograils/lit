@@ -52,8 +52,24 @@ module Lit
       mark_completed!
     end
 
+    def self.order_options
+      ["localization_key asc", "localization_key desc", "created_at asc", "created_at desc"]
+    end
+
+    # it can be overridden in parent application, for example: {:order => "created_at desc"}
+    def self.default_search_options
+      {}
+    end
+
     def self.search(options={})
-      s = scoped.ordered
+      options = options.reverse_merge(default_search_options)
+      s = self
+      if options[:order] && order_options.include?(options[:order])
+        column, order = options[:order].split(" ")
+        s = s.order("#{Lit::LocalizationKey.quoted_table_name}.#{connection.quote_column_name(column)} #{order}" )
+      else
+        s = s.ordered
+      end
       if options[:key_prefix].present?
         q = "#{options[:key_prefix]}%"
         s = s.where('lit_localization_keys.localization_key like ?', q)

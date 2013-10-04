@@ -41,7 +41,7 @@ module Lit
 
       def get_localization_keys
         key_parts = @search_options[:key_prefix].to_s.split('.').length
-        @prefixes = @scope.uniq.pluck(:localization_key).map{|lk| lk.split('.').shift(key_parts+1).join('.') }.uniq.sort
+        @prefixes = @scope.reorder(nil).uniq.pluck(:localization_key).map{|lk| lk.split('.').shift(key_parts+1).join('.') }.uniq.sort
         if @search_options[:key_prefix].present?
           parts = @search_options[:key_prefix].split('.')
           @parent_prefix = parts[0,parts.length-1].join('.')
@@ -54,7 +54,7 @@ module Lit
       end
 
       def valid_keys
-        %w( key include_completed key_prefix )
+        %w( key include_completed key_prefix order )
       end
 
       def grouped_localizations
