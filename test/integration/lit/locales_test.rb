@@ -5,8 +5,6 @@ class LocalesTest < ActionDispatch::IntegrationTest
 
   test "should allow hiding locale" do
     Lit.authentication_function = nil
-    Redis.new.flushall
-    Lit.init.cache.reset
     visit('/pl/welcome')
     visit('/lit/localization_keys')
     #within('td.locale_row:last-child') do
