@@ -3,8 +3,8 @@ require 'fakeweb'
 
 module Lit
   class SourcesControllerTest < ActionController::TestCase
-    fixtures :lit_sources
-    set_fixture_class :lit_sources => Lit::Source
+    fixtures "lit/sources"
+
     setup do
       Lit.authentication_function = nil
       @routes = Lit::Engine.routes
