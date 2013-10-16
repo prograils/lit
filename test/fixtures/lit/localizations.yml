@@ -1,17 +1,23 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  locale: 
-  localization_key: 
-  translated_value: MyText
-  default_value: MyText
+string:
+  locale: en
+  localization_key: array
+  translated_value: value
+  default_value: value
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
-two:
-  locale: 
-  localization_key: 
-  translated_value: MyText
-  default_value: MyText
+array:
+  locale: en
+  localization_key: array
+  translated_value:
+    - one
+    - two
+    - three
+  default_value:
+    - one
+    - two
+    - three
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

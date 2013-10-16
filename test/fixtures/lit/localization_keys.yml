@@ -1,0 +1,14 @@
+hello_world:
+  localization_key: 'scopes.hello_world'
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+array:
+  localization_key: 'scopes.array'
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+string:
+  localization_key: 'scopes.string'
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

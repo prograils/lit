@@ -3,7 +3,7 @@ require 'fakeweb'
 
 module Lit
   class IncommingLocalizationsControllerTest < ActionController::TestCase
-    fixtures :lit_sources
+    fixtures "lit/sources"
     set_fixture_class :lit_sources => Lit::Source
     def setup
       Lit.authentication_function = nil

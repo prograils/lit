@@ -1,5 +1,0 @@
-hello_world:
-  localization_key: 'scopes.hello_world'
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
-
