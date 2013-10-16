@@ -70,13 +70,21 @@ module Lit
       else
         s = s.ordered
       end
+      localization_key_col = Lit::LocalizationKey.arel_table[:localization_key]
+      default_value_col = Lit::Localization.arel_table[:default_value]
+      translated_value_col = Lit::Localization.arel_table[:translated_value]
       if options[:key_prefix].present?
         q = "#{options[:key_prefix]}%"
-        s = s.where('lit_localization_keys.localization_key like ?', q)
+        s = s.where(localization_key_col.matches(q))
       end
       if options[:key].present?
         q = "%#{options[:key]}%"
-        s = s.joins([:localizations]).where('lit_localization_keys.localization_key like ? or lit_localizations.default_value like ? or lit_localizations.translated_value like ?', q, q, q)
+        cond = localization_key_col.matches(q).or(
+            default_value_col.matches(q).or(
+                translated_value_col.matches(q)
+            )
+        )
+        s = s.joins([:localizations]).where(cond)
       end
       if not options[:include_completed].to_i==1
         s = s.not_completed
