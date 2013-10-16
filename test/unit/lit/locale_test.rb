@@ -2,8 +2,8 @@ require 'test_helper'
 
 module Lit
   class LocaleTest < ActiveSupport::TestCase
-    fixtures :lit_locales
-    set_fixture_class :lit_locales => Lit::Locale
+    fixtures 'lit/locales'
+
     test "uniqueness checking" do
       l = lit_locales(:pl)
       locale = Lit::Locale.new({:locale=>l.locale})
