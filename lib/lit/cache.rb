@@ -231,6 +231,8 @@ module Lit
             end
           when String then
             new_value = v
+          when Hash then
+            new_value = nil
           when Proc then
             new_value = nil # was v.call - requires more love
           else
