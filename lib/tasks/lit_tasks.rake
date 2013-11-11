@@ -1,8 +1,5 @@
-# desc "Explaining what the task does"
-# task :lit do
-#   # Task goes here
-# end
 namespace :lit do
+  desc "Exports translated strings from lit to config/locales/lit.yml file."
   task :export => :environment do
     if yml = Lit.init.cache.export
       PATH = "config/locales/lit.yml"
