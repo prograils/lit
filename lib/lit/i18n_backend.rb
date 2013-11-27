@@ -75,17 +75,5 @@ module Lit
       super
     end
 
-    def default(locale, object, subject, options = {})
-      content = super(locale, object, subject, options)
-      if content.respond_to?(:to_str)
-        parts = I18n.normalize_keys(locale, object, options[:scope], options[:separator])
-        if parts.size > 1
-          key = parts.join('.')
-          @cache[key] = content
-        end
-      end
-      content
-    end
-
   end
 end
