@@ -66,7 +66,7 @@ module Lit
       end
 
       def create_version
-        if self.translated_value.present? and (not self.translated_value.nil?)
+        if self.translated_value.present?
           l = self.localization_versions.new
           l.translated_value = self.translated_value_was || self.default_value
         end
