@@ -15,7 +15,7 @@ module Lit
     ## VALIDATIONS
     validates :localization_key,
               :presence=>true,
-              :uniqueness=>true
+              :uniqueness=>{:if=>:localization_key_changed?}
 
     unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
