@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PureI18nCompatibilityExtendedTest < ActiveSupport::TestCase
+class LitBehaviourTest < ActiveSupport::TestCase
   class Backend < Lit::I18nBackend
   end
 
@@ -26,6 +26,18 @@ class PureI18nCompatibilityExtendedTest < ActiveSupport::TestCase
     super
   end
 
+  test "translating the same not existing key twice should not set Lit::Localizaiton#is_changed to true" do
+    key = 'not_existing_translation'
+
+    assert_equal nil, find_localization_for(key, 'en')
+
+    assert_equal "translation missing: en.#{key}", I18n.t(key)
+    assert_equal false, find_localization_for(key, 'en').is_changed?
+
+    assert_equal "translation missing: en.#{key}", I18n.t(key)
+    assert_equal false, find_localization_for(key, 'en').is_changed?
+  end
+
   test "translations with scope, default and interpolation should use interpolation every time" do
     I18n.backend.store_translations(:en, :'scope.foo' => 'foo %{bar}')
 
@@ -35,6 +47,15 @@ class PureI18nCompatibilityExtendedTest < ActiveSupport::TestCase
     I18n.backend.store_translations(:en, :'next_scope.foo' => 'foo %{bar}')
     assert_equal 'foo bar',     I18n.t(:blank, :scope => :next_scope, :default => :foo, :bar => "bar")
     assert_equal 'foo bar bis', I18n.t(:blank, :scope => :next_scope, :default => :foo, :bar => "bar bis")
+  end
+
+  private
+
+  def find_localization_for(key, locale)
+    Lit::Localization.
+        joins(:localization_key, :locale).
+        where(:lit_localization_keys => { :localization_key => key }).
+        where(:lit_locales => { :locale => locale }).first
   end
 
 end
