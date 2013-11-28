@@ -123,27 +123,36 @@ module Lit
 
     # this comes directly from copycopter.
     def export
-      keys = {}
       reset
+      localizations_scope = Lit::Localization
+      unless ENV['LOCALES'].blank?
+        locale_keys = ENV['LOCALES'].to_s.split(',') || []
+        locale_ids = Lit::Locale.where(locale: locale_keys).pluck(:id)
+        localizations_scope = localizations_scope.where(locale_id: locale_ids) unless locale_ids.empty?
+      end
       db_localizations = {}
-      Lit::Localization.find_each do |l|
+      localizations_scope.find_each do |l|
         db_localizations[l.full_key] = l.get_value
       end
-      db_localizations.sort.each do |(l_key, value)|
-        current = keys
-        yaml_keys = l_key.split('.')
-
-        0.upto(yaml_keys.size - 2) do |i|
-          key = yaml_keys[i]
-          # Overwrite en.key with en.sub.key
-          unless current[key].class == Hash
-            current[key] = {}
-          end
-          current = current[key]
-        end
-        current[yaml_keys.last] = value
-      end
+      keys = nested_string_keys_to_hash(db_localizations)
       keys.to_yaml
+    end
+
+    def nested_string_keys_to_hash(db_localizations)
+      # http://subtech.g.hatena.ne.jp/cho45/20061122
+      deep_proc = Proc.new { |k, s, o|
+        if s.kind_of?(Hash) && o.kind_of?(Hash)
+          next s.merge(o, &deep_proc)
+        end
+        next o
+      }
+      keys = {}
+      db_localizations.sort.each do |k,v|
+        key_parts = k.to_s.split('.')
+        converted = key_parts.reverse.inject(v) { |a, n| { n => a } }
+        keys.merge!(converted, &deep_proc)
+      end
+      keys
     end
 
     def get_global_hits_counter(key)
