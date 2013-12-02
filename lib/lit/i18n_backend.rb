@@ -43,14 +43,26 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      newly_created = false
       unless @cache.has_key?(key_with_locale)
-        @cache.init_key_with_value(key_with_locale, content)
-        newly_created = true
-      end
-      if content.nil? || (newly_created && options[:default].present?)
-        @cache[key_with_locale] = options[:default]
-        content = @cache[key_with_locale]
+        new_content = @cache.init_key_with_value(key_with_locale, content)
+        content = new_content if content.nil? # Content can change when Lit.humanize is true for example
+
+        if content.nil? && options[:default].present?
+          if options[:default].is_a?(Array)
+            default = options[:default].map do |key|
+              if key.is_a?(Symbol)
+                I18n.normalize_keys(nil, key.to_s, options[:scope], options[:separator]).join('.').to_sym
+              else
+                key
+              end
+            end
+          else
+            default = options[:default]
+          end
+
+          @cache[key_with_locale] = default
+          content = @cache[key_with_locale]
+        end
       end
       ## return translated content
       content

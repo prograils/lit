@@ -58,6 +58,12 @@ module Lit
       self.updated_at.to_s(:db)
     end
 
+    def update_default_value(value)
+      return true if persisted? && default_value == value
+      self.default_value = value
+      self.save!
+    end
+
     private
       def update_is_changed
         unless is_changed?

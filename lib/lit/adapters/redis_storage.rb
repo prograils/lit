@@ -13,26 +13,32 @@ module Lit
     def [](key)
       if Lit.redis.exists(_prefixed_key_for_array(key))
         Lit.redis.lrange(_prefixed_key(key), 0, -1)
+      elsif Lit.redis.exists(_prefixed_key_for_nil(key))
+        nil
       else
         Lit.redis.get(_prefixed_key(key))
       end
     end
 
     def []=(k, v)
+
+      delete(k)
       if v.is_a?(Array)
-        delete(k)
         Lit.redis.set(_prefixed_key_for_array(k), "1")
         v.each do |ve|
           Lit.redis.rpush(_prefixed_key(k), ve.to_s)
         end
+      elsif v.nil?
+        Lit.redis.set(_prefixed_key_for_nil(k), "1")
+        Lit.redis.set(_prefixed_key(k), "")
       else
-        Lit.redis.del(_prefixed_key_for_array(k))
-        Lit.redis.set(_prefixed_key(k), v) unless v.nil?
+        Lit.redis.set(_prefixed_key(k), v)
       end
     end
 
     def delete(k)
       Lit.redis.del(_prefixed_key_for_array(k))
+      Lit.redis.del(_prefixed_key_for_nil(k))
       Lit.redis.del(_prefixed_key(k))
     end
 
@@ -71,6 +77,9 @@ module Lit
       end
       def _prefixed_key_for_array(key="")
         _prefix+"array_flags:"+key.to_s
+      end
+      def _prefixed_key_for_nil(key="")
+        _prefix+"nil_flags:"+key.to_s
       end
   end
 end

@@ -205,8 +205,7 @@ module Lit
               value = key_without_locale.split('.').last.humanize if value.nil? &&
                                                                     Lit.humanize_key
             end
-            localization.default_value = value
-            localization.save!
+            localization.update_default_value(value)
           end
           return localization
         else
@@ -214,9 +213,16 @@ module Lit
         end
       end
 
+      def find_localization_for_delete(locale, key_without_locale)
+        localization_key = find_localization_key_for_delete(key_without_locale)
+        return nil unless localization_key
+        Lit::Localization.where(:locale_id=>locale.id).
+            where(:localization_key_id=>localization_key.id).first
+      end
+
       def delete_localization(locale, key_without_locale)
-        localization = find_localization(locale, key_without_locale)
-        if localization.persisted?
+        localization = find_localization_for_delete(locale, key_without_locale)
+        if localization
           @localizations.delete("#{locale.locale}.#{key_without_locale}")
           @localization_keys.delete(key_without_locale)
           localization.destroy # or localization.default_value = nil; localization.save!
@@ -257,6 +263,12 @@ module Lit
         else
           Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) || find_or_create_localization_key(key_without_locale)
         end
+      end
+
+      def find_localization_key_for_delete(key_without_locale)
+        @localization_keys ||= Lit.get_key_value_engine
+        lk = Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) if @localization_keys.has_key?(key_without_locale)
+        lk || Lit::LocalizationKey.where(:localization_key=>key_without_locale).first
       end
 
       def split_key(key)
