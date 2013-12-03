@@ -67,16 +67,12 @@ module Lit
       delete_localization(locale, key_without_locale)
     end
 
-    def load_all_translations(oninit=false)
-      doinit = false
+    def load_all_translations
       first = Localization.order('id ASC').first
       last = Localization.order('id DESC').first
       if not first or not last or (not @localizations.has_key?(first.full_key) or
         not @localizations.has_key?(last.full_key))
-        doinit = true
-      end
 
-      if oninit==false || doinit==true
         Localization.includes([:locale, :localization_key]).find_each do |l|
           @localizations[l.full_key] = l.get_value
         end
