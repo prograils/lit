@@ -8,7 +8,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Hello World')
   end
 
-  test "should properly display text without default and humnize=false" do
+  test "should properly display text without default and humanize=false" do
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/en/welcome')
@@ -17,7 +17,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Text Without Default')
   end
 
-  test "should properly display text without default and humnize=true" do
+  test "should properly display text without default and humanize=true" do
     Lit.humanize_key = true
     Lit.fallback = false
     visit('/en/welcome')
