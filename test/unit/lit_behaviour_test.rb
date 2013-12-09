@@ -26,6 +26,20 @@ class LitBehaviourTest < ActiveSupport::TestCase
     super
   end
 
+  test "returned strings must not be html_safe if all_translations_are_html_safe is false" do
+    with_all_translations_are_html_safe false do
+      I18n.backend.store_translations(:en, :'foo' => 'foo')
+      assert_equal false, I18n.t('foo').html_safe?
+    end
+  end
+
+  test "returned strings must be html_safe if all_translations_are_html_safe is true" do
+    with_all_translations_are_html_safe true do
+      I18n.backend.store_translations(:en, :'foo' => 'foo')
+      assert I18n.t('foo').html_safe?
+    end
+  end
+
   test "translating the same not existing key twice should not set Lit::Localizaiton#is_changed to true" do
     key = 'not_existing_translation'
 
@@ -63,6 +77,14 @@ class LitBehaviourTest < ActiveSupport::TestCase
         joins(:localization_key, :locale).
         where(:lit_localization_keys => { :localization_key => key }).
         where(:lit_locales => { :locale => locale }).first
+  end
+
+  def with_all_translations_are_html_safe(value)
+    previous = Lit.all_translations_are_html_safe
+    Lit.all_translations_are_html_safe = value
+    yield
+  ensure
+    Lit.all_translations_are_html_safe = previous
   end
 
 end

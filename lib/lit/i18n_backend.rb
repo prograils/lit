@@ -12,7 +12,7 @@ module Lit
 
     def translate(locale, key, options = {})
       content = super(locale, key, options.merge(:fallback => true))
-      if content.respond_to?(:html_safe)
+      if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
       else
         content
