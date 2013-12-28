@@ -1,4 +1,3 @@
-require 'bootstrap-sass'
 module Lit
   class Engine < ::Rails::Engine
     isolate_namespace Lit
