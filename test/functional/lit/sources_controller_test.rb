@@ -3,8 +3,8 @@ require 'fakeweb'
 
 module Lit
   class SourcesControllerTest < ActionController::TestCase
-    fixtures :lit_sources
-    set_fixture_class :lit_sources => Lit::Source
+    fixtures "lit/sources"
+
     setup do
       Lit.authentication_function = nil
       @routes = Lit::Engine.routes
@@ -44,7 +44,7 @@ module Lit
       put :update, :id => @source, :source => { :identifier=>"test2" }
       assert_redirected_to source_path(assigns(:source))
       @source.reload
-      assert "test2", @source.identifier
+      assert_equal "test2", @source.identifier
     end
 
     test "should destroy source" do

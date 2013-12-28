@@ -32,9 +32,11 @@ module Lit
 
       def clear_params
         if defined?(::ActionController::StrongParameters)
-          params.require(:localization).permit(:translated_value, :locale_id)
+          clear_params = params.require(:localization).permit(:translated_value, :locale_id)
+          clear_params.merge! params.require(:localization).permit(:translated_value => []) # allow translated_value to be an array
+          clear_params
         else
-          params[:localization]
+          params[:localization].is_a?(Hash) ? params[:localization].slice(:translated_value, :locale_id) : {}
         end
       end
   end

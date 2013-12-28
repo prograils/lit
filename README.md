@@ -47,7 +47,7 @@ You may want to take a look at generated initializer in `config/initializers/lit
 * ~~API~~
 * ~~Synchronization between environments~~
 * Rewrite initializer
-* Rewrite exporter (which is now code from copycopter)
+* ~~Rewrite exporter (which is now code from copycopter)~~
 * ~~Support for array types (ie. `date.abbr_day_names`)~~
 * ~~Generator~~
 * ~~Support for wysiwyg~~

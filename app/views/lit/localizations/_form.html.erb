@@ -8,10 +8,12 @@
     </ul>
   <% else %>
     <%= f.text_area :translated_value, :size=>"40x2", :class=>"input-xxlarge" %>
-    <br />
-    <label>
-      <input type="checkbox" class="wysiwyg_switch" /> use wysiwyg editor
-    </label>
+    <% if allow_wysiwyg_editor?(@localization_key.localization_key) %>
+      <br />
+      <label>
+        <input type="checkbox" class="wysiwyg_switch" /> use wysiwyg editor
+      </label>
+    <% end %>
   <% end %>
 
   <button class="btn" type="submit"><%= t('lit.common.update', :default=>"Update") %></button>

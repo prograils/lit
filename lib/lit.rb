@@ -9,6 +9,8 @@ module Lit
   mattr_accessor :fallback
   mattr_accessor :api_enabled
   mattr_accessor :api_key
+  mattr_accessor :all_translations_are_html_safe
+
   class << self
     attr_accessor :loader
   end

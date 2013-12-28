@@ -4,13 +4,15 @@ module Lit
   class I18nBackend
     include I18n::Backend::Simple::Implementation
 
+    attr_reader :cache
+
     def initialize(cache)
       @cache = cache
     end
 
     def translate(locale, key, options = {})
       content = super(locale, key, options.merge(:fallback => true))
-      if content.respond_to?(:html_safe)
+      if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
       else
         content
@@ -39,14 +41,28 @@ module Lit
 
       ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
-      newly_created = false
+      return content if parts.size <= 1
+
       unless @cache.has_key?(key_with_locale)
-        @cache.init_key_with_value(key_with_locale, content)
-        newly_created = true
-      end
-      if content.nil? || (newly_created && options[:default].present?)
-        @cache[key_with_locale] = options[:default]
-        content = @cache[key_with_locale]
+        new_content = @cache.init_key_with_value(key_with_locale, content)
+        content = new_content if content.nil? # Content can change when Lit.humanize is true for example
+
+        if content.nil? && options[:default].present?
+          if options[:default].is_a?(Array)
+            default = options[:default].map do |key|
+              if key.is_a?(Symbol)
+                I18n.normalize_keys(nil, key.to_s, options[:scope], options[:separator]).join('.').to_sym
+              else
+                key
+              end
+            end
+          else
+            default = options[:default]
+          end
+
+          @cache[key_with_locale] = default
+          content = @cache[key_with_locale]
+        end
       end
       ## return translated content
       content
@@ -60,6 +76,9 @@ module Lit
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
         @cache[key] ||= data
+      elsif data.nil?
+        key = ([locale] + scope).join('.')
+        @cache.delete_locale(key)
       end
     end
 
@@ -68,16 +87,5 @@ module Lit
       super
     end
 
-    def default(locale, object, subject, options = {})
-      content = super(locale, object, subject, options)
-      if content.respond_to?(:to_str)
-        parts = I18n.normalize_keys(locale, object, options[:scope], options[:separator])
-        key = parts.join('.')
-        @cache[key] = content
-      end
-      content
-    end
-
-    attr_reader :cache
   end
 end

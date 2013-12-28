@@ -31,6 +31,8 @@ group :test do
   gem 'ransack'
   gem 'kaminari'
   gem "fakeweb", "~> 1.3", :require=>false
+  gem "test_declarative", :require => false
+  gem "mocha", :require => false
 end
 
 group :development, :test do

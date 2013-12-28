@@ -15,7 +15,7 @@ module Lit
     ## VALIDATIONS
     validates :localization_key,
               :presence=>true,
-              :uniqueness=>true
+              :uniqueness=>{:if=>:localization_key_changed?}
 
     unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
@@ -52,15 +52,39 @@ module Lit
       mark_completed!
     end
 
+    def self.order_options
+      ["localization_key asc", "localization_key desc", "created_at asc", "created_at desc"]
+    end
+
+    # it can be overridden in parent application, for example: {:order => "created_at desc"}
+    def self.default_search_options
+      {}
+    end
+
     def self.search(options={})
-      s = scoped.ordered
+      options = options.reverse_merge(default_search_options)
+      s = self
+      if options[:order] && order_options.include?(options[:order])
+        column, order = options[:order].split(" ")
+        s = s.order("#{Lit::LocalizationKey.quoted_table_name}.#{connection.quote_column_name(column)} #{order}" )
+      else
+        s = s.ordered
+      end
+      localization_key_col = Lit::LocalizationKey.arel_table[:localization_key]
+      default_value_col = Lit::Localization.arel_table[:default_value]
+      translated_value_col = Lit::Localization.arel_table[:translated_value]
       if options[:key_prefix].present?
         q = "#{options[:key_prefix]}%"
-        s = s.where('lit_localization_keys.localization_key like ?', q)
+        s = s.where(localization_key_col.matches(q))
       end
       if options[:key].present?
         q = "%#{options[:key]}%"
-        s = s.joins([:localizations]).where('lit_localization_keys.localization_key like ? or lit_localizations.default_value like ? or lit_localizations.translated_value like ?', q, q, q)
+        cond = localization_key_col.matches(q).or(
+            default_value_col.matches(q).or(
+                translated_value_col.matches(q)
+            )
+        )
+        s = s.joins([:localizations]).where(cond)
       end
       if not options[:include_completed].to_i==1
         s = s.not_completed

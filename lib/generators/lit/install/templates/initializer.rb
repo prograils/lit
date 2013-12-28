@@ -11,6 +11,9 @@ Lit.key_value_engine = "<%= @key_value_engine %>"
 # supported at the moment)
 # Lit.storage_options = { :prefix=>"my_project" }
 
+# If true all translations are returned as html_safe strings
+Lit.all_translations_are_html_safe = false
+
 # Translations without default will be humanized (default string will be added)
 # ie. scope.page_header will become "Page header"
 # If `false` then will serve nil instead (but translation will be wrapped in

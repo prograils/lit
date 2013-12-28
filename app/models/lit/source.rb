@@ -65,7 +65,7 @@ module Lit
 
       def get_from_remote(path, query_values={})
         result = nil
-        #begin
+        begin
           uri = URI(self.url+path)
           query_values.each do |k,v|
             params = URI.decode_www_form(uri.query || []) << [k, v]
@@ -79,8 +79,8 @@ module Lit
           if res.is_a?(Net::HTTPSuccess)
             result = JSON.parse(res.body)
           end
-        #rescue
-        #end
+        rescue
+        end
         result
       end
   end
