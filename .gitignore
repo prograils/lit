@@ -7,3 +7,4 @@ test/dummy/tmp/
 test/dummy/.sass-cache
 .sass-cache/
 /lit-*.gem
+**.DS_Store

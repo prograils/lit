@@ -7,8 +7,6 @@ gemspec
 
 # jquery-rails is used by the dummy application
 gem "jquery-rails"
-gem "haml", ">= 3.0.0"
-gem "bootstrap-sass", "~> 3.0", :github=>"thomas-mcdonald/bootstrap-sass"
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

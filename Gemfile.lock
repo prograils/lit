@@ -1,15 +1,7 @@
-GIT
-  remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
-  revision: c0e12a90ba3e44ab68d3f153411fba3edc400b2a
-  specs:
-    bootstrap-sass (3.0.0.0)
-      sass (~> 3.2)
-
 PATH
   remote: .
   specs:
     lit (0.2.1)
-      bootstrap-sass
       jquery-rails
       rails (> 3.1.0)
       sass-rails (> 3.1)
@@ -75,7 +67,6 @@ GEM
       multi_json (~> 1.0)
     fakeweb (1.3.0)
     ffi (1.1.5)
-    haml (3.1.7)
     hike (1.2.1)
     i18n (0.6.1)
     journey (1.0.4)
@@ -136,7 +127,7 @@ GEM
       json (~> 1.4)
     redis (3.0.2)
     rubyzip (0.9.9)
-    sass (3.2.11)
+    sass (3.2.12)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -170,13 +161,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootstrap-sass (~> 3.0)!
   capybara
   coffee-rails (>= 3.0.0)
   database_cleaner
   devise
   fakeweb (~> 1.3)
-  haml (>= 3.0.0)
   jquery-rails
   kaminari
   launchy

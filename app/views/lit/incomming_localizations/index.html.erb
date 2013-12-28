@@ -1,10 +1,10 @@
 <h1>Incomming localizations</h1>
 <div class="row">
   <span class="pull-right">
-    <%= link_to accept_all_source_incomming_localizations_path(@source), :class=>"btn btn-success", :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+    <%= link_to accept_all_source_incomming_localizations_path(@source), :class=>"btn btn-success btn-sm", :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
       <%= t('lit.common.accept_all', :default=>"Accept all") %>
     <% end %>
-    <%= link_to reject_all_source_incomming_localizations_path(@source), :class=>"btn btn-danger", :method=>:post, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+    <%= link_to reject_all_source_incomming_localizations_path(@source), :class=>"btn btn-danger btn-sm", :method=>:post, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
       <%= t('lit.common.reject_all', :default=>"Reject all") %>
     <% end %>
   </span>
@@ -38,7 +38,7 @@
           <%= t('lit.common.accept', :default=>"Accept") %>
         <% end %>
         <%= link_to source_incomming_localization_path(@source, il), :class=>"btn btn-danger", :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
-          <%= draw_icon "remove", :class=>"icon-white" %>
+          <%= draw_icon "times", :class=>"icon-white" %>
           <%= t('lit.common.reject', :default=>"Reject") %>
         <% end %>
       </td>

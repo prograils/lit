@@ -1,22 +1,23 @@
 <%= form_for [@localization_key, @localization], :html=>{:remote=>true} do |f| %>
-  <%= f.label :translated_value %>
+  <%- f.label :translated_value %>
   <% if @localization.translated_value.is_a?(Array) %>
     <ul style="list-style: none;">
       <% @localization.translated_value.each do |l| %>
-        <li><%= text_field_tag 'localization[translated_value][]', l, :class=>"input-xlarge" %></li>
+        <li><%= text_field_tag 'localization[translated_value][]', l, :class=>"form-control input-xlarge" %></li>
       <% end %>
     </ul>
   <% else %>
-    <%= f.text_area :translated_value, :size=>"40x2", :class=>"input-xxlarge" %>
+    <%= f.text_area :translated_value, :size=>"40x2", :class=>"form-control input-xxlarge" %>
     <% if allow_wysiwyg_editor?(@localization_key.localization_key) %>
       <br />
       <label>
         <input type="checkbox" class="wysiwyg_switch" /> use wysiwyg editor
       </label>
+      <br />
     <% end %>
   <% end %>
 
-  <button class="btn" type="submit"><%= t('lit.common.update', :default=>"Update") %></button>
-  <button class="btn cancel"><%= t('lit.common.cancel', :default=>'Cancel') %></button>
+  <button class="btn btn-primary btn-sm" type="submit"><%= t('lit.common.update', :default=>"Update") %></button>
+  <button class="btn btn-default btn-sm"><%= t('lit.common.cancel', :default=>'Cancel') %></button>
 <% end %>
 
