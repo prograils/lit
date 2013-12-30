@@ -40,7 +40,6 @@ module Lit
     end
 
     def has_key?(key)
-      # @TODO: change into correct has_key? call
       @localizations.has_key?(key)
     end
 
@@ -58,6 +57,11 @@ module Lit
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value, force_array, true)
       @localizations[key] = localization.get_value if localization
+    end
+
+    def update_cache(key, value)
+      key = key.to_s
+      @localizations[key] = value
     end
 
     def delete_locale(key)

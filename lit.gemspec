@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Lit::VERSION
   s.authors     = ["Maciej Litwiniuk"]
   s.email       = ["maciej@litwiniuk.net"]
-  s.license = 'MIT'
+  s.license     = 'MIT'
   s.homepage    = "https://github.com/prograils/lit"
   s.summary     = "Database powered i18n backend with web gui"
   s.description = "Translate your apps with pleasure (sort of...) and for free. It's simple i18n web interface, build on top of twitter bootstrap, that one may find helpful in translating app by non-technicals. "
@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "> 3.1.0"
   s.add_dependency "jquery-rails"
   s.add_dependency 'sass-rails', '> 3.1'
-  s.add_dependency 'bootstrap-sass', '~> 2.1'
 
   s.add_development_dependency "pg"
   s.add_development_dependency "devise"

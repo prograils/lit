@@ -10,7 +10,7 @@ module Lit
 
     def update
       if @localization.update_attributes(clear_params)
-        Lit.init.cache.refresh_key @localization.full_key
+        Lit.init.cache.update_cache @localization.full_key, @localization.get_value
       end
       @localization.reload
       respond_to :js

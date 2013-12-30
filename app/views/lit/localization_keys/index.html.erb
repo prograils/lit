@@ -9,10 +9,10 @@
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
-            <%= draw_icon lk.is_starred? ? 'star' : 'star-empty' %>
+            <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
           <% end %>
           <%= link_to lit.localization_key_path(lk), :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")}, :remote=>true do %>
-            <%= draw_icon 'trash' %>
+            <%= draw_icon 'trash-o' %>
           <% end %>
         </div>
         <div class="detail_wrapper">
@@ -53,16 +53,18 @@
       <% if @search_options.has_key?(:key_prefix) %>
         <%= hidden_field_tag :key_prefix, @search_options[:key_prefix] %>
       <% end %>
-      <div class="input-append">
-        <%= text_field_tag :key, @search_options[:key], :class=>"input-medium search-query" %>
-        <button type="submit" class="btn"><%= t('.search', :default=>"Search") %></button>
+      <div class="input-group">
+        <%= text_field_tag :key, @search_options[:key], :class=>"form-control search-query" %>
+        <div class="input-group-btn">
+          <button type="submit" class="btn btn-default"><%= draw_icon 'search' %></button>
+        </div>
       </div>
       <label class="checkbox">
         <%= check_box_tag :include_completed, '1', @search_options[:include_completed].to_i==1 %>
         <%= t('.is_completed', :default=>"Include completed") %>
       </label>
     <% end %>
-    <ul class="nav nav-list ">
+    <ul class="nav nav-pills nav-stacked">
       <li class="<%= "active" if params[:action]=='index' %>">
         <%= link_to lit.localization_keys_path do -%>
           <%= draw_icon 'list' %>
