@@ -20,6 +20,7 @@ module Lit
     end
 
     ## BEFORE & AFTER
+    before_create :set_last_updated_at_upon_creation
     after_validation :check_if_url_is_valid
 
 
@@ -91,6 +92,12 @@ module Lit
         rescue
         end
         result
+      end
+
+      def set_last_updated_at_upon_creation
+        if self.last_updated_at.blank?
+          touch_last_updated_at if Lit.set_last_updated_at_upon_creation
+        end
       end
   end
 end

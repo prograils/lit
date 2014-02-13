@@ -26,5 +26,27 @@ module Lit
       s.reload
       assert s.last_updated_at > previous_updated_at
     end
+
+    test "should set last_updated_at upon source creation" do
+      Lit.set_last_updated_at_upon_creation = true
+      s = Lit::Source.new
+      s.url = "http://testhost.com/lit"
+      s.api_key = "test"
+      s.identifier = "test"
+      s.save
+      s.reload
+      assert s.last_updated_at.present?
+    end
+
+    test "should not set last_updated_at upon source creation if asked" do
+      Lit.set_last_updated_at_upon_creation = false
+      s = Lit::Source.new
+      s.url = "http://testhost.com/lit"
+      s.api_key = "test"
+      s.identifier = "test"
+      s.save
+      s.reload
+      assert s.last_updated_at.nil?
+    end
   end
 end
