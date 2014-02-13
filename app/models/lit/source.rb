@@ -68,7 +68,7 @@ module Lit
         begin
           uri = URI(self.url+path)
           query_values.each do |k,v|
-            params = URI.decode_www_form(uri.query || []) << [k, v]
+            params = URI.decode_www_form(uri.query || "") << [k, v]
             uri.query = URI.encode_www_form(params)
           end
           req = Net::HTTP::Get.new(uri.request_uri)
