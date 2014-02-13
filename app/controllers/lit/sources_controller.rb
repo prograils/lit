@@ -24,6 +24,12 @@ module Lit
       redirect_to lit.source_incomming_localizations_path(@source)
     end
 
+    def touch
+      @source = Source.find(params[:id])
+      @source.touch_last_updated_at!
+      redirect_to request.env["HTTP_REFERER"].present? ? :back : @source
+    end
+
     def create
       @source = Source.new(clear_params)
       if @source.save

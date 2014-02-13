@@ -47,6 +47,15 @@ module Lit
       assert_equal "test2", @source.identifier
     end
 
+    test "should update last_updates_at" do
+      prev_last_updated_at = @source.last_updated_at
+      put :touch, :id => @source
+      assert_redirected_to source_path(assigns(:source))
+      @source.reload
+      assert_redirected_to @source
+      assert @source.last_updated_at > prev_last_updated_at
+    end
+
     test "should destroy source" do
       assert_difference('Source.count', -1) do
         delete :destroy, :id => @source

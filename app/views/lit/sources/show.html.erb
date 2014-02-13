@@ -11,6 +11,7 @@
 <br/>
 <strong>Last updated at:</strong>
 <%= @source.last_updated_at.to_s(:db) unless @source.last_updated_at.nil? %>
+<%= link_to '(touch!)', touch_source_path(@source), :method => :put, :data => { :confirm => 'Are you sure?' } %>
 <br/>
 
 
