@@ -35,7 +35,7 @@ module Lit
     end
 
     def full_key
-      "#{self.locale.locale}.#{self.localization_key.localization_key}"
+      [self.locale.locale, self.localization_key.localization_key].join('.')
     end
 
     def get_value

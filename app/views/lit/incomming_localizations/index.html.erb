@@ -33,11 +33,11 @@
         <%= render :partial=>"/lit/localization_keys/localization_row", :locals=>{:localization=>il.get_value} %>
       </td>
       <td>
-        <%= link_to accept_source_incomming_localization_path(@source, il), :class=>"btn btn-success" do %>
-          <%= draw_icon "ok", :class=>"icon-white" %>
+        <%= link_to accept_source_incomming_localization_path(@source, il), :class=>"btn btn-success btn-sm" do %>
+          <%= draw_icon "check", :class=>"icon-white" %>
           <%= t('lit.common.accept', :default=>"Accept") %>
         <% end %>
-        <%= link_to source_incomming_localization_path(@source, il), :class=>"btn btn-danger", :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+        <%= link_to source_incomming_localization_path(@source, il), :class=>"btn btn-danger btn-sm", :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
           <%= draw_icon "times", :class=>"icon-white" %>
           <%= t('lit.common.reject', :default=>"Reject") %>
         <% end %>

@@ -20,6 +20,7 @@ module Lit
     end
 
     ## BEFORE & AFTER
+    before_create :set_last_updated_at_upon_creation
     after_validation :check_if_url_is_valid
 
 
@@ -50,13 +51,22 @@ module Lit
           end
           lc = get_last_change
           lc = DateTime.parse(lc) unless lc.nil?
-          self.last_updated_at = lc || Time.now
+          touch_last_updated_at(lc)
           self.save
         end
       end
     end
 
+    def touch_last_updated_at!
+      touch_last_updated_at
+      self.save
+    end
+
     private
+      def touch_last_updated_at(time=nil)
+        self.last_updated_at = time || Time.now
+      end
+
       def check_if_url_is_valid
         if self.errors.empty? && (self.new_record? || self.url_changed?)
             self.errors.add(:url, "is not accessible") if get_last_change.nil?
@@ -68,7 +78,7 @@ module Lit
         begin
           uri = URI(self.url+path)
           query_values.each do |k,v|
-            params = URI.decode_www_form(uri.query || []) << [k, v]
+            params = URI.decode_www_form(uri.query || "") << [k, v]
             uri.query = URI.encode_www_form(params)
           end
           req = Net::HTTP::Get.new(uri.request_uri)
@@ -82,6 +92,12 @@ module Lit
         rescue
         end
         result
+      end
+
+      def set_last_updated_at_upon_creation
+        if self.last_updated_at.blank?
+          touch_last_updated_at if Lit.set_last_updated_at_upon_creation
+        end
       end
   end
 end

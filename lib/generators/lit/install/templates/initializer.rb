@@ -31,6 +31,10 @@ Lit.api_enabled = false
 # API key is required to authorize third party, if API is enabled
 Lit.api_key = "<%= @api_key %>"
 
+# If true, last_updated_at column of synchronizaton source will be set to now
+# upon record creation
+Lit.set_last_updated_at_upon_creation = true
+
 # Initialize lit
 Lit.init
 

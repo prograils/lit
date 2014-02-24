@@ -32,19 +32,19 @@ module Lit
         unless self.locale.present?
           self.locale = Lit::Locale.new
           self.locale.locale = self.locale_str
-          self.locale.save
+          self.locale.save!
         end
         unless self.localization_key.present?
           self.localization_key = Lit::LocalizationKey.new
           self.localization_key.localization_key = self.localization_key_str
-          self.localization_key.save
+          self.localization_key.save!
         end
         unless self.localization.present?
           self.localization = Lit::Localization.new
           self.localization.locale = self.locale
           self.localization.localization_key = self.localization_key
           self.localization.default_value = self.translated_value
-          self.localization.save
+          self.localization.save!
         end
       end
       self.destroy

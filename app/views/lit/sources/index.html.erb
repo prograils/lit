@@ -23,8 +23,11 @@
       <%= link_to lit.edit_source_path(source), :title=>t('lit.common.edit', :default=>"Edit") do %>
         <%= draw_icon 'pencil' %>
       <% end %>
+      <%= link_to lit.touch_source_path(source), :title=>t('lit.common.touch', :default=>"Touch (update) last_updated_at"), :method => :put, :data => { :confirm => 'Are you sure?' } do %>
+        <%= draw_icon 'clock-o' %>
+      <% end %>
       <%= link_to lit.source_path(source), :method => :delete, :data => { :confirm => 'Are you sure?' }, :title=>t('lit.common.delete', :default=>"Delete") do %>
-        <%= draw_icon 'trash' %>
+        <%= draw_icon 'trash-o' %>
       <% end %>
     </td>
   </tr>
