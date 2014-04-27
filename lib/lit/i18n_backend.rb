@@ -29,7 +29,12 @@ module Lit
     # @param [Hash] data nested key-value pairs to be added as blurbs
     def store_translations(locale, data, options = {})
       super
-      store_item(locale, data)
+      locales = ::Rails.configuration.i18n.available_locales.map(&:to_s)
+
+      if !locales || locales.include?(locale)
+        store_item(locale, data)
+      else
+      end
     end
 
 
