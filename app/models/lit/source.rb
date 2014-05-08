@@ -88,13 +88,15 @@ module Lit
           req.add_field("Authorization", %(Token token="#{self.api_key}"))
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = (uri.port == 443)
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
           res = http.start do |http|
             http.request(req)
           end
           if res.is_a?(Net::HTTPSuccess)
             result = JSON.parse(res.body)
           end
-        rescue
+        rescue => e
+          ::Rails.logger.error { "Lit remote error: #{e}" } if defined?(Rails)
         end
         result
       end
