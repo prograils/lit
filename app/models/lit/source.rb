@@ -86,7 +86,9 @@ module Lit
           end
           req = Net::HTTP::Get.new(uri.request_uri)
           req.add_field("Authorization", %(Token token="#{self.api_key}"))
-          res = Net::HTTP.new(uri.host, uri.port).start do |http|
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = (uri.port == 443)
+          res = http.start do |http|
             http.request(req)
           end
           if res.is_a?(Net::HTTPSuccess)
