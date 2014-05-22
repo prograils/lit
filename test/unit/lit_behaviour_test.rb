@@ -40,6 +40,17 @@ class LitBehaviourTest < ActiveSupport::TestCase
     end
   end
 
+  test "should not save in other languages then I18n.available_locales" do
+    ::Rails.configuration.i18n.stubs(:available_locales).returns([:fr])
+    I18n.backend.expects(:store_item).times(0)
+    I18n.backend.store_translations(:dk, :'foo' => 'foo')
+  end
+
+  test "should save in other languages if I18n.available_locales is empty" do
+    I18n.backend.expects(:store_item).times(1)
+    I18n.backend.store_translations(:dk, :'foo' => 'foo')
+  end
+
   test "translating the same not existing key twice should not set Lit::Localizaiton#is_changed to true" do
     key = 'not_existing_translation'
 
