@@ -3,6 +3,7 @@ module Lit
 
     ## SCOPES
     scope :ordered, proc{ order('locale ASC') }
+    scope :availables, proc { where(:locale => I18n.available_locales.map(&:to_s))}
     scope :visible, proc{ where(:is_hidden=>false) }
 
     ## ASSOCIATIONS
