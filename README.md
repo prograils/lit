@@ -22,7 +22,7 @@ Highly inspired by Copycopter by thoughtbot.
 Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
 
 ### So... again - what is it and how to use it?
-*Lit* is Rails engine - it runs in it's own namespace, by default it's avaulable under `/lit`. It provides UI for managing translations of your app. 
+*Lit* is Rails engine - it runs in it's own namespace, by default it's avaulable under `/lit`. It provides UI for managing translations of your app.
 
 Once you call `I18n.t()` function from your views, *Lit* is asked whether it has or not proper value for it. If translation is present in database and is available for *Lit*, it's served back. If it does not exists, record is automatically created in database with initial value provided in `default` option key. If `default` key is not present, value `nil` is saved to database. When app is starting, *Lit* will preload all keys from your local `config/locale/*.yml` files - this is why app startup may take a while.
 
@@ -32,15 +32,15 @@ To optimize translation key lookup, *Lit* can use different cache engines. For p
 
 1. Add `lit` gem to your `Gemfile`
 ```ruby
-gem "lit"
-````
+gem 'lit'
+```
 
 2. run `bundle install`
 
 3. run installation generator `bundle exec rails g lit:install`
   (for production/staging environment `redis` is suggested as key value engine. `hash` will not work in multi process environment)
 
-4. After doing above and restarting app, point your browser to ```http://app/lit```
+4. After doing above and restarting app, point your browser to `http://app/lit`
 
 5. Profit!
 
@@ -61,7 +61,7 @@ You may want to take a look at generated initializer in `config/initializers/lit
 * Better cache
 * ~~Support for other key value providers (ie. Redis does not support Array types in easy way)~~ (not applicable, as array storage works now with redis).
 * Integration with ActiveAdmin
-* Support for Proc defaults (like in `I18n.t("not_exising_keys", :default=> lambda{|_, options| "text"})` )
+* Support for Proc defaults (like in `I18n.t('not_exising_keys', default: lambda{|_, options| 'text'})` )
 
 
 ### License
