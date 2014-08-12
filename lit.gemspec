@@ -23,6 +23,4 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "pg"
   s.add_development_dependency "devise"
-  s.add_development_dependency "fakeweb", ["~> 1.3"]
-  #s.add_test_dependency "capybara"
 end

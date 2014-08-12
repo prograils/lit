@@ -34,6 +34,5 @@ group :test do
 end
 
 group :development, :test do
-  gem 'devise'
   gem 'sqlite3'
 end
