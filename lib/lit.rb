@@ -16,16 +16,14 @@ module Lit
     attr_accessor :loader
   end
   def self.init
-    @@table_exists ||= Lit::Locale.table_exists?
+    @@table_exists ||= ActiveRecord::Base.connected? && Lit::Locale.table_exists?
     if self.loader.nil? && @@table_exists
-      if ActiveRecord::Base.connected?
-        self.loader ||= Loader.new
-        Lit.humanize_key = true if Lit.humanize_key.nil?
-        # if loading all translations on start, migrations have to be already
-        # performed, fails on first deploy
-        # self.loader.cache.load_all_translations
-        Lit.storage_options ||= {}
-      end
+      self.loader ||= Loader.new
+      Lit.humanize_key = true if Lit.humanize_key.nil?
+      # if loading all translations on start, migrations have to be already
+      # performed, fails on first deploy
+      # self.loader.cache.load_all_translations
+      Lit.storage_options ||= {}
     end
     self.loader
   end
