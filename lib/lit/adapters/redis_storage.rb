@@ -2,7 +2,7 @@ require 'redis'
 module Lit
   extend self
   def redis
-    $redis = Redis.connect unless $redis
+    $redis = Redis.new(url: ENV['REDIS_URL']) unless $redis
     $redis
   end
   class RedisStorage
