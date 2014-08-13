@@ -5,7 +5,7 @@ class LocalesTest < ActionDispatch::IntegrationTest
 
   test "should allow hiding locale" do
     Lit.authentication_function = nil
-    visit('/pl/welcome')
+    #visit('/pl/welcome')
     visit('/lit/localization_keys')
     #within('td.locale_row:last-child') do
       #Lit.init.logger.info page.body

@@ -22,6 +22,8 @@ end
 # from. We hence use DatabaseCleaner to truncate our test database.
 DatabaseCleaner.strategy = :truncation
 
+DatabaseCleaner.clean_with :truncation
+
 class ActiveSupport::TestCase
   setup do
     Redis.new.flushall

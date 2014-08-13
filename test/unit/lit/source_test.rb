@@ -5,6 +5,9 @@ module Lit
     fixtures "lit/sources"
     def setup
       FakeWeb.register_uri(:get, "http://testhost.com/lit/api/v1/last_change.json", :body => {:last_change=>1.hour.ago.to_s(:db)}.to_json)
+      FakeWeb.register_uri(:get, 'http://testhost.nope/lit/api/v1/last_change.json',
+                                 :body => 'Nothing to be found around here',
+                                 :status => ["404", "Not Found"])
     end
     test "validates url validation" do
       s = Lit::Source.new
@@ -13,7 +16,7 @@ module Lit
       s.identifier = "test"
       assert s.valid?
       assert s.errors.empty?
-      s.url = "http://localhost.dev/lit"
+      s.url = "http://localhost.nope/lit"
       assert !s.valid?
       assert !s.errors.empty?
     end
