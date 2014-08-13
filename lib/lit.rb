@@ -16,7 +16,7 @@ module Lit
     attr_accessor :loader
   end
   def self.init
-    @@table_exists ||= ActiveRecord::Base.connected? && Lit::Locale.table_exists?
+    @@table_exists ||= self.check_if_table_exists
     if self.loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = true if Lit.humanize_key.nil?
@@ -26,6 +26,15 @@ module Lit
       Lit.storage_options ||= {}
     end
     self.loader
+  end
+
+  def self.check_if_table_exists
+    # because checking for existing connection will never
+    begin
+      Lit::Locale.table_exists?
+    rescue
+      false
+    end
   end
 
   def self.get_key_value_engine
