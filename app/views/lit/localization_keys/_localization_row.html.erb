@@ -1,11 +1,14 @@
-<%- la = localization -%>
-<% if la.is_a?(Array) %>
+<% if localization.is_a?(Array) %>
   <ul>
-    <% la.each do |l| %>
+    <% localization.each do |l| %>
       <li><%= l %></li>
     <% end %>
   </ul>
 <% else %>
-  <%= la %>
+  <% if localization.nil? %>
+    <em title="<%= t('.value_not_yet_translated', default: 'Value not yet translated') %>">null</em>
+  <% else %>
+    <%= localization %>
+  <% end %>
 <% end %>
 
