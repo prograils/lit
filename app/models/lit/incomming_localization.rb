@@ -50,6 +50,20 @@ module Lit
       self.destroy
     end
 
+    def is_duplicate?(val)
+      set_localization_id unless localization.present?
+      if localization
+        translated_value = localization.read_attribute_before_type_cast('translated_value')
+        if localization.is_changed? && !translated_value.nil?
+          translated_value == val
+        else
+          localization.read_attribute_before_type_cast('default_value') == val
+        end
+      else
+        false
+      end
+    end
+
     private
       def set_localization_id
         if self.locale.present? and self.localization_key.present?

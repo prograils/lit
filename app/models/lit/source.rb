@@ -46,20 +46,23 @@ module Lit
             il.locale = Locale.where(:locale=>il.locale_str).first
             il.localization_key_str = r["localization_key_str"]
             il.localization_key = LocalizationKey.where(:localization_key=>il.localization_key_str).first
-            il.save!
-            IncommingLocalization.where(:id=>il.id).update_all ['translated_value=?', r["value"]]
+            unless il.is_duplicate?(r['value'])
+              il.save!
+              IncommingLocalization.where(:id=>il.id).
+                update_all ['translated_value=?', r["value"]]
+            end
           end
-          lc = get_last_change
-          lc = DateTime.parse(lc) unless lc.nil?
-          touch_last_updated_at(lc)
-          self.save
+          last_change = get_last_change
+          last_change = DateTime.parse(last_change) unless last_change.nil?
+          touch_last_updated_at(last_change)
+          save
         end
       end
     end
 
     def touch_last_updated_at!
       touch_last_updated_at
-      self.save
+      save
     end
 
     private
