@@ -29,7 +29,6 @@ module Lit
   end
 
   def self.check_if_table_exists
-    # because checking for existing connection will never
     begin
       Lit::Locale.table_exists?
     rescue
