@@ -20,7 +20,7 @@ module Lit
     end
 
     def available_locales
-      Lit::Locale.ordered.visible.map{|l| l.locale.to_sym }
+      Lit::Locale.ordered.availables.visible.map{|l| l.locale.to_sym }
     end
 
     # Stores the given translations.
