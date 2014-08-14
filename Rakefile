@@ -30,6 +30,7 @@ Bundler::GemHelper.install_tasks
 require 'rake/testtask'
 
 Rake::TestTask.new(:test) do |t|
+  puts "Storage: #{ENV['LIT_STORAGE'] || 'redis'}"
   t.libs << 'lib'
   t.libs << 'test'
   t.pattern = 'test/**/*_test.rb'
