@@ -1,7 +1,6 @@
 
 Lit.authentication_function = :authenticate_admin!
-Lit.key_value_engine = 'redis'
-#Lit.key_value_engine = 'hash'
+Lit.key_value_engine = ENV['LIT_STORAGE'] || 'redis'
 Lit.fallback = true
 Lit.humanize_key = true
 Lit.api_enabled = true

@@ -20,7 +20,12 @@ module Lit
     end
 
     def available_locales
-      Lit::Locale.ordered.visible.map{|l| l.locale.to_sym }
+      locales = ::Rails.configuration.i18n.available_locales
+      if locales and !locales.empty?
+        locales
+      else
+        Lit::Locale.ordered.visible.map{|l| l.locale.to_sym }
+      end
     end
 
     # Stores the given translations.

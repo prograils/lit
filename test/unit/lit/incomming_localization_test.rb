@@ -4,6 +4,7 @@ require 'fakeweb'
 module Lit
   class IncommingLocalizationTest < ActiveSupport::TestCase
     def setup
+      DatabaseCleaner.clean_with :truncation
       FakeWeb.register_uri(:get, "http://testhost.com/lit/api/v1/last_change.json", :body => {:last_change=>1.hour.ago.to_s(:db)}.to_json)
       @source = Lit::Source.new
       @source.url = "http://testhost.com/lit"
