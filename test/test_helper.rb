@@ -15,6 +15,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
 
+## do not enforce available locales
+I18n.config.enforce_available_locales = false
+
 # Transactional fixtures do not work with Selenium tests, because Capybara
 # uses a separate server thread, which the transactions would be hidden
 # from. We hence use DatabaseCleaner to truncate our test database.

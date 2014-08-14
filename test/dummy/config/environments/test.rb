@@ -32,6 +32,8 @@ Dummy::Application.configure do
   if ::Rails::VERSION::MAJOR < 4
     # Raise exception on mass assignment protection for Active Record models
     config.active_record.mass_assignment_sanitizer = :strict
+  else
+    config.i18n.enforce_available_locales = false
   end
 
   # Print deprecation notices to the stderr
