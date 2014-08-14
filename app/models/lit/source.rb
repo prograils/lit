@@ -36,7 +36,7 @@ module Lit
         if result.is_a?(Array)
           result.each do |r|
             il = IncommingLocalization.new
-            if ::Rails::VERSION::MAJOR<4
+            if ::Rails::VERSION::MAJOR < 4
               il = IncommingLocalization.where(:incomming_id=>r["id"]).first_or_initialize
             else
               il = IncommingLocalization.find_or_initialize_by(:incomming_id=>r["id"])
