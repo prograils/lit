@@ -5,10 +5,10 @@ class ProjectsTest < ActionDispatch::IntegrationTest
 
   test "should display translated project name" do
     visit('/en/projects/new')
-    locale = Lit::Locale.first
+    locale = Lit::Locale.where('locale=?', 'en').first
     localization_key = Lit::LocalizationKey.find_by_localization_key! 'helpers.label.project.name'
-    localization = locale.localizations.where(:localization_key_id=>localization_key.id).first
-    assert localization.default_value == 'Name'
+    localization = localization_key.localizations.where(:locale_id=>locale.id).first
+    assert_equal 'Name', localization.default_value
   end
 
 end

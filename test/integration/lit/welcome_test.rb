@@ -3,6 +3,16 @@ require 'test_helper'
 
 class WelcomeTest < ActionDispatch::IntegrationTest
 
+  def setup
+    @old_fallback = Lit.fallback
+    @old_humanize_key = Lit.humanize_key
+  end
+
+  def teardown
+    Lit.fallback = @old_fallback
+    Lit.humanize_key = @old_humanize_key
+  end
+
   test "should properly display 'Hello world' in english" do
     visit('/en/welcome')
     assert page.has_content?('Hello World')
@@ -27,6 +37,8 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   end
 
   test "should properly display text with default" do
+    Lit.humanize_key = false
+    Lit.fallback = false
     visit('/en/welcome')
     assert page.has_content?('Default content')
     visit('/pl/welcome')
