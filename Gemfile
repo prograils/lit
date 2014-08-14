@@ -35,6 +35,6 @@ end
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'appraisal'
   gem 'sass-rails'
+  gem 'wwtd'
 end

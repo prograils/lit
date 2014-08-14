@@ -17,3 +17,5 @@ before_script:
   - psql -c 'create database lit_test;' -U postgres
   - cd test/dummy && RAILS_ENV=test bundle exec rake lit:install:migrations && cd ../..
   - cd test/dummy && RAILS_ENV=test bundle exec rake db:migrate && cd ../..
+script: "rake test"
+bundler_args: ""
