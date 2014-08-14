@@ -7,6 +7,8 @@ translating app by non-technicals.
 
 Highly inspired by Copycopter by thoughtbot.
 
+![travis status](https://travis-ci.org/prograils/lit.svg)
+
 ### Features
 
 1. Runs with your app - no need for external services

@@ -1,3 +1,6 @@
 class Project < ActiveRecord::Base
-  attr_accessible :name
+
+  unless defined?(::ActionController::StrongParameters)
+    attr_accessible :name
+  end
 end

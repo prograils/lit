@@ -19,8 +19,14 @@ module Lit
       Lit::Engine.routes.clear!
       Dummy::Application.reload_routes!
       @routes = Lit::Engine.routes
-      assert_raises(ActionController::RoutingError) do
-        get :index, :format=>:json
+      if defined?(ActionController::UrlGenerationError)
+        assert_raises(ActionController::UrlGenerationError) do
+          get :index, :format=>:json
+        end
+      else
+        assert_raises(ActionController::RoutingError) do
+          get :index, :format=>:json
+        end
       end
     end
     test "should not be able to access if authorization token is invalid" do

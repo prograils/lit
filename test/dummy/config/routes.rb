@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   scope "(:locale)", :locale => /en|pl|de/ do
     resources :projects
-    match 'welcome'=>"welcome#index", :as=>:welcome
-    match 'catan'=>"welcome#catan", :as=>:welcome
+    get 'welcome'=>"welcome#index", :as=>:welcome
+    get 'catan'=>"welcome#catan", :as=>:catan
   end
 
   root :to=>"welcome#index"
