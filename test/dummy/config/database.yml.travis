@@ -1,0 +1,5 @@
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: lit_test
+  username: postgres
