@@ -65,6 +65,9 @@ You may want to take a look at generated initializer in `config/initializers/lit
 * Integration with ActiveAdmin
 * Support for Proc defaults (like in `I18n.t('not_exising_keys', default: lambda{|_, options| 'text'})` )
 
+### Testing
+
+For local testing [wwtd](https://github.com/grosser/wwtd) gem comes into play, run tests via: `wwtd --local`. Run migrations using command `RAILS_ENV=test bundle exec rake db:migrate`.
 
 ### License
 
