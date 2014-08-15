@@ -15,6 +15,5 @@ env:
 before_script:
   - cp test/dummy/config/database.yml.travis test/dummy/config/database.yml
   - psql -c 'create database lit_test;' -U postgres
-  - cd test/dummy && RAILS_ENV=test bundle exec rake lit:install:migrations && cd ../..
-  - cd test/dummy && RAILS_ENV=test bundle exec rake db:migrate && cd ../..
+  - RAILS_ENV=test bundle exec rake db:migrate
 script: "bundle exec rake test"
