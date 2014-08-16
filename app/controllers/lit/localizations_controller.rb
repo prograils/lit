@@ -22,25 +22,26 @@ module Lit
     end
 
     private
-      def find_localization_key
-        @localization_key = Lit::LocalizationKey.find(params[:localization_key_id])
-      end
 
-      def find_localization
-        @localization = @localization_key.localizations.find(params[:id])
-      end
+    def find_localization_key
+      @localization_key = Lit::LocalizationKey.find(params[:localization_key_id])
+    end
 
-      def clear_params
-        if defined?(::ActionController::StrongParameters)
-          # allow translated_value to be an array
-          if @localization.value.is_a?(Array)
-            params.require(:localization).permit(:locale_id, :translated_value => [])
-          else
-            params.require(:localization).permit(:locale_id, :translated_value)
-          end
+    def find_localization
+      @localization = @localization_key.localizations.find(params[:id])
+    end
+
+    def clear_params
+      if defined?(::ActionController::StrongParameters)
+        # allow translated_value to be an array
+        if @localization.value.is_a?(Array)
+          params.require(:localization).permit(:locale_id, translated_value: [])
         else
-          params[:localization].is_a?(Hash) ? params[:localization].slice(:translated_value, :locale_id) : {}
+          params.require(:localization).permit(:locale_id, :translated_value)
         end
+      else
+        params[:localization].is_a?(Hash) ? params[:localization].slice(:translated_value, :locale_id) : {}
       end
+    end
   end
 end

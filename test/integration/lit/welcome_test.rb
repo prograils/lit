@@ -2,7 +2,6 @@
 require 'test_helper'
 
 class WelcomeTest < ActionDispatch::IntegrationTest
-
   def setup
     @old_fallback = Lit.fallback
     @old_humanize_key = Lit.humanize_key
@@ -18,7 +17,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Hello World')
   end
 
-  test "should properly display text without default and humanize=false" do
+  test 'should properly display text without default and humanize=false' do
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/en/welcome')
@@ -27,7 +26,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Text Without Default')
   end
 
-  test "should properly display text without default and humanize=true" do
+  test 'should properly display text without default and humanize=true' do
     Lit.humanize_key = true
     Lit.fallback = false
     visit('/en/welcome')
@@ -36,7 +35,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Text without default')
   end
 
-  test "should properly display text with default" do
+  test 'should properly display text with default' do
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/en/welcome')
@@ -45,12 +44,12 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Default content')
   end
 
-  test "should properly display saturday abbr in polish" do
+  test 'should properly display saturday abbr in polish' do
     visit('/pl/welcome')
     assert page.has_content?('Sob')
   end
 
-  test "should use interpolation instead of default value" do
+  test 'should use interpolation instead of default value' do
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/pl/welcome')
@@ -73,7 +72,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert text.present?
 
     assert page.has_content?(text)
-    text ='Żegnaj okrutny świecie'
+    text = 'Żegnaj okrutny świecie'
     localization.translated_value = text
     localization.save!
     Lit.init.cache.refresh_key(localization.full_key)
@@ -81,7 +80,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?(text)
   end
 
-  test "should not fallback if not asked to" do
+  test 'should not fallback if not asked to' do
     Lit.humanize_key = false
     Lit.fallback = false
     visit('/en/welcome')
@@ -90,7 +89,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Text With Translation In English')
   end
 
-  test "should properly fallback" do
+  test 'should properly fallback' do
     Lit.fallback = true
     visit('/en/welcome')
     assert page.has_content?('English translation')

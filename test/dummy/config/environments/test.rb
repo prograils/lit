@@ -9,7 +9,7 @@ Dummy::Application.configure do
 
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true
-  config.static_cache_control = "public, max-age=3600"
+  config.static_cache_control = 'public, max-age=3600'
 
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
@@ -42,6 +42,5 @@ Dummy::Application.configure do
   # See everything in the log (default is :info)
   config.log_level = :debug
 
-
-  #config.i18n.fallbacks = true
+  # config.i18n.fallbacks = true
 end

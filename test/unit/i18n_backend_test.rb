@@ -16,7 +16,7 @@ class I18nBackendTest < ActiveSupport::TestCase
     I18n.backend = @old_backend
   end
 
-  test "properly returns available locales" do
+  test 'properly returns available locales' do
     assert_equal 2, I18n.backend.available_locales.count
     ::Rails.configuration.i18n.available_locales = [:en, :pl]
     assert_equal 2, I18n.backend.available_locales.count

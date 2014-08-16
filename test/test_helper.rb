@@ -1,8 +1,8 @@
 # Configure Rails Environment
-ENV["RAILS_ENV"] = "test"
+ENV['RAILS_ENV'] = 'test'
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
-require "rails/test_help"
+require File.expand_path('../dummy/config/environment.rb',  __FILE__)
+require 'rails/test_help'
 require 'capybara/rails'
 require 'database_cleaner'
 require 'test_declarative'
@@ -13,7 +13,7 @@ Rails.backtrace_cleaner.remove_silencers!
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
-ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
+ActiveSupport::TestCase.fixture_path = File.expand_path('../fixtures', __FILE__)
 
 ## do not enforce available locales
 I18n.config.enforce_available_locales = false
@@ -53,7 +53,6 @@ class ActionDispatch::IntegrationTest
     DatabaseCleaner.strategy = :transaction
   end
 end
-
 
 class ActionController::TestCase
   include Warden::Test::Helpers

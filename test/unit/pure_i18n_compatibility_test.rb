@@ -39,7 +39,7 @@ class PureI18nCompatibilityTest < ActiveSupport::TestCase
   include I18n::Tests::Localization::Time
   include I18n::Tests::Localization::Procs
 
-  test "make sure we use the Lit::I18n backend" do
+  test 'make sure we use the Lit::I18n backend' do
     assert_equal Backend, I18n.backend.class
   end
 end

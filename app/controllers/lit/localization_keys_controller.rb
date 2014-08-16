@@ -1,19 +1,19 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
-    before_filter :get_localization_scope, :except=>[:destroy]
+    before_filter :get_localization_scope, except: [:destroy]
 
     def index
       get_localization_keys
     end
 
     def starred
-      @scope = @scope.where(:is_starred=>true)
+      @scope = @scope.where(is_starred: true)
 
       if @scope.respond_to?(:page)
         @scope = @scope.page(params[:page])
       end
       get_localization_keys
-      render :action=>:index
+      render action: :index
     end
 
     def star
@@ -33,72 +33,72 @@ module Lit
     end
 
     private
-      def get_localization_scope
-        @search_options = params.slice(*valid_keys)
-        @search_options[:include_completed] = '1' if @search_options.empty?
-        @scope = LocalizationKey.uniq.preload(:localizations => :locale).search(@search_options)
-      end
 
-      def get_localization_keys
-        key_parts = @search_options[:key_prefix].to_s.split('.').length
-        @prefixes = @scope.reorder(nil).uniq.pluck(:localization_key).map{|lk| lk.split('.').shift(key_parts+1).join('.') }.uniq.sort
-        if @search_options[:key_prefix].present?
-          parts = @search_options[:key_prefix].split('.')
-          @parent_prefix = parts[0,parts.length-1].join('.')
-        end
-        if @scope.respond_to?(:page)
-          @localization_keys = @scope.page(params[:page])
-        else
-          @localization_keys = @scope.all
-        end
-      end
+    def get_localization_scope
+      @search_options = params.slice(*valid_keys)
+      @search_options[:include_completed] = '1' if @search_options.empty?
+      @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
+    end
 
-      def valid_keys
-        %w( key include_completed key_prefix order )
+    def get_localization_keys
+      key_parts = @search_options[:key_prefix].to_s.split('.').length
+      @prefixes = @scope.reorder(nil).uniq.pluck(:localization_key).map { |lk| lk.split('.').shift(key_parts + 1).join('.') }.uniq.sort
+      if @search_options[:key_prefix].present?
+        parts = @search_options[:key_prefix].split('.')
+        @parent_prefix = parts[0, parts.length - 1].join('.')
       end
+      if @scope.respond_to?(:page)
+        @localization_keys = @scope.page(params[:page])
+      else
+        @localization_keys = @scope.all
+      end
+    end
 
-      def grouped_localizations
-        @_grouped_localizations ||= begin
-          {}.tap do |hash|
-            @localization_keys.each do |lk|
-              hash[lk] = {}
-              lk.localizations.each do |l|
-                hash[lk][l.locale.locale.to_sym] = l
-              end
+    def valid_keys
+      %w( key include_completed key_prefix order )
+    end
+
+    def grouped_localizations
+      @_grouped_localizations ||= begin
+        {}.tap do |hash|
+          @localization_keys.each do |lk|
+            hash[lk] = {}
+            lk.localizations.each do |l|
+              hash[lk][l.locale.locale.to_sym] = l
             end
           end
         end
       end
+    end
 
-      def localization_for(locale, localization_key)
-        @_localization_for ||= {}
-        key = [locale, localization_key]
-        ret = @_localization_for[key]
-        if ret == false
-          nil
-        elsif ret.nil?
-          ret = grouped_localizations[localization_key][locale]
-          unless ret
-            Lit.init.cache.refresh_key("#{locale}.#{localization_key.localization_key}")
-            ret = localization_key.localizations.where(:locale_id=>Lit.init.cache.find_locale(locale).id).first
-          end
-          @_localization_for[key] = ret ? ret : false
-        else
-          ret
+    def localization_for(locale, localization_key)
+      @_localization_for ||= {}
+      key = [locale, localization_key]
+      ret = @_localization_for[key]
+      if ret == false
+        nil
+      elsif ret.nil?
+        ret = grouped_localizations[localization_key][locale]
+        unless ret
+          Lit.init.cache.refresh_key("#{locale}.#{localization_key.localization_key}")
+          ret = localization_key.localizations.where(locale_id: Lit.init.cache.find_locale(locale).id).first
         end
-
+        @_localization_for[key] = ret ? ret : false
+      else
+        ret
       end
+    end
 
-      helper_method :localization_for
+    helper_method :localization_for
 
-      def has_versions?(localization)
-        @_versions ||= begin
-          ids = grouped_localizations.values.map(&:values).flatten.map(&:id)
-          Lit::Localization.where(:id => ids).joins(:versions).group("#{Lit::Localization.quoted_table_name}.id").count
-        end
-        @_versions[localization.id].to_i > 0
+    def has_versions?(localization)
+      @_versions ||= begin
+        ids = grouped_localizations.values.map(&:values).flatten.map(&:id)
+        Lit::Localization.where(id: ids).joins(:versions).group("#{Lit::Localization.quoted_table_name}.id").count
       end
+      @_versions[localization.id].to_i > 0
+    end
 
-      helper_method :has_versions?
+    helper_method :has_versions?
   end
 end

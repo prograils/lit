@@ -1,4 +1,4 @@
-require_dependency "lit/application_controller"
+require_dependency 'lit/application_controller'
 
 module Lit
   class IncommingLocalizationsController < ApplicationController
@@ -35,8 +35,9 @@ module Lit
     end
 
     private
-      def find_source
-        @source = Source.find(params[:source_id].to_i)
-      end
+
+    def find_source
+      @source = Source.find(params[:source_id].to_i)
+    end
   end
 end

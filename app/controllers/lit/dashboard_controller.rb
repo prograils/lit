@@ -1,4 +1,4 @@
-require_dependency "lit/application_controller"
+require_dependency 'lit/application_controller'
 
 module Lit
   class DashboardController < ::Lit::ApplicationController

@@ -6,13 +6,13 @@ module Lit
         respond_to :json
         before_filter :authenticate_requests!
 
-
         private
-          def authenticate_requests!
-            authenticate_or_request_with_http_token do |token, options|
-              Lit.api_key == token
-            end
+
+        def authenticate_requests!
+          authenticate_or_request_with_http_token do |token, _options|
+            Lit.api_key == token
           end
+        end
       end
     end
   end

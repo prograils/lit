@@ -1,6 +1,6 @@
 module Lit
   module LocalizationsHelper
-    def draw_icon(icon, opts={})
+    def draw_icon(icon, opts = {})
       raw("<i class=\"fa fa-#{icon} #{opts[:class]}\" title=\"#{opts[:title]}\" ></i>")
     end
 

@@ -6,7 +6,7 @@ module Lit
     belongs_to :localization
 
     def to_s
-      self.translated_value
+      translated_value
     end
   end
 end

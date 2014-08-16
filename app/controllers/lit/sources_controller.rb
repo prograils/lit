@@ -1,4 +1,4 @@
-require_dependency "lit/application_controller"
+require_dependency 'lit/application_controller'
 
 module Lit
   class SourcesController < ApplicationController
@@ -27,24 +27,24 @@ module Lit
     def touch
       @source = Source.find(params[:id])
       @source.touch_last_updated_at!
-      redirect_to request.env["HTTP_REFERER"].present? ? :back : @source
+      redirect_to request.env['HTTP_REFERER'].present? ? :back : @source
     end
 
     def create
       @source = Source.new(clear_params)
       if @source.save
-        redirect_to @source, :notice => 'Source was successfully created.'
+        redirect_to @source, notice: 'Source was successfully created.'
       else
-        render :action => "new"
+        render action: 'new'
       end
     end
 
     def update
       @source = Source.find(params[:id])
       if @source.update_attributes(clear_params)
-        redirect_to @source, :notice => 'Source was successfully updated.'
+        redirect_to @source, notice: 'Source was successfully updated.'
       else
-        render :action => "edit"
+        render action: 'edit'
       end
     end
 
@@ -55,12 +55,13 @@ module Lit
     end
 
     private
-      def clear_params
-        if defined?(::ActionController::StrongParameters)
-          params.require(:source).permit(:identifier, :url, :api_key)
-        else
-          params[:source]
-        end
+
+    def clear_params
+      if defined?(::ActionController::StrongParameters)
+        params.require(:source).permit(:identifier, :url, :api_key)
+      else
+        params[:source]
       end
+    end
   end
 end

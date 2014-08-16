@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 # Declare your gem's dependencies in lit.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -28,9 +28,9 @@ group :test do
   gem 'simple_form'
   gem 'ransack'
   gem 'kaminari'
-  gem 'fakeweb', "~> 1.3", :require=>false
-  gem "test_declarative", :require => false
-  gem 'mocha', :require => false
+  gem 'fakeweb', '~> 1.3', require: false
+  gem 'test_declarative', require: false
+  gem 'mocha', require: false
 end
 
 group :development, :test do

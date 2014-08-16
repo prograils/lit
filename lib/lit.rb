@@ -1,4 +1,4 @@
-require "lit/engine"
+require 'lit/engine'
 require 'lit/loader'
 
 module Lit
@@ -16,8 +16,8 @@ module Lit
     attr_accessor :loader
   end
   def self.init
-    @@table_exists ||= self.check_if_table_exists
-    if self.loader.nil? && @@table_exists
+    @@table_exists ||= check_if_table_exists
+    if loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
       # if loading all translations on start, migrations have to be already
@@ -29,11 +29,9 @@ module Lit
   end
 
   def self.check_if_table_exists
-    begin
-      Lit::Locale.table_exists?
-    rescue
-      false
-    end
+    Lit::Locale.table_exists?
+  rescue
+    false
   end
 
   def self.get_key_value_engine

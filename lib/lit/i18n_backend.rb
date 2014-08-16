@@ -11,7 +11,7 @@ module Lit
     end
 
     def translate(locale, key, options = {})
-      content = super(locale, key, options.merge(:fallback => true))
+      content = super(locale, key, options.merge(fallback: true))
       if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
       else
@@ -21,10 +21,10 @@ module Lit
 
     def available_locales
       locales = ::Rails.configuration.i18n.available_locales
-      if locales and !locales.empty?
+      if locales && !locales.empty?
         locales
       else
-        Lit::Locale.ordered.visible.map{|l| l.locale.to_sym }
+        Lit::Locale.ordered.visible.map { |l| l.locale.to_sym }
       end
     end
 
@@ -39,7 +39,6 @@ module Lit
         store_item(locale, data)
       end
     end
-
 
     private
 
@@ -94,6 +93,5 @@ module Lit
       @cache.load_all_translations
       super
     end
-
   end
 end

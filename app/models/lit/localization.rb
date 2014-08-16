@@ -4,9 +4,9 @@ module Lit
     serialize :default_value
 
     ## SCOPES
-    scope :changed, proc{ where(:is_changed=>true) }
+    scope :changed, proc { where(is_changed: true) }
     # @HACK: dirty, find a way to round date to full second
-    scope :after, proc{|dt| where('updated_at >= ?', dt+1.second) }
+    scope :after, proc { |dt| where('updated_at >= ?', dt + 1.second) }
 
     ## ASSOCIATIONS
     belongs_to :locale
@@ -16,7 +16,7 @@ module Lit
 
     ## VALIDATIONS
     validates :locale_id,
-              :presence=>true
+              presence: true
 
     unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
@@ -24,22 +24,22 @@ module Lit
     end
 
     ## BEFORE & AFTER
-    with_options :if=>:translated_value_changed? do |o|
+    with_options if: :translated_value_changed? do |o|
       o.before_update :update_is_changed
       o.before_update :create_version
     end
     after_update :mark_localization_key_completed
 
     def to_s
-      self.get_value
+      get_value
     end
 
     def full_key
-      [self.locale.locale, self.localization_key.localization_key].join('.')
+      [locale.locale, localization_key.localization_key].join('.')
     end
 
     def get_value
-      (is_changed? && (not self.translated_value.nil?)) ? self.translated_value : self.default_value
+      (is_changed? && (!translated_value.nil?)) ? translated_value : default_value
     end
 
     def value
@@ -47,15 +47,15 @@ module Lit
     end
 
     def localization_key_str
-      self.localization_key.localization_key
+      localization_key.localization_key
     end
 
     def locale_str
-      self.locale.locale
+      locale.locale
     end
 
     def last_change
-      self.updated_at.to_s(:db)
+      updated_at.to_s(:db)
     end
 
     def update_default_value(value)
@@ -65,22 +65,23 @@ module Lit
     end
 
     private
-      def update_is_changed
-        unless is_changed?
-          self.is_changed = true
-          @should_mark_localization_key_completed = true
-        end
-      end
 
-      def mark_localization_key_completed
-        self.localization_key.mark_completed! if @should_mark_localization_key_completed
+    def update_is_changed
+      unless is_changed?
+        self.is_changed = true
+        @should_mark_localization_key_completed = true
       end
+    end
 
-      def create_version
-        if self.translated_value.present?
-          l = self.localization_versions.new
-          l.translated_value = self.translated_value_was || self.default_value
-        end
+    def mark_localization_key_completed
+      localization_key.mark_completed! if @should_mark_localization_key_completed
+    end
+
+    def create_version
+      if translated_value.present?
+        l = localization_versions.new
+        l.translated_value = translated_value_was || default_value
       end
+    end
   end
 end

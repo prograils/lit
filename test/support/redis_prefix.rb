@@ -1,1 +1,1 @@
-Lit.storage_options = { :prefix=>"_test_" }
+Lit.storage_options = { prefix: '_test_' }

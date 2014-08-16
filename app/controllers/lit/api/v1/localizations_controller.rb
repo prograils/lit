@@ -7,12 +7,12 @@ module Lit
       else
         @localizations = @localizations.all
       end
-      render :json=>@localizations.as_json(:root=>false, :only=>[:id, :localization_key_id, :locale_id], :methods=>[:value, :localization_key_str, :locale_str])
+      render json: @localizations.as_json(root: false, only: [:id, :localization_key_id, :locale_id], methods: [:value, :localization_key_str, :locale_str])
     end
 
     def last_change
       @localization = Localization.order('updated_at DESC').first
-      render :json=>@localization.as_json(:root=>false, :only=>[], :methods=>[:last_change])
+      render json: @localization.as_json(root: false, only: [], methods: [:last_change])
     end
   end
 end
