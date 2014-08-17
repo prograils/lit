@@ -37,6 +37,8 @@ To optimize translation key lookup, *Lit* can use different cache engines. For p
 gem 'lit'
 ```
 
+  For Ruby < 1.9 use `gem 'lit', '= 0.2.4'`, as next versions introduced new ruby hash syntax.
+
 2. run `bundle install`
 
 3. run installation generator `bundle exec rails g lit:install`
