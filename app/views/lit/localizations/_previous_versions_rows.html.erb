@@ -2,14 +2,14 @@
 <table class="table table-condensed">
   <tr>
     <th><%= t('lit.common.previous_versions') %></th>
-    <th width="25%"><%= t('lit.common.created_at') %></th>
+    <th width="25%"><%= t('lit.common.changed_at') %></th>
   </tr>
   <% @versions.each do |v| %>
     <tr>
       <td>
         <%= render :partial=>"/lit/localization_keys/localization_row", :locals=>{:localization=>v.translated_value} %>
       </td>
-      <td><%= v.created_at %></td>
+      <td><%= I18n.l v.created_at, format: :long %></td>
     </tr>
   <% end %>
 </table>
