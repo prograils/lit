@@ -28,7 +28,7 @@ DatabaseCleaner.clean_with :truncation
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   setup do
-    Redis.new.flushall if Lit.key_value_engine == 'redis'
+    clear_redis
     Lit.init.cache.reset
   end
 end
