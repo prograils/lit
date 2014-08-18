@@ -39,7 +39,7 @@ module Lit
     end
 
     def has_key?(key)
-      @localizations.key?(key)
+      @localizations.has_key?(key)
     end
 
     def sync
@@ -73,8 +73,8 @@ module Lit
     def load_all_translations
       first = Localization.order('id ASC').first
       last = Localization.order('id DESC').first
-      if !first || !last || (!@localizations.key?(first.full_key) ||
-        !@localizations.key?(last.full_key))
+      if !first || !last || (!@localizations.has_key?(first.full_key) ||
+        !@localizations.has_key?(last.full_key))
 
         Localization.includes([:locale, :localization_key]).find_each do |l|
           @localizations[l.full_key] = l.get_value
@@ -112,7 +112,7 @@ module Lit
     def find_locale(locale_key)
       locale_key = locale_key.to_s
       @locale_cache ||= {}
-      unless @locale_cache.key?(locale_key)
+      unless @locale_cache.has_key?(locale_key)
         locale = Lit::Locale.where(locale: locale_key).first_or_create!
         @locale_cache[locale_key] = locale
       end
@@ -257,7 +257,7 @@ module Lit
 
     def find_localization_key(key_without_locale)
       @localization_keys ||= Lit.get_key_value_engine
-      unless @localization_keys.key?(key_without_locale)
+      unless @localization_keys.has_key?(key_without_locale)
         find_or_create_localization_key(key_without_locale)
       else
         Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) || find_or_create_localization_key(key_without_locale)
@@ -266,7 +266,7 @@ module Lit
 
     def find_localization_key_for_delete(key_without_locale)
       @localization_keys ||= Lit.get_key_value_engine
-      lk = Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) if @localization_keys.key?(key_without_locale)
+      lk = Lit::LocalizationKey.find_by_id(@localization_keys[key_without_locale]) if @localization_keys.has_key?(key_without_locale)
       lk || Lit::LocalizationKey.where(localization_key: key_without_locale).first
     end
 
