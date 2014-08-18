@@ -8,7 +8,6 @@ class I18nBackendTest < ActiveSupport::TestCase
   def setup
     @old_backend = I18n.backend
     @old_available_locales = ::Rails.configuration.i18n.available_locales
-    I18n.backend = Backend.new(Lit.loader.cache)
   end
 
   def teardown
@@ -17,10 +16,13 @@ class I18nBackendTest < ActiveSupport::TestCase
   end
 
   test 'properly returns available locales' do
+    I18n.backend = Backend.new(Lit.loader.cache)
     assert_equal 2, I18n.backend.available_locales.count
     ::Rails.configuration.i18n.available_locales = [:en, :pl]
+    I18n.backend = Backend.new(Lit.loader.cache)
     assert_equal 2, I18n.backend.available_locales.count
     ::Rails.configuration.i18n.available_locales = [:en]
+    I18n.backend = Backend.new(Lit.loader.cache)
     assert_equal 1, I18n.backend.available_locales.count
   end
 end

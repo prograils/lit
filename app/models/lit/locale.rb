@@ -12,6 +12,10 @@ module Lit
               presence: true,
               uniqueness: true
 
+    ## BEFORE & AFTER
+    after_save :reset_available_locales_cache
+    after_destroy :reset_available_locales_cache
+
     unless defined?(::ActionController::StrongParameters)
       ## ACCESSIBLE
       attr_accessible :locale
@@ -32,6 +36,14 @@ module Lit
 
     def get_all_localizations_count
       localizations.count(:id)
+    end
+
+    private
+
+    def reset_available_locales_cache
+      if I18n.backend.respond_to?(:reset_available_locales_cache)
+        I18n.backend.reset_available_locales_cache
+      end
     end
   end
 end

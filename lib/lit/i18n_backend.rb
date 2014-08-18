@@ -8,6 +8,7 @@ module Lit
 
     def initialize(cache)
       @cache = cache
+      @available_locales_cache = nil
     end
 
     def translate(locale, key, options = {})
@@ -20,12 +21,18 @@ module Lit
     end
 
     def available_locales
+      return @available_locales_cache unless @available_locales_cache.nil?
       locales = ::Rails.configuration.i18n.available_locales
       if locales && !locales.empty?
-        locales
+        @available_locales_cache = locales.map(&:to_sym)
       else
-        Lit::Locale.ordered.visible.map { |l| l.locale.to_sym }
+        @available_locales_cache = Lit::Locale.ordered.visible.map { |l| l.locale.to_sym }
       end
+      @available_locales_cache
+    end
+
+    def reset_available_locales_cache
+      @available_locales_cache = nil
     end
 
     # Stores the given translations.
