@@ -29,20 +29,23 @@ module Lit
         localization.save
       else
         unless locale.present?
-          self.locale = Lit::Locale.new
-          locale.locale = locale_str
-          locale.save!
+          self.locale = Lit::Locale.where(locale: locale_str).first_or_create
         end
         unless localization_key.present?
-          self.localization_key = Lit::LocalizationKey.new
-          localization_key.localization_key = localization_key_str
-          localization_key.save!
+          self.localization_key = Lit::LocalizationKey.
+                where(localization_key: localization_key_str).
+                first_or_create
         end
         unless localization.present?
-          self.localization = Lit::Localization.new
-          localization.locale = locale
-          localization.localization_key = localization_key
-          localization.default_value = translated_value
+          self.localization = Lit::Localization.
+                where(localization_key_id: self.localization_key.id).
+                where(locale_id: self.locale.id).
+                first_or_initialize
+          if localization.present?
+            localization.translated_value = translated_value
+          else
+            localization.default_value = translated_value
+          end
           localization.save!
         end
       end
@@ -52,7 +55,8 @@ module Lit
     def is_duplicate?(val)
       set_localization_id unless localization.present?
       if localization
-        translated_value = localization.read_attribute_before_type_cast('translated_value')
+        translated_value = localization.
+                read_attribute_before_type_cast('translated_value')
         if localization.is_changed? && !translated_value.nil?
           translated_value == val
         else

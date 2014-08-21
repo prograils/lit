@@ -10,20 +10,20 @@
   </span>
 </div>
 
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped incomming-localizations-table">
   <tr>
     <th>Current value</th>
     <th>Imported value</th>
     <th width="200px"></th>
   </tr>
   <% @incomming_localizations.each do |il| %>
-    <tr>
+    <tr data-id="<%= il.id %>">
       <td colspan="3">
         <%= image_tag "lit/famfamfam_flags/#{il.locale_str[0,2]}.png" %>
         <strong><%= il.full_key %></strong>
       </td>
     </tr>
-    <tr>
+    <tr data-id="<%= il.id %>">
       <td>
         <% if il.localization %>
           <%= render :partial=>"/lit/localization_keys/localization_row", :locals=>{:localization=>il.localization.get_value} %>
@@ -33,11 +33,11 @@
         <%= render :partial=>"/lit/localization_keys/localization_row", :locals=>{:localization=>il.get_value} %>
       </td>
       <td>
-        <%= link_to accept_source_incomming_localization_path(@source, il), :class=>"btn btn-success btn-sm" do %>
+        <%= link_to accept_source_incomming_localization_path(@source, il), :class=>"btn btn-success btn-sm", :remote=>true do %>
           <%= draw_icon "check", :class=>"icon-white" %>
           <%= t('lit.common.accept', :default=>"Accept") %>
         <% end %>
-        <%= link_to source_incomming_localization_path(@source, il), :class=>"btn btn-danger btn-sm", :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
+        <%= link_to source_incomming_localization_path(@source, il), :class=>"btn btn-danger btn-sm", :remote=>true, :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
           <%= draw_icon "times", :class=>"icon-white" %>
           <%= t('lit.common.reject', :default=>"Reject") %>
         <% end %>
