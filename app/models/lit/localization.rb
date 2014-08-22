@@ -10,7 +10,7 @@ module Lit
 
     ## ASSOCIATIONS
     belongs_to :locale
-    belongs_to :localization_key
+    belongs_to :localization_key, touch: true
     has_many :localization_versions, dependent: :destroy
     has_many :versions, class_name: '::Lit::LocalizationVersion'
 
