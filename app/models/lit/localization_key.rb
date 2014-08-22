@@ -53,7 +53,7 @@ module Lit
     end
 
     def self.order_options
-      ['localization_key asc', 'localization_key desc', 'created_at asc', 'created_at desc']
+      ['localization_key asc', 'localization_key desc', 'created_at asc', 'created_at desc', 'updated_at asc', 'updated_at desc']
     end
 
     # it can be overridden in parent application, for example: {:order => "created_at desc"}
