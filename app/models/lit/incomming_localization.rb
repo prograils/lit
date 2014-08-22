@@ -26,6 +26,7 @@ module Lit
     def accept
       if localization.present?
         localization.translated_value = translated_value
+        localization.is_changed = true
         localization.save
       else
         unless locale.present?
@@ -41,14 +42,12 @@ module Lit
                 where(localization_key_id: self.localization_key.id).
                 where(locale_id: self.locale.id).
                 first_or_initialize
-          if localization.present?
-            localization.translated_value = translated_value
-          else
-            localization.default_value = translated_value
-          end
+          localization.translated_value = translated_value
+          localization.is_changed = true
           localization.save!
         end
       end
+      Lit.init.cache.update_cache localization.full_key, localization.get_value
       destroy
     end
 
