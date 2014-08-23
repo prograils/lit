@@ -25,7 +25,7 @@ module Lit
 
     ## BEFORE & AFTER
     with_options if: :translated_value_changed? do |o|
-      o.before_update :update_is_changed
+      o.before_update :update_is_changed_attribute
       o.before_update :create_version
     end
     after_update :mark_localization_key_completed
@@ -66,11 +66,11 @@ module Lit
 
     private
 
-    def update_is_changed
-      unless is_changed?
-        self.is_changed = true
-        @should_mark_localization_key_completed = true
-      end
+    def update_is_changed_attribute
+      return if attributes['is_changed'] == true
+
+      self[:is_changed] = true
+      @should_mark_localization_key_completed = true
     end
 
     def mark_localization_key_completed

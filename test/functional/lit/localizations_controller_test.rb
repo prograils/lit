@@ -26,11 +26,13 @@ module Lit
 
     test 'should update localization when translated_value is a string' do
       @localization = lit_localizations(:string)
+      @localization.update_attribute(:is_changed, false)
       put :update, localization_key_id: @localization.localization_key.id, id: @localization.id,
           localization: { translated_value: 'new-value', locale_id: @localization.locale_id }, format: :js
       assert_response :success
       @localization.reload
       assert_equal 'new-value', @localization.translated_value
+      assert_equal true, @localization.is_changed?
     end
 
     test 'should update localization when translated_value is a array' do

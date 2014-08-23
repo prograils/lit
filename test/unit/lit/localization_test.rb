@@ -4,7 +4,6 @@ module Lit
   class LocalizationTest < ActiveSupport::TestCase
     test 'does not create version upon creation' do
       I18n.locale = :en
-      Redis.new.flushall if Lit.key_value_engine == 'redis'
       assert_no_difference 'Lit::LocalizationVersion.count' do
         Lit.init.cache.reset
         assert_equal 'English translation', I18n.t('scope.text_with_translation_in_english')
@@ -13,7 +12,6 @@ module Lit
 
     test 'does create new version upon update via model' do
       I18n.locale = :en
-      Redis.new.flushall if Lit.key_value_engine == 'redis'
       assert_difference 'Lit::LocalizationVersion.count' do
         Lit.init.cache.reset
         assert_equal 'English translation', I18n.t('scope.text_with_translation_in_english')
@@ -21,8 +19,12 @@ module Lit
         lk = Lit::LocalizationKey.find_by_localization_key('scope.text_with_translation_in_english')
         l = Lit::Localization.where('localization_key_id=?', lk).where('locale_id=?', lang).first
         assert_not_nil l
+        l.update_attribute :is_changed, false
+        l.reload
         l.translated_value = 'test'
         l.save!
+        l.reload
+        assert_equal true, l.is_changed?
       end
       Lit.init.cache.reset
       assert_equal 'test', I18n.t('scope.text_with_translation_in_english')
