@@ -9,7 +9,7 @@ module Lit
     def starred
       @scope = @scope.where(is_starred: true)
 
-      if @scope.respond_to?(Kaminari.config.page_method_name)
+      if defined?(Kaminari) and @scope.respond_to?(Kaminari.config.page_method_name)
         @scope = @scope.send(Kaminari.config.page_method_name, params[:page])
       end
       get_localization_keys
@@ -47,7 +47,7 @@ module Lit
         parts = @search_options[:key_prefix].split('.')
         @parent_prefix = parts[0, parts.length - 1].join('.')
       end
-      if @scope.respond_to?(Kaminari.config.page_method_name)
+      if defined?(Kaminari) and @scope.respond_to?(Kaminari.config.page_method_name)
         @localization_keys = @scope.send(Kaminari.config.page_method_name, params[:page])
       else
         @localization_keys = @scope.all
