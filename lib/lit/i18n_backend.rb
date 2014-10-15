@@ -57,7 +57,7 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      if !@cache.has_key?(key_with_locale) and (Lit.init_lit or Lit.discover_new_translation == true)
+      if !@cache.has_key?(key_with_locale) and (Lit.init_lit or Lit.discover_new_translation == true or (Lit.discover_new_translation == :default and options[:default].present?))
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
