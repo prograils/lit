@@ -7,6 +7,10 @@ Lit.authentication_function = <%= @authentication_function || 'nil' %>
 # environment
 Lit.key_value_engine = "<%= @key_value_engine %>"
 
+# Either true, false or :default. :default means to created if a default value
+# is specify.
+# Lit.discover_new_translation = true
+
 # Pass extra options to key_value_neinge, ie. prefix for redis (only one
 # supported at the moment)
 # Lit.storage_options = { :prefix=>"my_project" }
