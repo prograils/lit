@@ -23,6 +23,7 @@ module Lit
     if loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
+      Lit.discover_new_translation = true if Lit.discover_new_translation.nil?
       # if loading all translations on start, migrations have to be already
       # performed, fails on first deploy
       # self.loader.cache.load_all_translations
