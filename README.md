@@ -30,6 +30,18 @@ Once you call `I18n.t()` function from your views, *Lit* is asked whether it has
 
 To optimize translation key lookup, *Lit* can use different cache engines. For production with many workers `redis` is suggested, for local development `hash` will be fine (`hash` is stored in memory, so if you have many workers and will update translation value in backend, only one worker will have proper translation in it's cache - db will be updated anyway).
 
+Keys ending with `_html` have auto wysiwyg support.
+
+You can also export translations using rake task
+```bash
+$ rake lit:export
+```
+You may also give it extra env variables to limit the export results.
+```bash
+$ LOCALES=en,de rake lit:export
+```
+
+
 ### Installation
 
 1. Add `lit` gem to your `Gemfile`
