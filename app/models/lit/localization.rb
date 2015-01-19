@@ -8,6 +8,7 @@ module Lit
     # @HACK: dirty, find a way to round date to full second
     scope :after, proc { |dt| where('updated_at >= ?', dt + 1.second) }
     scope :without_translation, proc { where(translated_value: nil)}
+    scope :for_locale, proc { |locale| joins(:locale).merge(Lit::Locale.just_locale(locale)) }
 
     ## ASSOCIATIONS
     belongs_to :locale
