@@ -5,7 +5,7 @@
   <%- @localization_keys.each do |lk| %>
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
-        <strong><%= lk.localization_key %></strong>
+        <strong><%= lk.localization_key %>: <%= lk.localizations.find_by(locale: Lit::Locale.find_by_locale(:en)).default_value || 'null' %></strong>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
@@ -17,7 +17,7 @@
         </div>
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
-            <%- available_locales.each do |locale| %>
+            <%- locales.each do |locale| %>
               <%- localization = localization_for(locale, lk) %>
               <tr>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="">
@@ -63,6 +63,10 @@
         <%= check_box_tag :include_completed, '1', @search_options[:include_completed].to_i==1 %>
         <%= t('.is_completed', :default=>"Include completed") %>
       </label>
+      <div class="input-group">
+        <%= select_tag :current_locale,
+          options_for_select(I18n.available_locales), prompt: "Select locale" %>
+      </div>
     <% end %>
     <ul class="nav nav-pills nav-stacked">
       <li class="<%= "active" if params[:action]=='index' %>">
@@ -105,4 +109,3 @@
     </ul>
   </div>
 <% end %>
-
