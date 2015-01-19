@@ -13,8 +13,8 @@ module Lit
     end
 
     def locales
+      return I18n.available_locales if !@current_locale || @current_locale == ''
       return [@current_locale] if @current_locale
-      return I18n.available_locales if !@current_locale
     end
   end
 end
