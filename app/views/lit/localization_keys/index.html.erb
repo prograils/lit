@@ -17,7 +17,7 @@
         </div>
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
-            <%- available_locales.each do |locale| %>
+            <%- locales.each do |locale| %>
               <%- localization = localization_for(locale, lk) %>
               <tr>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="">
@@ -105,4 +105,3 @@
     </ul>
   </div>
 <% end %>
-
