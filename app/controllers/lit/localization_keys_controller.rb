@@ -1,6 +1,7 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
     before_filter :get_localization_scope, except: [:destroy]
+    before_filter :get_current_locale, only: [:index]
 
     def index
       get_localization_keys
@@ -33,6 +34,10 @@ module Lit
     end
 
     private
+
+    def get_current_locale
+      @current_locale = params[:current_locale]
+    end
 
     def get_localization_scope
       @search_options = params.slice(*valid_keys)
