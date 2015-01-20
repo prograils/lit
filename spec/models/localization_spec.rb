@@ -17,15 +17,15 @@ RSpec.describe Lit::Localization, type: :model do
     )
   end
 
-  describe "without_translation scope" do
-    it "returns only localization without any value" do
+  describe "without_value scope" do
+    it "returns only localizations without any value" do
       I18n.locale = :en
       Lit.init.cache.reset
       lang = Lit::Locale.find_by_locale('en')
       lk = Lit::LocalizationKey.find_by_localization_key('scope.some_text')
-      l = Lit::Localization.without_translation.first
+      l = Lit::Localization.without_value.first
       expect(l.default_value).to be_nil
-      expect(Lit::Localization.without_translation.count).to be_eql 1
+      expect(Lit::Localization.without_value.count).to be_eql 1
     end
   end
 
