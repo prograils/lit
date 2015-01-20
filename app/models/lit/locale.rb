@@ -1,6 +1,5 @@
 module Lit
   class Locale < ActiveRecord::Base
-    attr_accessible :locale
     ## SCOPES
     scope :ordered, proc { order('locale ASC') }
     scope :visible, proc { where(is_hidden: false) }
@@ -17,6 +16,11 @@ module Lit
     ## BEFORE & AFTER
     after_save :reset_available_locales_cache
     after_destroy :reset_available_locales_cache
+
+    unless defined?(::ActionController::StrongParameters)
+      ## ACCESSIBLE
+      attr_accessible :locale
+    end
 
     def to_s
       locale

@@ -5,7 +5,7 @@
   <%- @localization_keys.each do |lk| %>
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
-        <strong><%= lk.localization_key %>: <%= lk.localizations.find_by(locale: Lit::Locale.find_by_locale(:en)) ? lk.localizations.find_by(locale: Lit::Locale.find_by_locale(:en)).default_value : 'null' %></strong>
+        <strong><%= lk.localization_key %>: <%= lk.localizations.where(locale: Lit::Locale.find_by_locale(:en)).first ? lk.localizations.where(locale: Lit::Locale.find_by_locale(:en)).first.default_value : 'null' %></strong>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
