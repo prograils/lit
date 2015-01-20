@@ -5,7 +5,7 @@
   <%- @localization_keys.each do |lk| %>
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
-        <strong><%= lk.localization_key %>: <%= lk.localizations.find_by(locale: Lit::Locale.find_by_locale(:en)).default_value || 'null' %></strong>
+        <strong><%= lk.localization_key %>: <%= lk.localizations.find_by(locale: Lit::Locale.find_by_locale(:en)) ? lk.localizations.find_by(locale: Lit::Locale.find_by_locale(:en)).default_value : 'null' %></strong>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
@@ -65,12 +65,13 @@
       </label>
       <div class="input-group">
         <%= select_tag :current_locale,
-          options_for_select(I18n.available_locales), prompt: "Select locale" %>
+          options_for_select(I18n.available_locales, request.parameters[:current_locale]), prompt: "Select locale" %>
       </div>
     <% end %>
+    <br>
     <ul class="nav nav-pills nav-stacked">
       <li class="<%= "active" if params[:action]=='index' %>">
-        <%= link_to lit.localization_keys_path do -%>
+        <%= link_to lit.localization_keys_path(request.parameters.merge(all: true)) do -%>
           <%= draw_icon 'list' %>
           all
         <% end %>

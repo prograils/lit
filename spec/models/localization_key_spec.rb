@@ -8,8 +8,7 @@ RSpec.describe Lit::LocalizationKey, type: :model do
       @localization_key = Lit::LocalizationKey.create(localization_key: 'scope.some_text')
       Lit::Localization.create(
         locale: locale,
-        localization_key: @localization_key,
-        default_value: "Some text"
+        localization_key: @localization_key
       )
       Lit::Localization.create(
         locale: locale_pt,
