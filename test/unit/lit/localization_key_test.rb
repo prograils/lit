@@ -17,16 +17,17 @@ module Lit
       locale_en = lit_locales(:en)
       localization = Lit::Localization.new()
       localization.locale = locale_pl
-      localization.localization_key = @localization_key
+      localization.localization_key = l
       localization.save()
 
       localization = Lit::Localization.new()
       localization.locale = locale_en
-      localization.localization_key = @localization_key
+      localization.localization_key = l
       localization.default_value = "Some text"
       localization.save()
 
-      assert_equal(Lit::LocalizationKey.nulls_for(:pl), [])
+      assert_equal([l], Lit::LocalizationKey.nulls_for(:pl))
+      assert_equal([], Lit::LocalizationKey.nulls_for(:en))
     end
   end
 end

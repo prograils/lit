@@ -2,6 +2,25 @@ require 'test_helper'
 
 module Lit
   class LocalizationTest < ActiveSupport::TestCase
+    fixtures 'lit/localization_keys'
+    fixtures 'lit/locales'
+
+    def setup
+      l = lit_localization_keys(:hello_world)
+      locale_pl = lit_locales(:pl)
+      locale_en = lit_locales(:en)
+      @lc_pl = Lit::Localization.new()
+      @lc_pl.locale = locale_pl
+      @lc_pl.localization_key = l
+      @lc_pl.save()
+
+      @lc_en = Lit::Localization.new()
+      @lc_en.locale = locale_en
+      @lc_en.localization_key = l
+      @lc_en.default_value = "Some text"
+      @lc_en.save()
+    end
+
     test 'does not create version upon creation' do
       I18n.locale = :en
       assert_no_difference 'Lit::LocalizationVersion.count' do
@@ -28,6 +47,14 @@ module Lit
       end
       Lit.init.cache.reset
       assert_equal 'test', I18n.t('scope.text_with_translation_in_english')
+    end
+
+    test 'returns only localizations without value for this scope' do
+      assert_equal([@lc_pl], Lit::Localization.without_value)
+    end
+
+    test 'locale scope returns only localizaions of a specific locale' do
+      assert_equal([@lc_en], Lit::Localization.for_locale(:en))
     end
   end
 end
