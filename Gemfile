@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'jquery-rails'
-gem 'rails', '4.1.0'
+gem 'rails', '3.2.14'
 gem 'devise'
 gem 'pg'
 
 group :assets do
-  gem 'coffee-rails', '~> 4.0.1'
+  gem 'coffee-rails', '~> 3.2.1'
 end
 
 group :test do
@@ -21,9 +21,10 @@ group :test do
   gem 'test_declarative', :require => false
   gem 'mocha', :require => false
   gem 'rspec-rails', '~> 3.0'
+  gem 'appraisal'
 end
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'sass-rails',   '~> 4.0.3'
+  gem 'sass-rails'
 end

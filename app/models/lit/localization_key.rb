@@ -1,6 +1,7 @@
 module Lit
   class LocalizationKey < ActiveRecord::Base
     attr_accessor :interpolated_key
+    attr_accessible :localization_key
 
     ## SCOPES
     scope :completed, proc { where(is_completed: true) }
@@ -20,11 +21,6 @@ module Lit
     validates :localization_key,
               presence: true,
               uniqueness: { if: :localization_key_changed? }
-
-    unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
-      attr_accessible :localization_key
-    end
 
     def to_s
       localization_key

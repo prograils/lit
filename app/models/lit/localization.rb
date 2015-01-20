@@ -1,5 +1,7 @@
 module Lit
   class Localization < ActiveRecord::Base
+    attr_accessible :translated_value, :locale_id, :locale, :localization_key, :default_value
+
     serialize :translated_value
     serialize :default_value
 
@@ -19,11 +21,6 @@ module Lit
     ## VALIDATIONS
     validates :locale_id,
               presence: true
-
-    unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
-      attr_accessible :translated_value, :locale_id
-    end
 
     ## BEFORE & AFTER
     with_options if: :translated_value_changed? do |o|
