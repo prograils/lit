@@ -1,7 +1,6 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
     before_filter :get_localization_scope, except: [:destroy]
-    before_filter :get_current_locale, only: [:index]
 
     def index
       get_localization_keys
@@ -39,10 +38,19 @@ module Lit
       @current_locale = params[:current_locale]
     end
 
+    def get_all
+      return params[:all]
+    end
+
     def get_localization_scope
+      get_current_locale
       @search_options = params.slice(*valid_keys)
       @search_options[:include_completed] = '1' if @search_options.empty?
       @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
+      if @current_locale and @current_locale != '' and !get_all
+        @scope = @scope.nulls_for(@current_locale)
+      end
+      return @scope
     end
 
     def get_localization_keys
