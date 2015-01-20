@@ -8,7 +8,7 @@ module Lit
     scope :starred, proc { where(is_starred: true) }
     scope :ordered, proc { order('localization_key asc') }
     scope :after, proc { |dt| where('updated_at >= ?', dt) }
-    scope :nulls, proc { |locale|
+    scope :nulls_for, proc { |locale|
       joins(:localizations).merge(Lit::Localization.without_translation).
       merge(Lit::Localization.for_locale(locale))
     }

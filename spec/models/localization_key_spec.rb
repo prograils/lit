@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Lit::LocalizationKey, type: :model do
-  describe "nulls scope" do
+  describe "nulls_for scope" do
     before do
       locale = Lit::Locale.create(locale: :en)
       locale_pt = Lit::Locale.create(locale: "pt-BR")
@@ -23,8 +23,8 @@ RSpec.describe Lit::LocalizationKey, type: :model do
       Lit.init.cache.reset
       lang = Lit::Locale.find_by_locale('en')
       lk = Lit::LocalizationKey.find_by_localization_key('scope.some_text')
-      expect(Lit::LocalizationKey.nulls(:en)).to match_array [@localization_key]
-      expect(Lit::LocalizationKey.nulls("pt-BR")).to match_array []
+      expect(Lit::LocalizationKey.nulls_for(:en)).to match_array [@localization_key]
+      expect(Lit::LocalizationKey.nulls_for("pt-BR")).to match_array []
     end
   end
 end

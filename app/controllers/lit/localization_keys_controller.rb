@@ -47,9 +47,8 @@ module Lit
       @search_options = params.slice(*valid_keys)
       @search_options[:include_completed] = '1' if @search_options.empty?
       @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
-      @scope.nulls(@current_locale).each {|scope| puts "\n#{scope}"}
       if @current_locale and @current_locale != '' and !get_all
-        @scope = @scope.nulls(@current_locale)
+        @scope = @scope.nulls_for(@current_locale)
       end
       return @scope
     end
