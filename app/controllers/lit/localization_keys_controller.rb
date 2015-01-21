@@ -43,7 +43,9 @@ module Lit
     end
 
     def localizations_without_value
-      return Lit::Localization.within(@scope).without_value
+      localizations = Lit::Localization.within(@scope).without_value
+      return localizations.for_locale(@current_locale) if @current_locale and @current_locale != ''
+      return localizations
     end
 
     def get_localization_scope
@@ -51,7 +53,7 @@ module Lit
       @search_options = params.slice(*valid_keys)
       @search_options[:include_completed] = '1' if @search_options.empty?
       @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
-      if @current_locale and @current_locale != '' and !get_all
+      if @current_locale and @current_locale != '' and !get_all and (!@search_options[:key] or @search_options[:key].empty?)
         @scope = @scope.nulls_for(@current_locale)
       end
       return @scope
