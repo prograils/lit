@@ -11,6 +11,7 @@ module Lit
       locale_en = lit_locales(:en)
       @lc_pl = Lit::Localization.new()
       @lc_pl.locale = locale_pl
+      @lc_pl.default_value = nil
       @lc_pl.localization_key = l
       @lc_pl.save()
 
@@ -49,7 +50,7 @@ module Lit
       assert_equal 'test', I18n.t('scope.text_with_translation_in_english')
     end
 
-    test 'returns only localizations without value for this scope' do
+    test 'without_value returns only localizations without a value' do
       assert_equal([@lc_pl], Lit::Localization.without_value)
     end
 
