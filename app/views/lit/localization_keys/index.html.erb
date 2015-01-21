@@ -1,4 +1,12 @@
 <h3><%= t('.header', :default=>"Localization keys") %></h3>
+
+<strong>
+  Keys without translation:
+  <span class="badge">
+    <%= keys_without_value.count %>
+  </span>
+</strong>
+
 <% available_locales = I18n.backend.available_locales %>
 
 <table class="table">

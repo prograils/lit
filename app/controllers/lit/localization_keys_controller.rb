@@ -42,6 +42,10 @@ module Lit
       return params[:all]
     end
 
+    def keys_without_value
+      return Lit::Localization.within(@scope).without_value
+    end
+
     def get_localization_scope
       get_current_locale
       @search_options = params.slice(*valid_keys)
@@ -103,6 +107,7 @@ module Lit
     end
 
     helper_method :localization_for
+    helper_method :keys_without_value
 
     def has_versions?(localization)
       @_versions ||= begin
