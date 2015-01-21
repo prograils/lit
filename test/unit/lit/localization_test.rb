@@ -20,6 +20,12 @@ module Lit
       @lc_en.localization_key = l
       @lc_en.default_value = "Some text"
       @lc_en.save()
+
+      @array = lit_localization_keys(:array)
+      @lc_array_pl = Lit::Localization.new()
+      @lc_array_pl.locale = locale_pl
+      @lc_array_pl.localization_key = @array
+      @lc_array_pl.save()
     end
 
     test 'does not create version upon creation' do
@@ -56,6 +62,13 @@ module Lit
 
     test 'locale scope returns only localizaions of a specific locale' do
       assert_equal([@lc_en], Lit::Localization.for_locale(:en))
+    end
+
+    test 'within scope filters by localization keys' do
+      scope = Lit::LocalizationKey.where(id: @array.id)
+      assert_equal([@lc_array_pl], Lit::Localization.within(scope))
+      scope = Lit::LocalizationKey.all
+      assert_equal(3, Lit::Localization.within(scope).count)
     end
   end
 end

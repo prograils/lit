@@ -42,7 +42,7 @@ module Lit
       return params[:all]
     end
 
-    def keys_without_value
+    def localizations_without_value
       return Lit::Localization.within(@scope).without_value
     end
 
@@ -107,7 +107,7 @@ module Lit
     end
 
     helper_method :localization_for
-    helper_method :keys_without_value
+    helper_method :localizations_without_value
 
     def has_versions?(localization)
       @_versions ||= begin
