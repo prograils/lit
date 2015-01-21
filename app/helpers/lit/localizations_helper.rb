@@ -16,5 +16,13 @@ module Lit
       return I18n.available_locales if !@current_locale || @current_locale == ''
       return [@current_locale] if @current_locale
     end
+
+    def default_localization(localization_key, locale=:en)
+      if lk = localization_key.localizations.for_locale(locale).first
+        lk.default_value
+      else
+        'null'
+      end
+    end
   end
 end

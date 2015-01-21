@@ -6,7 +6,7 @@
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
         <span>
-          <strong><%= lk.localizations.where(locale_id: Lit::Locale.just_locale(:en)).first.default_value ? lk.localizations.where(locale_id: Lit::Locale.just_locale(:en)).first.default_value : 'null' %></strong>:
+          <strong><%= default_localization(lk) %></strong>:
           (<%= lk.localization_key %>)
         </span>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
