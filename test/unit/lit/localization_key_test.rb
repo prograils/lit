@@ -18,6 +18,7 @@ module Lit
       localization = Lit::Localization.new()
       localization.locale = locale_pl
       localization.localization_key = l
+      localization.default_value = nil
       localization.save()
 
       localization = Lit::Localization.new()
