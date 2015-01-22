@@ -25,7 +25,7 @@ module Lit
 
       def set_key_value_engine
         @key_value_engine = options['key-value-engine'].presence ||
-              ask("What's the key value engine? ([hash] OR redis):").presence ||
+              ask("What's the key value engine? (memory OR redis):").presence ||
               :hash
       end
 
