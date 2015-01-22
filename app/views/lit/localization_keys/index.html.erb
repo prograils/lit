@@ -36,7 +36,7 @@
                 </td>
                 <td class="locale_row">
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
-                  <%= locale %>
+                  <%= locale unless localization.locale.is_hidden %>
                   <% if localization %>
                     <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization), :class=>"show_prev_versions #{'hidden' unless has_versions?(localization)}", :remote=>true do %>
                       <%= draw_icon 'random', :title=>t('lit.common.previous_versions', :default=>"Previous versions") %>
