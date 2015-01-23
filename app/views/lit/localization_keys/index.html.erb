@@ -83,13 +83,13 @@
     <br>
     <ul class="nav nav-pills nav-stacked">
       <li class="<%= "active" if params[:action]=='index' %>">
-        <%= link_to lit.localization_keys_path(request.parameters.merge(all: true)) do -%>
+        <%= link_to lit.localization_keys_path(request.parameters.merge(all: true, current_locale: @current_locale)) do -%>
           <%= draw_icon 'list' %>
           all
         <% end %>
       </li>
       <li class="<%= "active" if params[:action]=='starred' %>">
-        <%= link_to lit.starred_localization_keys_path do -%>
+        <%= link_to lit.starred_localization_keys_path(current_locale: @current_locale) do -%>
           <%= draw_icon 'star' %>
           starred
         <% end %>
@@ -97,7 +97,7 @@
       <li class="nav-header"><%= t(".order_by", :default => "Order by") %>:</li>
       <% Lit::LocalizationKey.order_options.each do |order| %>
         <li class="<%= "active" if order == @search_options[:order]  %>">
-          <%= link_to url_for(@search_options.merge(:order => order)) do %>
+          <%= link_to url_for(@search_options.merge(:order => order, :current_locale => @current_locale)) do %>
             <%= t("lit.order_options.#{order.gsub(" ", "_")}", :default => order.humanize) %>
           <% end %>
         </li>
@@ -105,7 +105,7 @@
       <li class="nav-header">Narrow with prefix</li>
       <% if @search_options[:key_prefix].present? %>
         <li>
-          <%= link_to url_for(@search_options.merge(:key_prefix=>p)), :title=>(@parent_prefix.present? ? @parent_prefix : 'show all') do %>
+          <%= link_to url_for(@search_options.merge(:key_prefix=>p, :current_locale => @current_locale)), :title=>(@parent_prefix.present? ? @parent_prefix : 'show all') do %>
             <%= draw_icon('chevron-left') %>
             <%= @parent_prefix.present? ? @parent_prefix.split('.').last : 'show all' %>
           <% end %>
@@ -113,7 +113,7 @@
       <% end %>
       <% @prefixes.each do |p| %>
         <li class="key_prefix">
-        <%= link_to url_for(@search_options.merge(:key_prefix=>p)) do %>
+        <%= link_to url_for(@search_options.merge(:key_prefix=>p, :current_locale => @current_locale)) do %>
           <%= draw_icon('chevron-right') %>
           <%=  p.split('.').last %>
         <% end %>
