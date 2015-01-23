@@ -39,6 +39,9 @@ module Lit
         when 'redis'
           require 'lit/adapters/redis_storage'
           return RedisStorage.new
+        when 'memory'
+          require 'lit/adapters/activesupport_storage'
+          return MemoryStorage.new
         else
           require 'lit/adapters/hash_storage'
           return HashStorage.new
