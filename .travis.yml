@@ -10,7 +10,7 @@ gemfile:
 services:
   - redis-server
 env:
-  - LIT_STORAGE=hash
+  - LIT_STORAGE=memory
   - LIT_STORAGE=redis
 before_script:
   - cp test/dummy/config/database.yml.travis test/dummy/config/database.yml

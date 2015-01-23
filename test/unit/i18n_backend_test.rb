@@ -17,7 +17,7 @@ class I18nBackendTest < ActiveSupport::TestCase
 
   test 'properly returns available locales' do
     I18n.backend = Backend.new(Lit.loader.cache)
-    assert_equal 2, I18n.backend.available_locales.count
+    assert_equal 3, I18n.backend.available_locales.count
     ::Rails.configuration.i18n.available_locales = [:en, :pl]
     I18n.backend = Backend.new(Lit.loader.cache)
     assert_equal 2, I18n.backend.available_locales.count

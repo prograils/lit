@@ -1,5 +1,33 @@
 <strong>All localization keys</strong> <%= Lit::LocalizationKey.count(:id) %><br/>
-<% @locales.each do |l| %>
-  <strong><%= image_tag "lit/famfamfam_flags/#{l.locale[0,2]}.png" %> <%= t("lit.locale_to_languages.#{l.locale}", :default=>l.locale) %>:</strong> <span title="<%= "#{l.get_changed_localizations_count}/#{l.get_all_localizations_count}" %>"><%= l.get_translated_percentage %>%</span><br/>
-<% end %>
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th><%= t("lit.locale", default: "Locale") %></th>
+      <th><%= t(".translated_keys", default: "Translated Keys") %> (%)</th>
+      <th><%= t(".translated_keys", default: "Translated Keys") %></th>
+      <th><%= t(".actions", default: "Actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @locales.each do |l| %>
+      <tr class="localization_row">
+         <td>
+            <strong>
+              <%= image_tag "lit/famfamfam_flags/#{l.locale[0,2]}.png" %> <%= t("lit.locale_to_languages.#{l.locale}", :default=>l.locale) %>
+            </strong>
+	 </td>
+         <td>
+            <span title="<%= "#{l.get_all_localizations_count - l.get_untranslated_localizations_count}/#{l.get_all_localizations_count}" %>"><%= l.get_translated_percentage %>%</span>
+         </td>
+	 <td>
+	    <span><%= "#{l.get_all_localizations_count - l.get_untranslated_localizations_count}/#{l.get_all_localizations_count}" %></span>
+            <br/>
+         </td>
+	 <td>
+	   <%= link_to t(".start_translating", default: "Start Translating"), localization_keys_path(current_locale: l.locale) %>
+	 </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 

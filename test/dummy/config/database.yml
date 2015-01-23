@@ -15,9 +15,6 @@ development:
 test:
   adapter: postgresql
   database: lit_test
-  username: lit
-  password: lit
-  host: localhost
   pool: 5
   timeout: 5000
 

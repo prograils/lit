@@ -34,10 +34,29 @@ module Lit
 
     private
 
+    def get_current_locale
+      @current_locale = params[:current_locale]
+    end
+
+    def get_all
+      return params[:all]
+    end
+
+    def localizations_without_value
+      localizations = Lit::Localization.within(@scope).without_value
+      return localizations.for_locale(@current_locale) if @current_locale and @current_locale != ''
+      return localizations
+    end
+
     def get_localization_scope
+      get_current_locale
       @search_options = params.slice(*valid_keys)
       @search_options[:include_completed] = '1' if @search_options.empty?
       @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
+      if @current_locale and @current_locale != '' and !get_all and (!@search_options[:key] or @search_options[:key].empty?)
+        @scope = @scope.nulls_for(@current_locale)
+      end
+      return @scope
     end
 
     def get_localization_keys
@@ -90,6 +109,7 @@ module Lit
     end
 
     helper_method :localization_for
+    helper_method :localizations_without_value
 
     def has_versions?(localization)
       @_versions ||= begin

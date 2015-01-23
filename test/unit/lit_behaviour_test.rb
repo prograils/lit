@@ -47,6 +47,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
   end
 
   test 'should save in other languages if I18n.available_locales is empty' do
+    ::Rails.configuration.i18n.stubs(:available_locales).returns(nil)
     I18n.backend.expects(:store_item).times(1)
     I18n.backend.store_translations(:dk, foo: 'foo')
   end

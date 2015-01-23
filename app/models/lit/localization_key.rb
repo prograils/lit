@@ -8,9 +8,13 @@ module Lit
     scope :starred, proc { where(is_starred: true) }
     scope :ordered, proc { order('localization_key asc') }
     scope :after, proc { |dt| where('updated_at >= ?', dt) }
-
+    scope :nulls_for, proc { |locale|
+      joins(:localizations).merge(Lit::Localization.without_value).
+      merge(Lit::Localization.for_locale(locale))
+    }
     ## ASSOCIATIONS
     has_many :localizations, dependent: :destroy
+    has_many :locales
 
     ## VALIDATIONS
     validates :localization_key,

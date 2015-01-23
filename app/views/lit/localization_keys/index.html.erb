@@ -1,11 +1,22 @@
 <h3><%= t('.header', :default=>"Localization keys") %></h3>
+
+<strong>
+  Keys without translation:
+  <span class="badge">
+    <%= localizations_without_value.count %>
+  </span>
+</strong>
+
 <% available_locales = I18n.backend.available_locales %>
 
 <table class="table">
   <%- @localization_keys.each do |lk| %>
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
-        <strong><%= lk.localization_key %></strong>
+        <span>
+          <strong><%= default_localization(lk) %></strong>:
+          (<%= lk.localization_key %>)
+        </span>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
@@ -17,7 +28,7 @@
         </div>
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
-            <%- available_locales.each do |locale| %>
+            <%- locales.each do |locale| %>
               <%- localization = localization_for(locale, lk) %>
               <tr>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="">
@@ -25,7 +36,7 @@
                 </td>
                 <td class="locale_row">
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
-                  <%= locale %>
+                  <%= locale unless localization.locale.is_hidden %>
                   <% if localization %>
                     <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization), :class=>"show_prev_versions #{'hidden' unless has_versions?(localization)}", :remote=>true do %>
                       <%= draw_icon 'random', :title=>t('lit.common.previous_versions', :default=>"Previous versions") %>
@@ -63,16 +74,22 @@
         <%= check_box_tag :include_completed, '1', @search_options[:include_completed].to_i==1 %>
         <%= t('.is_completed', :default=>"Include completed") %>
       </label>
+      <div class="input-group">
+        <%= select_tag :current_locale,
+          options_for_select(I18n.available_locales, request.parameters[:current_locale]),
+	  prompt: "Select locale", class: "form-control" %>
+      </div>
     <% end %>
+    <br>
     <ul class="nav nav-pills nav-stacked">
       <li class="<%= "active" if params[:action]=='index' %>">
-        <%= link_to lit.localization_keys_path do -%>
+        <%= link_to lit.localization_keys_path(request.parameters.merge(all: true, current_locale: @current_locale)) do -%>
           <%= draw_icon 'list' %>
           all
         <% end %>
       </li>
       <li class="<%= "active" if params[:action]=='starred' %>">
-        <%= link_to lit.starred_localization_keys_path do -%>
+        <%= link_to lit.starred_localization_keys_path(current_locale: @current_locale) do -%>
           <%= draw_icon 'star' %>
           starred
         <% end %>
@@ -80,7 +97,7 @@
       <li class="nav-header"><%= t(".order_by", :default => "Order by") %>:</li>
       <% Lit::LocalizationKey.order_options.each do |order| %>
         <li class="<%= "active" if order == @search_options[:order]  %>">
-          <%= link_to url_for(@search_options.merge(:order => order)) do %>
+          <%= link_to url_for(@search_options.merge(:order => order, :current_locale => @current_locale)) do %>
             <%= t("lit.order_options.#{order.gsub(" ", "_")}", :default => order.humanize) %>
           <% end %>
         </li>
@@ -88,7 +105,7 @@
       <li class="nav-header">Narrow with prefix</li>
       <% if @search_options[:key_prefix].present? %>
         <li>
-          <%= link_to url_for(@search_options.merge(:key_prefix=>p)), :title=>(@parent_prefix.present? ? @parent_prefix : 'show all') do %>
+          <%= link_to url_for(@search_options.merge(:key_prefix=>p, :current_locale => @current_locale)), :title=>(@parent_prefix.present? ? @parent_prefix : 'show all') do %>
             <%= draw_icon('chevron-left') %>
             <%= @parent_prefix.present? ? @parent_prefix.split('.').last : 'show all' %>
           <% end %>
@@ -96,7 +113,7 @@
       <% end %>
       <% @prefixes.each do |p| %>
         <li class="key_prefix">
-        <%= link_to url_for(@search_options.merge(:key_prefix=>p)) do %>
+        <%= link_to url_for(@search_options.merge(:key_prefix=>p, :current_locale => @current_locale)) do %>
           <%= draw_icon('chevron-right') %>
           <%=  p.split('.').last %>
         <% end %>
@@ -105,4 +122,3 @@
     </ul>
   </div>
 <% end %>
-
