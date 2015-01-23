@@ -2,6 +2,7 @@
 <table class="table table-bordered table-striped">
   <thead>
     <tr>
+      <th>Translated Keys (%)</th>
       <th>Translated Keys</th>
       <th>Locale</th>
     </tr>
@@ -11,6 +12,9 @@
       <tr class="localization_row">
         <td>
             <span title="<%= "#{l.get_all_localizations_count - l.get_untranslated_localizations_count}/#{l.get_all_localizations_count}" %>"><%= l.get_translated_percentage %>%</span>
+	</td>
+	<td>
+	    <span><%= "#{l.get_all_localizations_count - l.get_untranslated_localizations_count}/#{l.get_all_localizations_count}" %></span>
             <br/>
         </td>
         <td>
