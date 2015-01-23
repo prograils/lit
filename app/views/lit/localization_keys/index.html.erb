@@ -76,7 +76,8 @@
       </label>
       <div class="input-group">
         <%= select_tag :current_locale,
-          options_for_select(I18n.available_locales, request.parameters[:current_locale]), prompt: "Select locale" %>
+          options_for_select(I18n.available_locales, request.parameters[:current_locale]),
+	  prompt: "Select locale", class: "form-control" %>
       </div>
     <% end %>
     <br>
