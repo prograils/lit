@@ -51,6 +51,24 @@ class LitBehaviourTest < ActiveSupport::TestCase
     I18n.backend.store_translations(:dk, foo: 'foo')
   end
 
+  test 'should override default gems translations' do
+    load_paths = @old_load_path.
+      select { |p| p.include?('lib/active_support/locale/en.yml') }
+    load_paths <<
+      File.expand_path('../../dummy/config/locales/active_support_extensions.yml', __FILE__)
+
+    I18n.load_path = load_paths
+
+    assert_equal '%B %d, %Y extended',
+                 I18n.backend.translate(:en, :"date.formats.long")
+
+    # check once again if I18n.backend.translate returns expected value. There
+    # where a bug with cache initialized to late and first call to translate
+    # returned other results then second call.
+    assert_equal '%B %d, %Y extended',
+                 I18n.backend.translate(:en, :"date.formats.long")
+  end
+
   test 'translating the same not existing key twice should not set Lit::Localizaiton#is_changed to true' do
     key = 'not_existing_translation'
 

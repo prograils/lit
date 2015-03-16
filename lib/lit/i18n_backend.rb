@@ -41,15 +41,14 @@ module Lit
     # @param [Hash] data nested key-value pairs to be added as blurbs
     def store_translations(locale, data, options = {})
       super
-      locales = ::Rails.configuration.i18n.available_locales
-      if !locales || locales.map(&:to_s).include?(locale.to_s)
-        store_item(locale, data)
-      end
+      store_item(locale, data) if store_items? && valid_locale?(locale)
     end
 
     private
 
     def lookup(locale, key, scope = [], options = {})
+      init_translations unless initialized?
+
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
 
@@ -96,9 +95,39 @@ module Lit
       end
     end
 
-    def load_translations(*filenames)
+    def load_translations_to_cache
+      (@translations || {}).each do |locale, data|
+          store_item(locale, data) if valid_locale?(locale)
+      end
+    end
+
+    def init_translations
+      # Load all translations from *.yml, *.rb files to @translations variable.
+      # We don't want to store translations in lit cache just yet. We'll do it
+      # with `load_translations_to_cache` when all translations form yml (rb)
+      # files will be loaded.
+      without_store_items { load_translations }
+      # load translations from database to cache
       @cache.load_all_translations
-      super
+      # load translations from @translations to cache
+      load_translations_to_cache
+      @initialized = true
+    end
+
+    def without_store_items
+      @store_items = false
+      yield
+    ensure
+      @store_items = true
+    end
+
+    def store_items?
+      @store_items.nil? || @store_items
+    end
+
+    def valid_locale?(locale)
+      locales = ::Rails.configuration.i18n.available_locales
+      !locales || locales.map(&:to_s).include?(locale.to_s)
     end
   end
 end
