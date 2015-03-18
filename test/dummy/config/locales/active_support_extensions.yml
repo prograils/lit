@@ -1,0 +1,4 @@
+en:
+  date:
+    formats:
+      long: '%B %d, %Y extended'
