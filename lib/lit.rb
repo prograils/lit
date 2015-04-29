@@ -11,20 +11,25 @@ module Lit
   mattr_accessor :api_key
   mattr_accessor :all_translations_are_html_safe
   mattr_accessor :set_last_updated_at_upon_creation
+  mattr_accessor :discover_new_translation
+  mattr_accessor :init_lit
 
   class << self
     attr_accessor :loader
   end
   def self.init
+    Lit.init_lit = true
     @@table_exists ||= check_if_table_exists
     if loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
+      Lit.discover_new_translation = true if Lit.discover_new_translation.nil?
       # if loading all translations on start, migrations have to be already
       # performed, fails on first deploy
       # self.loader.cache.load_all_translations
       Lit.storage_options ||= {}
     end
+    Lit.init_lit = false
     self.loader
   end
 

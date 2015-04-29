@@ -55,8 +55,13 @@ module Lit
       ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
+      
+      # According to the context and the options, will we created the key
+      condition = Lit.init_lit ||
+                  Lit.discover_new_translation == true ||
+                  Lit.discover_new_translation == :default && options[:default].present?
 
-      unless @cache.has_key?(key_with_locale)
+      if !@cache.has_key?(key_with_locale) and condition
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
