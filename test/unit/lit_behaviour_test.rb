@@ -99,6 +99,43 @@ class LitBehaviourTest < ActiveSupport::TestCase
     assert_equal 'translated foo', find_localization_for('scope.not_existing', 'en').default_value
   end
 
+  test 'it stores translations upon first invokation' do
+    key = 'test.of.storge'
+    I18n.t(key)
+    assert Lit::LocalizationKey.where(localization_key: key).exists?
+  end
+
+  test 'it wont store key if prefix is added to ignored' do
+    old_loader = Lit.loader
+    key = 'test.of.storge'
+    existing_key = 'existing.string'
+    Lit.ignored_keys = ['test.of']
+    Lit.loader = nil
+    Lit.init
+    I18n.t(key)
+    I18n.t(existing_key)
+    assert !Lit::LocalizationKey.where(localization_key: key).exists?
+    assert Lit::LocalizationKey.where(localization_key: existing_key).exists?
+    Lit.loader = old_loader
+  end
+
+  test 'it wont store key if ignored_key prefix is a string' do
+    old_loader = Lit.loader
+    first_key = 'test.of.storge'
+    second_key = 'secondary.key.to.test'
+    existing_key = 'existing.string'
+    Lit.ignored_keys = 'test.of, secondary.key '
+    Lit.loader = nil
+    Lit.init
+    I18n.t(first_key)
+    I18n.t(second_key)
+    I18n.t(existing_key)
+    assert !Lit::LocalizationKey.where(localization_key: first_key).exists?
+    assert !Lit::LocalizationKey.where(localization_key: second_key).exists?
+    assert Lit::LocalizationKey.where(localization_key: existing_key).exists?
+    Lit.loader = old_loader
+  end
+
   private
 
   def find_localization_for(key, locale)

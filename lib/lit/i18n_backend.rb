@@ -51,12 +51,14 @@ module Lit
 
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
+      _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
 
       ## check in cache or in simple backend
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      unless @cache.has_key?(key_with_locale)
+      if !@cache.has_key?(key_with_locale) &&
+          !is_ignored_key(key_without_locale)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
@@ -128,6 +130,13 @@ module Lit
     def valid_locale?(locale)
       locales = ::Rails.configuration.i18n.available_locales
       !locales || locales.map(&:to_s).include?(locale.to_s)
+    end
+
+    def is_ignored_key(key_without_locale)
+      Lit.ignored_keys.each do |k|
+        return true if key_without_locale.start_with?(k)
+      end
+      false
     end
   end
 end
