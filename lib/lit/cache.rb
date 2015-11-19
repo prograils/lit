@@ -274,7 +274,7 @@ module Lit
     end
 
     def split_key(key)
-      key.split('.', 2)
+      Lit::Cache.split_key(key)
     end
 
     def find_or_create_localization_key(key_without_locale)
@@ -289,6 +289,9 @@ module Lit
         @hits_counter.incr('hits_counter.' + key)
         @hits_counter.incr('global_hits_counter.' + key_without_locale)
       end
+    end
+    def self.split_key(key)
+      key.split('.', 2)
     end
   end
 end

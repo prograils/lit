@@ -56,7 +56,7 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      unless @cache.has_key?(key_with_locale)
+      if should_cache?(key_with_locale)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
@@ -128,6 +128,19 @@ module Lit
     def valid_locale?(locale)
       locales = ::Rails.configuration.i18n.available_locales
       !locales || locales.map(&:to_s).include?(locale.to_s)
+    end
+
+    def is_ignored_key(key_without_locale)
+      Lit.ignored_keys.any?{ |k| key_without_locale.start_with?(k) }
+    end
+
+    def should_cache?(key_with_locale)
+      return false if @cache.has_key?(key_with_locale)
+
+      _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
+      return false if is_ignored_key(key_without_locale)
+
+      true
     end
   end
 end
