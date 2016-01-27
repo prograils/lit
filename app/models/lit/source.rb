@@ -47,8 +47,8 @@ module Lit
             il.localization_key = LocalizationKey.where(localization_key: il.localization_key_str).first
             unless il.is_duplicate?(r['value'])
               il.save!
-              IncommingLocalization.where(id: il.id).
-                update_all ['translated_value=?', r['value']]
+              IncommingLocalization.where(id: il.id).first.
+                update_attributes(translated_value: r['value'])
             end
           end
           last_change = get_last_change
