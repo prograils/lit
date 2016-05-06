@@ -41,7 +41,9 @@ module Lit
     # @param [Hash] data nested key-value pairs to be added as blurbs
     def store_translations(locale, data, options = {})
       super
-      store_item(locale, data) if store_items? && valid_locale?(locale)
+      ActiveRecord::Base.transaction do
+        store_item(locale, data) if store_items? && valid_locale?(locale)
+      end
     end
 
     private
@@ -83,8 +85,10 @@ module Lit
 
     def store_item(locale, data, scope = [])
       if data.respond_to?(:to_hash)
-        data.to_hash.each do |key, value|
-          store_item(locale, value, scope + [key])
+        ActiveRecord::Base.transaction do
+          data.to_hash.each do |key, value|
+            store_item(locale, value, scope + [key])
+          end
         end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
@@ -97,7 +101,9 @@ module Lit
 
     def load_translations_to_cache
       (@translations || {}).each do |locale, data|
-          store_item(locale, data) if valid_locale?(locale)
+          ActiveRecord::Base.transaction do
+            store_item(locale, data) if valid_locale?(locale)
+          end
       end
     end
 
