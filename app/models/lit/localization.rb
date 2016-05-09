@@ -67,7 +67,8 @@ module Lit
     end
 
     def update_modified_at
-      update_column(:modified_at, created_at)
+      update_column(:modified_at, updated_at)
+      localization_key.update_column(:modified_at, updated_at)
     end
 
     private

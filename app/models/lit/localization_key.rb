@@ -7,7 +7,9 @@ module Lit
     scope :not_completed, proc { where(is_completed: false) }
     scope :starred, proc { where(is_starred: true) }
     scope :ordered, proc { order('localization_key asc') }
-    scope :after, proc { |dt| where('updated_at >= ?', dt) }
+    scope :after, proc { |dt|
+      where('modified_at IS NOT NULL AND modified_at >= ?', dt)
+    }
 
     ## ASSOCIATIONS
     has_many :localizations, dependent: :destroy
@@ -90,6 +92,10 @@ module Lit
         s = s.not_completed
       end
       s
+    end
+
+    def update_modified_at
+      update_column(:modified_at, updated_at)
     end
   end
 end
