@@ -12,6 +12,7 @@ module Lit
       if @localization.update_attributes(clear_params)
         Lit.init.cache.update_cache @localization.full_key, @localization.get_value
       end
+      @localization.update_modified_at
       @localization.reload
       respond_to :js
     end

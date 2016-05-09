@@ -6,7 +6,9 @@ module Lit
     ## SCOPES
     scope :changed, proc { where(is_changed: true) }
     # @HACK: dirty, find a way to round date to full second
-    scope :after, proc { |dt| where('updated_at >= ?', dt + 1.second) }
+    scope :after, proc { |dt|
+      where('modified_at IS NOT NULL AND modified_at >= ?', dt + 1.second)
+    }
 
     ## ASSOCIATIONS
     belongs_to :locale
@@ -62,6 +64,10 @@ module Lit
       return true if persisted? && default_value == value
       self.default_value = value
       self.save!
+    end
+
+    def update_modified_at
+      update_column(:modified_at, created_at)
     end
 
     private
