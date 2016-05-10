@@ -24,8 +24,7 @@ module Lit
     after_validation :check_if_url_is_valid
 
     def get_last_change
-      result = get_from_remote(LAST_CHANGE_PATH)
-      result['last_change'] unless result.nil?
+      get_from_remote(LAST_CHANGE_PATH)
     end
 
     def synchronize
@@ -51,7 +50,7 @@ module Lit
                 update_all ['translated_value=?', r['value']]
             end
           end
-          last_change = get_last_change
+          last_change = get_last_change.try(:fetch, 'last_change')
           last_change = DateTime.parse(last_change) unless last_change.nil?
           touch_last_updated_at(last_change)
           save
