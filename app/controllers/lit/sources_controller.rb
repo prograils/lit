@@ -20,7 +20,11 @@ module Lit
 
     def synchronize
       @source = Source.find(params[:id])
-      @source.synchronize
+      if defined?(ActiveJob)
+        SynchronizeSourceJob.perform_later(@source)
+      else
+        @source.synchronize
+      end
       redirect_to lit.source_incomming_localizations_path(@source)
     end
 
