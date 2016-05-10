@@ -20,6 +20,7 @@ module Lit
 
     def synchronize
       @source = Source.find(params[:id])
+      @source.update_column(:sync_complete, false)
       if defined?(ActiveJob)
         SynchronizeSourceJob.perform_later(@source)
       else

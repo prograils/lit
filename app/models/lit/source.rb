@@ -54,6 +54,7 @@ module Lit
           last_change = get_last_change
           last_change = DateTime.parse(last_change) unless last_change.nil?
           touch_last_updated_at(last_change)
+          update_column(:sync_complete, true)
           save
         end
       end
