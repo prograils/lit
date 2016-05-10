@@ -11,7 +11,7 @@ module Lit
     end
 
     def last_change
-      @localization = Localization.order('updated_at DESC').first
+      @localization = Localization.order('modified_at DESC').first
       render json: @localization.as_json(root: false, only: [], methods: [:last_change])
     end
   end

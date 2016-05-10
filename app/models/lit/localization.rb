@@ -57,7 +57,8 @@ module Lit
     end
 
     def last_change
-      updated_at.to_s(:db)
+      return nil unless modified_at.present?
+      modified_at.to_s(:db)
     end
 
     def update_default_value(value)
