@@ -10,6 +10,9 @@ Lit::Engine.routes.draw do
         resources :localizations, :only=>[:index] do
           get 'last_change', :on=>:collection
         end
+        resources :sources, only: [] do
+          get 'sync_complete', :on=>:member
+        end
       end
     end
   end

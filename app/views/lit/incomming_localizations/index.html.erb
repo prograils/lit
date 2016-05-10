@@ -1,7 +1,9 @@
 <h1>Incomming localizations</h1>
+<input type="hidden" id="source_id" value="<%= @source.id %>">
+<input type="hidden" id="api_key" value="<%= @source.api_key %>">
 <div class="container">
   <div class="row inline-headers">
-    <h4 class="<%= source_loading_class(@source) %>">Please wait...</h2>
+    <h4 class="<%= source_loading_class(@source) %>">Synchronization in progress, please wait. The page will refresh automatically when done.</h2>
     <span class="pull-right">
       <%= link_to accept_all_source_incomming_localizations_path(@source), :class=>"btn btn-success btn-sm", :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")} do %>
         <%= t('lit.common.accept_all', :default=>"Accept all") %>
