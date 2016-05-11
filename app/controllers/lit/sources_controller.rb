@@ -59,6 +59,11 @@ module Lit
       redirect_to sources_url
     end
 
+    def sync_complete
+      @source = Source.find(params[:id])
+      render json: { sync_complete: @source.sync_complete }
+    end
+
     private
 
     def clear_params

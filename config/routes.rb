@@ -10,9 +10,6 @@ Lit::Engine.routes.draw do
         resources :localizations, :only=>[:index] do
           get 'last_change', :on=>:collection
         end
-        resources :sources, only: [] do
-          get 'sync_complete', :on=>:member
-        end
       end
     end
   end
@@ -35,6 +32,7 @@ Lit::Engine.routes.draw do
   resources :sources do
     member do
       get :synchronize
+      get :sync_complete
       put :touch
     end
     resources :incomming_localizations, :only=>[:index, :destroy] do

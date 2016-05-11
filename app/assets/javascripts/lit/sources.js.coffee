@@ -1,12 +1,10 @@
 $ ->
   sourceId = $('#source_id').attr('value')
-  apiKey = $('#api_key').attr('value')
 
   updateFunc = ->
-    $.ajax "/lit/api/v1/sources/" + sourceId + "/sync_complete",
+    $.ajax "/lit/sources/" + sourceId + "/sync_complete",
       type: 'GET'
-      headers:
-        'Authorization': "Token token=\"#{apiKey}\""
+      format: 'json'
       success: (xml, textStatus, xhr) ->
         if xhr.responseJSON.sync_complete
           $('.loading').addClass('loaded').removeClass('loading')
