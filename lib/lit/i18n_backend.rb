@@ -42,8 +42,8 @@ module Lit
     def store_translations(locale, data, options = {})
       super
       ActiveRecord::Base.transaction do
-        store_item(locale, data) if store_items? && valid_locale?(locale)
-      end
+        store_item(locale, data)
+      end if store_items? && valid_locale?(locale)
     end
 
     private
@@ -85,11 +85,11 @@ module Lit
 
     def store_item(locale, data, scope = [])
       if data.respond_to?(:to_hash)
-        ActiveRecord::Base.transaction do
+        # ActiveRecord::Base.transaction do
           data.to_hash.each do |key, value|
             store_item(locale, value, scope + [key])
           end
-        end
+        # end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
         @cache[key] ||= data
@@ -100,10 +100,10 @@ module Lit
     end
 
     def load_translations_to_cache
-      (@translations || {}).each do |locale, data|
-          ActiveRecord::Base.transaction do
-            store_item(locale, data) if valid_locale?(locale)
-          end
+      ActiveRecord::Base.transaction do
+        (@translations || {}).each do |locale, data|
+          store_item(locale, data) if valid_locale?(locale)
+        end
       end
     end
 
