@@ -79,11 +79,12 @@ module Lit
       end
       if options[:key].present?
         q = "%#{options[:key]}%"
+        q_underscore = "%#{options[:key].parameterize.underscore}%"
         cond = localization_key_col.matches(q).or(
             default_value_col.matches(q).or(
                 translated_value_col.matches(q)
             )
-        )
+        ).or(localization_key_col.matches(q_underscore))
         s = s.joins([:localizations]).where(cond)
       end
       unless options[:include_completed].to_i == 1

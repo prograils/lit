@@ -5,8 +5,8 @@ string:
   localization_key: array
   translated_value: value
   default_value: value
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
 
 array:
   locale: en
@@ -19,5 +19,5 @@ array:
     - one
     - two
     - three
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

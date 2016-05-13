@@ -2,10 +2,10 @@
 
 pl:
   locale: pl
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
 
 en:
   locale: en
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

@@ -178,40 +178,43 @@ module Lit
 
     def find_localization(locale, key_without_locale, value = nil, force_array = false, update_value = false)
       unless value.is_a?(Hash)
-        localization_key = find_localization_key(key_without_locale)
-        localization = Lit::Localization.where(locale_id: locale.id).
-                          where(localization_key_id: localization_key.id).first_or_initialize
-        if update_value || localization.new_record?
-          if value.is_a?(Array)
-            unless force_array
-              new_value = nil
-              value_clone = value.dup
-              while (v = value_clone.shift) && v.present?
-                pv = parse_value(v, locale)
-                new_value = pv unless pv.nil?
+        ActiveRecord::Base.transaction do
+          localization_key = find_localization_key(key_without_locale)
+          localization = Lit::Localization.where(locale_id: locale.id).
+                            where(localization_key_id: localization_key.id).first_or_initialize
+          if update_value || localization.new_record?
+            if value.is_a?(Array)
+              unless force_array
+                new_value = nil
+                value_clone = value.dup
+                while (v = value_clone.shift) && v.present?
+                  pv = parse_value(v, locale)
+                  new_value = pv unless pv.nil?
+                end
+                value = new_value
               end
-              value = new_value
+            else
+              value = parse_value(value, locale) unless value.nil?
             end
-          else
-            value = parse_value(value, locale) unless value.nil?
-          end
-          if value.nil?
-            if Lit.fallback
-              @locale_cache.keys.each do |lc|
-                if lc != locale.locale
-                  nk = "#{lc}.#{key_without_locale}"
-                  v = localizations[nk]
-                  value = v if v.present? && value.nil?
+            if value.nil?
+              if Lit.fallback
+                @locale_cache.keys.each do |lc|
+                  if lc != locale.locale
+                    nk = "#{lc}.#{key_without_locale}"
+                    v = localizations[nk]
+                    value = v if v.present? && value.nil?
+                  end
                 end
               end
+              if value.nil? && Lit.humanize_key
+                value = key_without_locale.split('.').last.humanize
+              end
             end
-            if value.nil? && Lit.humanize_key
-              value = key_without_locale.split('.').last.humanize
-            end
+            localization.update_default_value(value)
           end
-          localization.update_default_value(value)
+          return localization
+
         end
-        return localization
       else
         nil
       end
