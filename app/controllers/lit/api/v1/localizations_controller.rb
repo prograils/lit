@@ -11,8 +11,13 @@ module Lit
     end
 
     def last_change
-      @localization = Localization.order('updated_at DESC').first
-      render json: @localization.as_json(root: false, only: [], methods: [:last_change])
+      @localization = Localization.where('modified_at IS NOT NULL')
+                                  .order('modified_at DESC').first
+      if @localization.present?
+        render json: @localization.as_json(root: false, only: [], methods: [:last_change])
+      else
+        render json: { last_change: nil }
+      end
     end
   end
 end

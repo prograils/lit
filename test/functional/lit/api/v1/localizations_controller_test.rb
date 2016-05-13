@@ -17,10 +17,11 @@ module Lit
     end
     test 'should only changed records' do
       I18n.l(Time.now)
-      Lit::Localization.update_all ['updated_at=?', 2.hours.ago]
+      Lit::Localization.update_all ['modified_at=?', 2.hours.ago]
       l = Lit::Localization.last
       l.translated_value = 'test'
       l.save
+      l.update_modified_at
       get :index, format: :json, after: 2.seconds.ago.to_s(:db)
       assert_response :success
       assert_equal 1, assigns(:localizations).count
@@ -32,10 +33,11 @@ module Lit
       l = Lit::Localization.last
       l.translated_value = 'test'
       l.save
+      l.update_modified_at
       get :last_change, format: :json
       assert_response :success
       assert_equal l, assigns(:localization)
-      assert response.body =~ /#{l.updated_at.to_s(:db)}/
+      assert response.body =~ /#{l.modified_at.to_s(:db)}/
 
     end
   end
