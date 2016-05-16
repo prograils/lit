@@ -18,8 +18,10 @@ module Lit
     test 'should only changed records' do
       I18n.l(Time.now)
       Lit::LocalizationKey.update_all ['updated_at=?', 2.hours.ago]
+      Lit::Localization.update_all ['updated_at=?', 2.hours.ago]
       l = Lit::LocalizationKey.last
       l.touch
+      l.localizations.each { |loc| loc.update(translated_value: 'trollolollo') }
       get :index, format: :json, after: I18n.l(2.seconds.ago)
       assert_response :success
       assert_equal 1, assigns(:localization_keys).count
