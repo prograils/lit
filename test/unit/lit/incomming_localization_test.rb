@@ -30,6 +30,7 @@ module Lit
       assert_equal 1, Locale.count
       assert_equal 1, Localization.count
       assert_equal 1, LocalizationKey.count
+      assert_equal true, Localization.first.is_changed?
     end
   end
 end

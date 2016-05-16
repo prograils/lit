@@ -21,7 +21,9 @@ module Lit
       Lit::Localization.update_all ['updated_at=?', 2.hours.ago]
       l = Lit::LocalizationKey.last
       l.touch
-      l.localizations.each { |loc| loc.update(translated_value: 'trollolollo') }
+      l.localizations.each do |loc|
+        loc.update_column :is_changed, true
+      end
       get :index, format: :json, after: I18n.l(2.seconds.ago)
       assert_response :success
       assert_equal 1, assigns(:localization_keys).count

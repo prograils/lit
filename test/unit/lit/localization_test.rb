@@ -23,11 +23,21 @@ module Lit
         l.reload
         l.translated_value = 'test'
         l.save!
+        l.update_attribute :is_changed, true
         l.reload
         assert_equal true, l.is_changed?
       end
       Lit.init.cache.reset
       assert_equal 'test', I18n.t('scope.text_with_translation_in_english')
+    end
+
+    test 'does not set is_changed to true upon update via model' do
+      I18n.locale = :en
+      assert_equal 'English translation', I18n.t('scope.text_with_translation_in_english')
+      l = Lit::Localization.first
+      assert_equal false, l.is_changed?
+      l.update_attributes(translated_value: 'Test')
+      assert_equal false, l.is_changed?
     end
   end
 end

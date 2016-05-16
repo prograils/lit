@@ -10,6 +10,7 @@ module Lit
 
     def update
       if @localization.update_attributes(clear_params)
+        @localization.update_column :is_changed, true
         Lit.init.cache.update_cache @localization.full_key, @localization.get_value
       end
       @localization.reload
