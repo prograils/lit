@@ -14,7 +14,7 @@ $ ->
         404: ->
           $('.loading').text('Could not update synchronization status, please try refreshing page')
         401: ->
-          $('.loading').text('Invalid API key, please check source settings')
+          $('.loading').text('You are not authorized. Please check if you are properly logged in')
         500: ->
           $('.loading').text('Something went wrong, please try synchronizing again')
       error: ->
