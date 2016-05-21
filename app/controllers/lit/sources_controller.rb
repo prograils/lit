@@ -20,7 +20,12 @@ module Lit
 
     def synchronize
       @source = Source.find(params[:id])
-      @source.synchronize
+      @source.update_column(:sync_complete, false)
+      if defined?(ActiveJob)
+        SynchronizeSourceJob.perform_later(@source)
+      else
+        @source.synchronize
+      end
       redirect_to lit.source_incomming_localizations_path(@source)
     end
 
@@ -52,6 +57,11 @@ module Lit
       @source = Source.find(params[:id])
       @source.destroy
       redirect_to sources_url
+    end
+
+    def sync_complete
+      @source = Source.find(params[:id])
+      render json: { sync_complete: @source.sync_complete }
     end
 
     private

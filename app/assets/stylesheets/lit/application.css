@@ -51,3 +51,9 @@ padding: 5px 7px;
 .localization_row em{
   color: #bbb;
 }
+.loading {
+  display: inline;
+}
+.loaded {
+  display: none;
+}

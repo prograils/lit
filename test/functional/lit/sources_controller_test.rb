@@ -62,5 +62,12 @@ module Lit
       end
       assert_redirected_to sources_path
     end
+
+    test 'should indicate sync completion' do
+      @source.update_column(:sync_complete, true)
+      get :sync_complete, format: :json, id: @source.id
+      body = JSON.parse(response.body)
+      assert_equal true, body['sync_complete']
+    end
   end
 end

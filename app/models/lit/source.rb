@@ -48,12 +48,13 @@ module Lit
             unless il.is_duplicate?(r['value'])
               il.save!
               IncommingLocalization.where(id: il.id).
-                update_all ['translated_value=?', r['value']]
+                update_all(translated_value: r['value'])
             end
           end
           last_change = get_last_change
           last_change = DateTime.parse(last_change) unless last_change.nil?
           touch_last_updated_at(last_change)
+          update_column(:sync_complete, true)
           save
         end
       end
