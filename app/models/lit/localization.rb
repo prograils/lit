@@ -6,7 +6,10 @@ module Lit
     ## SCOPES
     scope :changed, proc { where(is_changed: true) }
     # @HACK: dirty, find a way to round date to full second
-    scope :after, proc { |dt| where('updated_at >= ?', dt + 1.second) }
+    scope :after, proc { |dt|
+      where('updated_at >= ?', dt + 1.second)
+        .where('is_changed = true')
+    }
 
     ## ASSOCIATIONS
     belongs_to :locale
@@ -25,7 +28,7 @@ module Lit
 
     ## BEFORE & AFTER
     with_options if: :translated_value_changed? do |o|
-      o.before_update :update_is_changed_attribute
+      o.before_update :update_should_mark_localization_key_completed
       o.before_update :create_version
     end
     after_update :mark_localization_key_completed
@@ -66,10 +69,8 @@ module Lit
 
     private
 
-    def update_is_changed_attribute
-      return if attributes['is_changed'] == true
-
-      self[:is_changed] = true
+    def update_should_mark_localization_key_completed
+      return if translated_value == translated_value_was
       @should_mark_localization_key_completed = true
     end
 

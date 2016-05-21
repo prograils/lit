@@ -75,8 +75,10 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     text = 'Żegnaj okrutny świecie'
     localization.translated_value = text
     localization.save!
+    localization.update_column :is_changed, true
     Lit.init.cache.refresh_key(localization.full_key)
     visit('/pl/welcome')
+    localization.reload
     assert page.has_content?(text)
   end
 

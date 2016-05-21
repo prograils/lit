@@ -20,6 +20,7 @@ module Lit
       Lit::Localization.update_all ['updated_at=?', 2.hours.ago]
       l = Lit::Localization.last
       l.translated_value = 'test'
+      l.is_changed = true
       l.save
       get :index, format: :json, after: 2.seconds.ago.to_s(:db)
       assert_response :success
