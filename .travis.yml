@@ -1,21 +1,22 @@
 language: ruby
 sudo: false
 rvm:
-  - 2.0.0
-  - 2.1.2
-  - 2.2.5
-  - 2.3.1
+#  - 2.0.0
+#  - 2.1.2
+#  - 2.2.5
+   - 2.3.0
 gemfile:
-  - gemfiles/rails_4.gemfile
-  - gemfiles/rails_4.1.gemfile
+#  - gemfiles/rails_4.gemfile
+#  - gemfiles/rails_4.1.gemfile
   - gemfiles/rails_4.2.gemfile
 services:
   - redis-server
 env:
-  - LIT_STORAGE=hash
-  - LIT_STORAGE=redis
+  # - LIT_STORAGE=hash
+  # - LIT_STORAGE=redis
+  - LIT_STORAGE=hybrid
 before_script:
   - cp test/dummy/config/database.yml.travis test/dummy/config/database.yml
   - psql -c 'create database lit_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate
-script: "bundle exec rake test"
+script: "bundle exec rake test" # TEST=test/unit/lit_behaviour_test.rb"

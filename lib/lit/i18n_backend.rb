@@ -59,6 +59,7 @@ module Lit
       return content if parts.size <= 1
 
       if should_cache?(key_with_locale)
+        puts "SHOULD CACHE #{key_with_locale}"
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
@@ -141,12 +142,17 @@ module Lit
     end
 
     def should_cache?(key_with_locale)
-      return false if @cache.has_key?(key_with_locale)
+      return false if @cache[key_with_locale] != nil
 
       _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
       return false if is_ignored_key(key_without_locale)
 
       true
+    end
+
+    def extract_non_symbol_default!(options)
+      defaults = [options[:default]].flatten
+      defaults.detect{|default| !default.is_a?(Symbol)}
     end
   end
 end
