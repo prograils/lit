@@ -35,7 +35,7 @@ module Lit
   end
 
   def redis_snapshot
-    timestamp = Lit.redis.get('lit:_snapshot')
+    timestamp = Lit.redis.get(Lit.prefix + '_snapshot')
     if timestamp.nil?
       timestamp = Time.current.to_s
       Lit.redis_snapshot = timestamp
@@ -44,11 +44,19 @@ module Lit
   end
 
   def redis_snapshot= (timestamp)
-    Lit.redis.set('lit:_snapshot', timestamp)
+    Lit.redis.set(Lit.prefix + '_snapshot', timestamp)
   end
 
   def determine_redis_provider
     ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL']
+  end
+
+  def prefix
+    pfx = 'lit:'
+    if Lit.storage_options.is_a?(Hash)
+      pfx += "#{Lit.storage_options[:prefix]}:" if Lit.storage_options.key?(:prefix)
+    end
+    pfx
   end
 
   class HybridStorage
@@ -131,11 +139,7 @@ module Lit
     private
 
     def _prefix
-      prefix = 'lit:'
-      if Lit.storage_options.is_a?(Hash)
-        prefix += "#{Lit.storage_options[:prefix]}:" if Lit.storage_options.key?(:prefix)
-      end
-      prefix
+      Lit.prefix
     end
 
     def _prefixed_key(key = '')
