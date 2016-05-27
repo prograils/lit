@@ -59,7 +59,6 @@ module Lit
       return content if parts.size <= 1
 
       if should_cache?(key_with_locale)
-        puts "SHOULD CACHE #{key_with_locale}"
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
@@ -84,26 +83,25 @@ module Lit
       content
     end
 
-    def store_item(locale, data, scope = [])
+    def store_item(locale, data, scope = [], unless_is_changed = false)
       if data.respond_to?(:to_hash)
-        # ActiveRecord::Base.transaction do
-          data.to_hash.each do |key, value|
-            store_item(locale, value, scope + [key])
-          end
-        # end
+        data.to_hash.each do |key, value|
+          store_item(locale, value, scope + [key], unless_is_changed)
+        end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
-        @cache[key] ||= data
+        @cache.update_locale(key, data, false, unless_is_changed)
       elsif data.nil?
         key = ([locale] + scope).join('.')
-        @cache.delete_locale(key)
+        @cache.delete_locale(key, unless_is_changed)
       end
     end
 
     def load_translations_to_cache
       ActiveRecord::Base.transaction do
         (@translations || {}).each do |locale, data|
-          store_item(locale, data) if valid_locale?(locale)
+          # TODO maybe don't store if marked as changed in db? :)
+          store_item(locale, data, [], true) if valid_locale?(locale)
         end
       end
     end
