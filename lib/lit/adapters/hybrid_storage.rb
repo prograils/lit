@@ -27,7 +27,7 @@ module Lit
   end
 
   def hash_snapshot
-    $_hash_snapshot ||= DateTime.new
+    $_hash_snapshot ||= DateTime.new.to_f.to_d
   end
 
   def hash_snapshot= (timestamp)
@@ -37,14 +37,18 @@ module Lit
   def redis_snapshot
     timestamp = Lit.redis.get(Lit.prefix + '_snapshot')
     if timestamp.nil?
-      timestamp = DateTime.now.to_s
+      timestamp = DateTime.now.to_f.to_s
       Lit.redis_snapshot = timestamp
     end
-    DateTime.parse(timestamp)
+    DateTime.strptime(timestamp, '%s').to_f.to_d
   end
 
   def redis_snapshot= (timestamp)
     Lit.redis.set(Lit.prefix + '_snapshot', timestamp)
+  end
+
+  def now_timestamp
+    DateTime.now.to_f.to_d
   end
 
   def determine_redis_provider
@@ -67,7 +71,7 @@ module Lit
 
     def [](key)
       if Lit.hash_dirty?
-        Lit.hash_snapshot = DateTime.current
+        Lit.hash_snapshot = Lit.now_timestamp
         Lit._hash.clear
       end
       if Lit._hash.key? key
@@ -105,7 +109,7 @@ module Lit
     end
 
     def delete(k)
-      Lit.redis_snapshot = DateTime.now
+      Lit.redis_snapshot = Lit.now_timestamp
       Lit._hash.delete(k)
       Lit.redis.del(_prefixed_key_for_array(k))
       Lit.redis.del(_prefixed_key_for_nil(k))
@@ -113,7 +117,7 @@ module Lit
     end
 
     def clear
-      Lit.redis_snapshot = DateTime.now
+      Lit.redis_snapshot = Lit.now_timestamp
       Lit._hash.clear
       Lit.redis.del(keys) if keys.length > 0
     end
