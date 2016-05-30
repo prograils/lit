@@ -100,7 +100,6 @@ module Lit
     def load_translations_to_cache
       ActiveRecord::Base.transaction do
         (@translations || {}).each do |locale, data|
-          # TODO maybe don't store if marked as changed in db? :)
           store_item(locale, data, [], true) if valid_locale?(locale)
         end
       end

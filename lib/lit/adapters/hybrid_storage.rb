@@ -37,7 +37,7 @@ module Lit
   def redis_snapshot
     timestamp = Lit.redis.get(Lit.prefix + '_snapshot')
     if timestamp.nil?
-      timestamp = Time.current.to_s
+      timestamp = DateTime.now.to_s
       Lit.redis_snapshot = timestamp
     end
     DateTime.parse(timestamp)
@@ -105,7 +105,7 @@ module Lit
     end
 
     def delete(k)
-      Lit.redis_snapshot = Time.current
+      Lit.redis_snapshot = DateTime.now
       Lit._hash.delete(k)
       Lit.redis.del(_prefixed_key_for_array(k))
       Lit.redis.del(_prefixed_key_for_nil(k))
@@ -113,7 +113,7 @@ module Lit
     end
 
     def clear
-      Lit.redis_snapshot = Time.current
+      Lit.redis_snapshot = DateTime.now
       Lit._hash.clear
       Lit.redis.del(keys) if keys.length > 0
     end
