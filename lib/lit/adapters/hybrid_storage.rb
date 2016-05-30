@@ -1,6 +1,14 @@
 require 'redis'
 require 'concurrent'
 
+ActionController::Base.class_eval do
+  after_action :clear_saved_redis_snapshot
+
+  def clear_saved_redis_snapshot
+    Lit.saved_redis_snapshot = nil
+  end
+end
+
 module Lit
   extend self
   def redis
@@ -35,16 +43,27 @@ module Lit
   end
 
   def redis_snapshot
+    return Lit.saved_redis_snapshot unless Lit.saved_redis_snapshot.nil?
     timestamp = Lit.redis.get(Lit.prefix + '_snapshot')
     if timestamp.nil?
       timestamp = DateTime.now.to_f.to_s
       Lit.redis_snapshot = timestamp
     end
-    DateTime.strptime(timestamp, '%s').to_f.to_d
+    Lit.saved_redis_snapshot = DateTime.strptime(timestamp, '%s').to_f.to_d
   end
 
   def redis_snapshot= (timestamp)
     Lit.redis.set(Lit.prefix + '_snapshot', timestamp)
+  end
+
+  def saved_redis_snapshot
+    $saved_redis_snapshot ||= Concurrent::MVar.new(nil)
+    $saved_redis_snapshot.value
+  end
+
+  def saved_redis_snapshot= (snap)
+    $saved_redis_snapshot ||= Concurrent::MVar.new(nil)
+    $saved_redis_snapshot.set!(snap)
   end
 
   def now_timestamp
