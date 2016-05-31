@@ -49,12 +49,11 @@ module Lit
       localizations.keys
     end
 
-    def update_locale(key, value, force_array = false, unless_is_changed = false)
+    def update_locale(key, value, force_array = false)
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value, force_array, true)
-      return localization.get_value if unless_is_changed && localization.is_changed?
       localizations[key] = localization.get_value if localization
     end
 
@@ -63,12 +62,11 @@ module Lit
       localizations[key] = value
     end
 
-    def delete_locale(key, unless_is_changed = false)
-      binding.pry if key.match /abbr_month/
+    def delete_locale(key)
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
-      delete_localization(locale, key_without_locale, unless_is_changed)
+      delete_localization(locale, key_without_locale)
     end
 
     def load_all_translations
@@ -229,9 +227,8 @@ module Lit
           where(localization_key_id: localization_key.id).first
     end
 
-    def delete_localization(locale, key_without_locale, unless_is_changed = false)
+    def delete_localization(locale, key_without_locale)
       localization = find_localization_for_delete(locale, key_without_locale)
-      return if unless_is_changed && localization.try(:is_changed?)
       if localization
         localizations.delete("#{locale.locale}.#{key_without_locale}")
         localization_keys.delete(key_without_locale)
