@@ -13,6 +13,11 @@ Rails.backtrace_cleaner.remove_silencers!
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
+# Helper for adding sample .yml file to load path
+def load_sample_yml(fname)
+  I18n.load_path << "#{File.dirname(__FILE__)}/support/#{fname}"
+end
+
 ActiveSupport::TestCase.fixture_path = File.expand_path('../fixtures', __FILE__)
 
 ## do not enforce available locales

@@ -136,6 +136,75 @@ class LitBehaviourTest < ActiveSupport::TestCase
     Lit.loader = old_loader
   end
 
+  test 'it wont overwrite existing UI-changed values with those from yaml' do
+    load_sample_yml('en.yml')
+    old_loader = Lit.loader
+    Lit.loader = nil
+    Lit.init
+
+    # Defaults from yml: en.foo: bar, en.nil_thing: [nothing]
+    assert_equal 'bar', I18n.t('foo')
+    assert_equal 'no longer nil', I18n.t('nil_thing', default: 'no longer nil')
+
+    foo_loc = Lit::LocalizationKey.find_by_localization_key('foo').localizations.first
+    nil_loc = Lit::LocalizationKey.find_by_localization_key('nil_thing').localizations.first
+
+    # Check if default values have been loaded into DB
+    assert_equal 'bar', foo_loc.default_value
+    assert_equal 'no longer nil', nil_loc.default_value
+
+    # Translate as if it was done in UI (is_changed set to true)
+    foo_loc.update(translated_value: 'barbar', is_changed: true)
+    nil_loc.update(translated_value: 'new one', is_changed: true)
+    [foo_loc, nil_loc].each do |loc|
+      Lit.init.cache.update_cache loc.full_key, loc.get_value
+    end
+
+    # Translations should be changed as intended
+    assert_equal 'barbar', I18n.t('foo')
+    assert_equal 'new one', I18n.t('nil_thing')
+
+    # Reload Lit, UI-changed translations should be intact
+    Lit.loader = nil
+    Lit.init
+    assert_equal 'barbar', I18n.t('foo')
+    assert_equal 'new one', I18n.t('nil_thing')
+
+    Lit.loader = old_loader
+  end
+
+  test 'it will overwrite existing values with those from yaml for unchanged localizations' do
+    load_sample_yml('en.yml')
+    old_loader = Lit.loader
+    Lit.loader = nil
+    Lit.init
+
+    # Defaults from en.yml: en.foo: bar, en.nil_thing: [nothing]
+    assert_equal 'bar', I18n.t('foo')
+    assert_equal 'no longer nil', I18n.t('nil_thing', default: 'no longer nil')
+
+    foo_loc = Lit::LocalizationKey.find_by_localization_key('foo')
+                                  .localizations.first
+    nil_loc = Lit::LocalizationKey.find_by_localization_key('nil_thing')
+                                  .localizations.first
+
+    # Check if default values have been loaded into DB
+    assert_equal 'bar', foo_loc.default_value
+    assert_equal 'no longer nil', nil_loc.default_value
+
+    # Defaults from en_changed.yml en.foo: barbar, en.nil_thing: not nil anymore
+    # Swap yml file and reload Lit, changes in yml file should be visible
+    I18n.load_path = []
+    load_sample_yml('en_changed.yml')
+
+    Lit.loader = nil
+    Lit.init
+    assert_equal 'barbar', I18n.t('foo')
+    assert_equal 'not nil anymore', I18n.t('nil_thing')
+
+    Lit.loader = old_loader
+  end
+
   private
 
   def find_localization_for(key, locale)
