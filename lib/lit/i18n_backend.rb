@@ -83,26 +83,26 @@ module Lit
       content
     end
 
-    def store_item(locale, data, scope = [])
+    def store_item(locale, data, scope = [], unless_changed = false)
       if data.respond_to?(:to_hash)
         # ActiveRecord::Base.transaction do
           data.to_hash.each do |key, value|
-            store_item(locale, value, scope + [key])
+            store_item(locale, value, scope + [key], unless_changed)
           end
         # end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
-        @cache[key] ||= data
+        @cache.update_locale(key, data, false, unless_changed)
       elsif data.nil?
         key = ([locale] + scope).join('.')
-        @cache.delete_locale(key)
+        @cache.delete_locale(key, unless_changed)
       end
     end
 
     def load_translations_to_cache
       ActiveRecord::Base.transaction do
         (@translations || {}).each do |locale, data|
-          store_item(locale, data) if valid_locale?(locale)
+          store_item(locale, data, [], true) if valid_locale?(locale)
         end
       end
     end
