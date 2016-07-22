@@ -46,6 +46,9 @@ module Lit
         when 'redis'
           require 'lit/adapters/redis_storage'
           return RedisStorage.new
+        when 'hybrid'
+          require 'lit/adapters/hybrid_storage'
+          return HybridStorage.new
         else
           require 'lit/adapters/hash_storage'
           return HashStorage.new

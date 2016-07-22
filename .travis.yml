@@ -4,7 +4,7 @@ rvm:
   - 2.0.0
   - 2.1.2
   - 2.2.5
-  - 2.3.1
+  - 2.3.0
 gemfile:
   - gemfiles/rails_4.gemfile
   - gemfiles/rails_4.1.gemfile
@@ -14,6 +14,7 @@ services:
 env:
   - LIT_STORAGE=hash
   - LIT_STORAGE=redis
+  - LIT_STORAGE=hybrid
 before_script:
   - cp test/dummy/config/database.yml.travis test/dummy/config/database.yml
   - psql -c 'create database lit_test;' -U postgres

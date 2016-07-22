@@ -85,11 +85,9 @@ module Lit
 
     def store_item(locale, data, scope = [], unless_changed = false)
       if data.respond_to?(:to_hash)
-        # ActiveRecord::Base.transaction do
-          data.to_hash.each do |key, value|
-            store_item(locale, value, scope + [key], unless_changed)
-          end
-        # end
+        data.to_hash.each do |key, value|
+          store_item(locale, value, scope + [key], unless_changed)
+        end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
         @cache.update_locale(key, data, false, unless_changed)
@@ -141,12 +139,17 @@ module Lit
     end
 
     def should_cache?(key_with_locale)
-      return false if @cache.has_key?(key_with_locale)
+      return false if @cache[key_with_locale] != nil
 
       _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
       return false if is_ignored_key(key_without_locale)
 
       true
+    end
+
+    def extract_non_symbol_default!(options)
+      defaults = [options[:default]].flatten
+      defaults.detect{|default| !default.is_a?(Symbol)}
     end
   end
 end

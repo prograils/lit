@@ -33,6 +33,7 @@ DatabaseCleaner.clean_with :truncation
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   setup do
+    clear_snapshots
     clear_redis
     Lit.init.cache.reset
   end
