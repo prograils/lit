@@ -49,7 +49,7 @@ module Lit
       timestamp = DateTime.now.to_f.to_s
       Lit.redis_snapshot = timestamp
     end
-    Lit.saved_redis_snapshot = DateTime.strptime(timestamp, '%s').to_f.to_d
+    Lit.saved_redis_snapshot = timestamp.to_f
   end
 
   def redis_snapshot= (timestamp)
