@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'pry'
 
 # Applicable only for LIT_STORAGE=hybrid
 class HybridStorageTest < ActiveSupport::TestCase
