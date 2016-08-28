@@ -253,7 +253,7 @@ module Lit
                         where(localization_key_id: lk.id).first
             new_value = loca.get_value if loca && loca.get_value.present?
           end
-        when String then
+        when String, Numeric, TrueClass, FalseClass then
           new_value = v
         when Hash then
           new_value = nil
