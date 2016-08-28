@@ -90,12 +90,16 @@ module Lit
             store_item(locale, value, scope + [key], unless_changed)
           end
         # end
-      elsif data.respond_to?(:to_str)
+      else
         key = ([locale] + scope).join('.')
-        @cache.update_locale(key, data, false, unless_changed)
-      elsif data.nil?
-        key = ([locale] + scope).join('.')
-        @cache.delete_locale(key, unless_changed)
+        if data.respond_to?(:to_str)
+          @cache.update_locale(key, data, false, unless_changed)
+        elsif data.is_a?(Array)
+          @cache.update_locale(key, data, true, unless_changed)
+        elsif data.nil?
+          key = ([locale] + scope).join('.')
+          @cache.delete_locale(key, unless_changed)
+        end
       end
     end
 
