@@ -92,13 +92,13 @@ module Lit
         # end
       else
         key = ([locale] + scope).join('.')
-        if data.respond_to?(:to_str)
-          @cache.update_locale(key, data, false, unless_changed)
-        elsif data.is_a?(Array)
-          @cache.update_locale(key, data, true, unless_changed)
-        elsif data.nil?
+        if data.nil?
           key = ([locale] + scope).join('.')
           @cache.delete_locale(key, unless_changed)
+        elsif data.is_a?(Array)
+          @cache.update_locale(key, data, true, unless_changed)
+        else
+          @cache.update_locale(key, data, false, unless_changed)
         end
       end
     end
