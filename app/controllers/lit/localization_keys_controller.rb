@@ -35,7 +35,7 @@ module Lit
     private
 
     def get_localization_scope
-      @search_options = params.slice(*valid_keys)
+      @search_options = params.permit(valid_keys)
       @search_options[:include_completed] = '1' if @search_options.empty?
       @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
     end
