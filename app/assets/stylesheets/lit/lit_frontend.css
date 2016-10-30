@@ -1,0 +1,22 @@
+.lit-key-generic {
+}
+.lit-key-highlight{
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: red;
+}
+#lit_button_wrapper{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  background-color: red;
+  height: 20px;
+  border-radius: 10px;
+  display: block;
+  padding: 2px;
+  cursor: pointer;
+}
+#lit_button_wrapper.lit-highlight-enabled{
+  background-color: lightgreen;
+}

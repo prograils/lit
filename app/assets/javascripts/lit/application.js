@@ -12,9 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require_directory ./backend/
 
 $(document).ready(function(){
   $('.title').tooltip();
-
 });

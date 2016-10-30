@@ -9,6 +9,7 @@ module Lit
     def initialize(cache)
       @cache = cache
       @available_locales_cache = nil
+      @translations = {}
     end
 
     def translate(locale, key, options = {})
@@ -128,7 +129,7 @@ module Lit
     end
 
     def store_items?
-      @store_items.nil? || @store_items
+      !instance_variable_defined?(:@store_items) || @store_items
     end
 
     def valid_locale?(locale)
