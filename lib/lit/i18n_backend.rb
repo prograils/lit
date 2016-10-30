@@ -62,21 +62,44 @@ module Lit
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
-        if content.nil? && options[:default].present?
-          if options[:default].is_a?(Array)
-            default = options[:default].map do |key|
-              if key.is_a?(Symbol)
-                I18n.normalize_keys(nil, key.to_s, options[:scope], options[:separator]).join('.').to_sym
-              else
-                key
-              end
-            end
-          else
-            default = options[:default]
-          end
 
-          @cache[key_with_locale] = default
-          content = @cache[key_with_locale]
+        # so there is no content in cache - it might not be if ie. we're doing
+        # fallback to already existing language
+        if content.nil?
+          # check if default was provided
+          if options[:default].present?
+            # default most likely will be an array
+            if options[:default].is_a?(Array)
+              default = options[:default].map do |key|
+                if key.is_a?(Symbol)
+                  I18n.normalize_keys(nil, key.to_s, options[:scope], options[:separator]).join('.').to_sym
+                else
+                  key
+                end
+              end
+            else
+              default = options[:default]
+            end
+            content = default
+          end
+          # if we have content now, let's store it in cache
+          if content.present?
+            @cache[key_with_locale] = content
+            content = @cache[key_with_locale]
+          end
+          # content might be nil - default value passed to cache was in fact
+          # useless.
+          # if content is still nil, we may try to humanize it. Rails will do
+          # it anyway if we return nil, but then it will wrap it also in
+          # translation_missing span.
+          # Humanizing key should be last resort
+          if content.nil? && Lit.humanize_key
+            content = key.to_s.split('.').last.humanize
+            if content.present?
+              @cache[key_with_locale] = content
+              content = @cache[key_with_locale]
+            end
+          end
         end
       end
       ## return translated content
