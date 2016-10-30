@@ -3,7 +3,7 @@ module Lit
     include ActionView::Helpers::TranslationHelper
     def translate_with_lit(key, options = {})
       key = scope_key_by_partial(key)
-      ret = content_tag :span, class: 'lit-key-generic', data: { title: key } do
+      ret = content_tag :span, class: 'lit-key-generic', data: { key: key, locale: I18n.locale } do
         translate_without_lit(key, options)
       end
       puts key
@@ -27,7 +27,8 @@ module Lit
 
     def lit_frontend_files
       if Lit.authentication_verification.present? && send(Lit.authentication_verification)
-        [javascript_lit_files, stylesheet_lit_files].join('').html_safe
+        meta = content_tag :meta, '', value: lit.find_localization_localization_keys_path, name: 'lit-url-base'
+        [javascript_lit_files, stylesheet_lit_files, meta].join('').html_safe
       end
     end
   end

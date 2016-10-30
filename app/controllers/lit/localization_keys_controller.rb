@@ -1,15 +1,26 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
-    before_filter :get_localization_scope, except: [:destroy]
+    before_filter :get_localization_scope, except: [:destroy, :find_localization]
 
     def index
       get_localization_keys
     end
 
+    def find_localization
+      localization_key = Lit::LocalizationKey. \
+                         find_by!(localization_key: params[:key])
+      locale = Lit::Locale.find_by!(locale: params[:locale])
+      localization = localization_key.localizations.find_by(locale_id: locale)
+      render json: {
+        path: localization_key_localization_path(localization_key, localization)
+      }
+    end
+
     def starred
       @scope = @scope.where(is_starred: true)
 
-      if defined?(Kaminari) and @scope.respond_to?(Kaminari.config.page_method_name)
+      if defined?(Kaminari) && \
+         @scope.respond_to?(Kaminari.config.page_method_name)
         @scope = @scope.send(Kaminari.config.page_method_name, params[:page])
       end
       get_localization_keys
@@ -18,7 +29,7 @@ module Lit
 
     def star
       @localization_key = LocalizationKey.find params[:id].to_i
-      @localization_key.is_starred = ! @localization_key.is_starred?
+      @localization_key.is_starred = !@localization_key.is_starred?
       @localization_key.save
       respond_to :js
     end
