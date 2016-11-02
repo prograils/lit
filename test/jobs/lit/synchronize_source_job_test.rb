@@ -14,7 +14,6 @@ if defined?(ActiveJob)
         after_str = after.strftime('%F %T')
         after_param = Rack::Utils.escape(after_str)
         @source = Source.first
-        puts @source.incomming_localizations
         @source.update_column(:last_updated_at, after)
         localizations_addr = "http://testhost.com/lit/api/v1/localizations.json?after=#{after_param}"
         last_change_addr = 'http://testhost.com/lit/api/v1/last_change.json'

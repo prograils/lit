@@ -21,8 +21,6 @@ module Lit
 
   def self.init
     @@table_exists ||= check_if_table_exists
-    puts @@table_exists
-    puts check_if_table_exists
     if loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?

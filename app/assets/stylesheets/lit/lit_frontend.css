@@ -1,9 +1,7 @@
 .lit-key-generic {
 }
 .lit-key-highlight{
-  text-decoration-line: underline;
-  text-decoration-style: wavy;
-  text-decoration-color: red;
+  text-decoration: underline wavy red !important;
 }
 #lit_button_wrapper{
   position: fixed;

@@ -6,8 +6,6 @@ module Lit
       ret = content_tag :span, class: 'lit-key-generic', data: { key: key, locale: I18n.locale } do
         translate_without_lit(key, options)
       end
-      puts key
-      puts ret
       ret
     end
     alias_method_chain :translate, :lit

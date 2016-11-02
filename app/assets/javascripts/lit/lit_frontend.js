@@ -1,3 +1,5 @@
+//= require ./mousetrap.js
+
 var $btn, $elem;
 
 buildLocalizationForm = function(e){
@@ -32,17 +34,11 @@ getLocalizationDetails = function(elem, path){
 replaceWithForm = function(elem, value, update_path){
   removeLitForm();
   $this = $(elem);
-  $form = $('<form id="litForm"><textarea id="lit_textarea" /></form>').appendTo('body');
-  $area = $('#lit_textarea');
-  $area.offset($this.offset());
-  $area.css($this.css(['background', 'font-family', 'font-style', 'font-size', 'text', 'color', 'height', 'width', 'padding', 'margin', 'font-weight', 'display']));
-  $area.css('min-width', $this.css('width'));
-  //$area.val( $this[0].innerHTML );
-  $area.val( value );
-  $area.focus();
-  $area.on('blur', function(){
-    $this.html( $area.val() );
-    submitForm(elem, $area.val(), update_path);
+  $this.attr('contentEditable', true);
+  $this.html( value );
+  $this.focus();
+  $this.on('blur', function(){
+    submitForm($this, $this.html(), update_path);
     removeLitForm();
   });
 };
@@ -54,9 +50,12 @@ submitForm = function(elem, val, update_path){
     url: update_path,
     data: { 'localization[translated_value]': val },
     success: function(data){
-      elem.html( data.value );
+      elem.html( data.html );
+      elem.attr('contentEditable', false);
+      console.log('saved ' + elem.data('key'));
     },
     error: function(){
+      console.log('problem saving ' + elem.data('key'));
       alert('ups, ops, something went wrong');
     }
   });
@@ -87,5 +86,4 @@ $(document).ready(function(){
       });
     }
   });
-  $('#lit_button_wrapper').click();
 });
