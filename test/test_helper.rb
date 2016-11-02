@@ -61,6 +61,10 @@ end
 
 class ActionController::TestCase
   include Warden::Test::Helpers
-  include Devise::TestHelpers
+  if defined?(Devise::Test::ControllerHelpers)
+    include Devise::Test::ControllerHelpers
+  else
+    include Devise::TestHelpers
+  end
   Warden.test_mode!
 end

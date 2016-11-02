@@ -207,9 +207,6 @@ module Lit
                   end
                 end
               end
-              if value.nil? && Lit.humanize_key
-                value = key_without_locale.split('.').last.humanize
-              end
             end
             localization.update_default_value(value)
           end

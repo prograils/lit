@@ -42,7 +42,7 @@ module Lit
     end
 
     def get_value
-      (is_changed? && (!translated_value.nil?)) ? translated_value : default_value
+      is_changed? && !translated_value.nil? ? translated_value : default_value
     end
 
     def value
@@ -63,8 +63,12 @@ module Lit
 
     def update_default_value(value)
       return true if persisted? && default_value == value
-      self.default_value = value
-      self.save!
+      if persisted?
+        update_column(:default_value, value)
+      else
+        self.default_value = value
+        save!
+      end
     end
 
     private
