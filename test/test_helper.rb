@@ -7,6 +7,15 @@ require 'capybara/rails'
 require 'database_cleaner'
 require 'test_declarative'
 require 'mocha/setup'
+require 'webmock'
+
+begin
+  require 'rails-controller-testing'
+  Rails::Controller::Testing.install
+rescue LoadError
+end
+
+WebMock.enable!
 
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -31,10 +40,19 @@ DatabaseCleaner.strategy = :transaction
 DatabaseCleaner.clean_with :truncation
 
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = true
+  include WebMock::API
+
+  if respond_to?(:use_transactional_tests=)
+    self.use_transactional_tests = true
+  else
+    self.use_transactional_fixtures = true
+  end
   setup do
     clear_redis
     Lit.init.cache.reset
+  end
+  teardown do
+    WebMock.reset!
   end
 end
 
@@ -43,7 +61,11 @@ class ActionDispatch::IntegrationTest
   include Capybara::DSL
 
   # Stop ActiveRecord from wrapping tests in transactions
-  self.use_transactional_fixtures = false
+  if respond_to?(:use_transactional_tests=)
+    self.use_transactional_tests = false
+  else
+    self.use_transactional_fixtures = false
+  end
 
   setup do
     DatabaseCleaner.strategy = :truncation
@@ -61,6 +83,15 @@ end
 
 class ActionController::TestCase
   include Warden::Test::Helpers
-  include Devise::TestHelpers
+  if defined?(Devise::Test::ControllerHelpers)
+    include Devise::Test::ControllerHelpers
+  else
+    include Devise::TestHelpers
+  end
   Warden.test_mode!
+
+  # Disable keyword arguments deprecation notice for now
+  def non_kwarg_request_warning
+    nil
+  end
 end

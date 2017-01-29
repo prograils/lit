@@ -72,7 +72,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
   test 'translating the same not existing key twice should not set Lit::Localizaiton#is_changed to true' do
     key = 'not_existing_translation'
 
-    assert_equal nil, find_localization_for(key, 'en')
+    assert_nil find_localization_for(key, 'en')
 
     assert_equal "translation missing: en.#{key}", I18n.t(key)
     assert_equal false, find_localization_for(key, 'en').is_changed?

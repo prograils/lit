@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :set_locale
+  unless respond_to?(:before_action)
+    alias_method :before_action, :before_filter
+  end
+
+  before_action :set_locale
 
   def set_locale
     I18n.locale = params[:locale] if params[:locale]

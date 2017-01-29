@@ -66,7 +66,7 @@ module Lit
     end
 
     def self.search(options = {})
-      options = options.reverse_merge(default_search_options)
+      options = options.to_h.reverse_merge(default_search_options)
       s = self
       if options[:order] && order_options.include?(options[:order])
         column, order = options[:order].split(' ')
