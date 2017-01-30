@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'fakeweb'
 
 module Lit
   class SourcesControllerTest < ActionController::TestCase
@@ -8,7 +7,8 @@ module Lit
     setup do
       Lit.authentication_function = nil
       @routes = Lit::Engine.routes
-      FakeWeb.register_uri(:get, 'http://testhost.com/lit/api/v1/last_change.json', body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
+      stub_request(:get, 'http://testhost.com/lit/api/v1/last_change.json').
+        to_return(body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
       @source = lit_sources(:test)
     end
 

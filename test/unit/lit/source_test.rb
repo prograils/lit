@@ -1,13 +1,13 @@
 require 'test_helper'
-require 'fakeweb'
+
 module Lit
   class SourceTest < ActiveSupport::TestCase
     fixtures 'lit/sources'
     def setup
-      FakeWeb.register_uri(:get, 'http://testhost.com/lit/api/v1/last_change.json', body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
-      FakeWeb.register_uri(:get, 'http://testhost.nope/lit/api/v1/last_change.json',
-                           body: 'Nothing to be found around here',
-                           status: ['404', 'Not Found'])
+      stub_request(:get, 'http://testhost.com/lit/api/v1/last_change.json').
+          to_return(body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
+      stub_request(:get, 'http://testhost.nope/lit/api/v1/last_change.json').
+          to_return(body: 'Nothing to be found around here', status: 404)
     end
     test 'validates url validation' do
       s = Lit::Source.new
@@ -16,7 +16,7 @@ module Lit
       s.identifier = 'test'
       assert s.valid?
       assert s.errors.empty?
-      s.url = 'http://localhost.nope/lit'
+      s.url = 'http://testhost.nope/lit'
       assert !s.valid?
       assert !s.errors.empty?
     end
@@ -36,7 +36,7 @@ module Lit
       s.url = 'http://testhost.com/lit'
       s.api_key = 'test'
       s.identifier = 'test'
-      s.save
+      s.save!
       s.reload
       assert s.last_updated_at.present?
     end
@@ -47,7 +47,7 @@ module Lit
       s.url = 'http://testhost.com/lit'
       s.api_key = 'test'
       s.identifier = 'test'
-      s.save
+      s.save!
       s.reload
       assert s.last_updated_at.nil?
     end
