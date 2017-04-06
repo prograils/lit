@@ -5,11 +5,11 @@ Lit.authentication_function = <%= @authentication_function || 'nil' %>
 
 # Either 'redis' or 'hash'. Hash is the fastest, but will fail in multiprocess
 # environment
-Lit.key_value_engine = "<%= @key_value_engine %>"
+Lit.key_value_engine = '<%= @key_value_engine %>'
 
 # Pass extra options to key_value_neinge, ie. prefix for redis (only one
 # supported at the moment)
-# Lit.storage_options = { :prefix=>"my_project" }
+# Lit.storage_options = { prefix: "my_project" }
 
 # If true all translations are returned as html_safe strings
 Lit.all_translations_are_html_safe = false
@@ -29,7 +29,7 @@ Lit.fallback = false
 Lit.api_enabled = false
 
 # API key is required to authorize third party, if API is enabled
-Lit.api_key = "<%= @api_key %>"
+Lit.api_key = '<%= @api_key %>'
 
 # If true, last_updated_at column of synchronizaton source will be set to now
 # upon record creation
