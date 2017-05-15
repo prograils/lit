@@ -58,15 +58,16 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      if should_cache?(key_with_locale)
+
+      if content.nil? || should_cache?(key_with_locale)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
         if content.nil? && options[:default].present?
           if options[:default].is_a?(Array)
-            default = options[:default].map do |key|
-              if key.is_a?(Symbol)
-                I18n.normalize_keys(nil, key.to_s, options[:scope], options[:separator]).join('.').to_sym
+            default = options[:default].map do |k|
+              if k.is_a?(Symbol)
+                I18n.normalize_keys(nil, k.to_s, options[:scope], options[:separator]).join('.').to_sym
               else
                 key
               end
