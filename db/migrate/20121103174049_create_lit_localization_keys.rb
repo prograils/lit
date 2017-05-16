@@ -1,4 +1,4 @@
-class CreateLitLocalizationKeys < ActiveRecord::Migration
+class CreateLitLocalizationKeys < Rails::VERSION::MAJOR >= 5 ? ActiveRecord::Migration[4.2] : ActiveRecord::Migration
   def change
     create_table :lit_localization_keys do |t|
       t.string :localization_key

@@ -1,4 +1,4 @@
-class CreateLitLocalizations < ActiveRecord::Migration
+class CreateLitLocalizations < Rails::VERSION::MAJOR >= 5 ? ActiveRecord::Migration[4.2] : ActiveRecord::Migration
   def change
     create_table :lit_localizations do |t|
       t.references :locale
