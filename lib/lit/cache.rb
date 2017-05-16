@@ -77,9 +77,9 @@ module Lit
     end
 
     def load_all_translations
-      first = Localization.order('id ASC').first
-      last = Localization.order('id DESC').first
-      if !first || !last || (!localizations.has_key?(first.full_key) ||
+      first = Localization.order(id: :asc).first
+      last = Localization.order(id: :desc).first
+      if !first || (!localizations.has_key?(first.full_key) ||
         !localizations.has_key?(last.full_key))
         Localization.includes([:locale, :localization_key]).find_each do |l|
           localizations[l.full_key] = l.get_value
