@@ -82,7 +82,7 @@ module Lit
         s = s.where(localization_key_col.matches(q))
       end
       if options[:key].present?
-        q = "%#{options[:key]}%"
+        q = Arel::Nodes.build_quoted("%#{options[:key]}%")
         q_underscore = "%#{options[:key].parameterize.underscore}%"
         cond = localization_key_col.matches(q).or(
             default_value_col.matches(q).or(
