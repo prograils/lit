@@ -7,7 +7,7 @@ require 'lit/version'
 Gem::Specification.new do |s|
   s.name        = 'lit'
   s.version     = Lit::VERSION
-  s.authors     = ['Maciej Litwiniuk']
+  s.authors     = ['Maciej Litwiniuk', 'Piotr Boniecki', 'Michał Buszkiewicz']
   s.email       = ['maciej@litwiniuk.net']
   s.license     = 'MIT'
   s.homepage    = 'https://github.com/prograils/lit'
