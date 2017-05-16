@@ -1,0 +1,28 @@
+.lit-key-generic {
+}
+.lit-key-highlight{
+  text-decoration: underline wavy red !important;
+}
+#lit_button_wrapper{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  background-color: red;
+  border-radius: 4px;
+  display: block;
+  padding: 5px;
+  cursor: pointer;
+  color: white;
+}
+#lit_button_wrapper.lit-highlight-enabled{
+  background-color: lightgreen;
+}
+#lit_textarea{
+  position: absolute;
+  padding: 0 0 1px 0;
+  margin: 0 0 0 0;
+  border: 0;
+  border-bottom: 1px solid red;
+
+}

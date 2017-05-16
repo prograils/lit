@@ -3,6 +3,10 @@ module Lit
     before_action :find_localization_key
     before_action :find_localization
 
+    def show
+      render json: { value: @localization.get_value }
+    end
+
     def edit
       @localization.translated_value = @localization.get_value
       respond_to :js
@@ -14,7 +18,12 @@ module Lit
         Lit.init.cache.update_cache @localization.full_key, @localization.get_value
       end
       @localization.reload
-      respond_to :js
+      respond_to do |f|
+        f.js
+        f.json do
+          render json: { value: @localization.get_value }
+        end
+      end
     end
 
     def previous_versions
@@ -25,7 +34,8 @@ module Lit
     private
 
     def find_localization_key
-      @localization_key = Lit::LocalizationKey.find(params[:localization_key_id])
+      @localization_key = Lit::LocalizationKey. \
+                          find(params[:localization_key_id])
     end
 
     def find_localization

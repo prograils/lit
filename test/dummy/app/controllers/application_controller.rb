@@ -1,8 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+
   unless respond_to?(:before_action)
     alias_method :before_action, :before_filter
   end
+
+  helper Lit::FrontendHelper
 
   before_action :set_locale
 

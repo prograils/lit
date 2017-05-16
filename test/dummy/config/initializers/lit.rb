@@ -1,5 +1,5 @@
-
 Lit.authentication_function = :authenticate_admin!
+Lit.authentication_verification = :admin_signed_in?
 Lit.key_value_engine = ENV['LIT_STORAGE'] || 'redis'
 Lit.fallback = true
 Lit.humanize_key = true

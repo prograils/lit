@@ -79,7 +79,9 @@ module Lit
     end
 
     def mark_localization_key_completed
-      localization_key.mark_completed! if @should_mark_localization_key_completed
+      return if !instance_variable_defined?(:@should_mark_localization_key_completed) || \
+                @should_mark_localization_key_completed
+      localization_key.mark_completed!
     end
 
     def create_version

@@ -3,6 +3,7 @@ require 'lit/loader'
 
 module Lit
   mattr_accessor :authentication_function
+  mattr_accessor :authentication_verification
   mattr_accessor :key_value_engine
   mattr_accessor :storage_options
   mattr_accessor :humanize_key
@@ -16,6 +17,7 @@ module Lit
   class << self
     attr_accessor :loader
   end
+
   def self.init
     @@table_exists ||= check_if_table_exists
     if loader.nil? && @@table_exists
@@ -43,12 +45,12 @@ module Lit
 
   def self.get_key_value_engine
     case Lit.key_value_engine
-        when 'redis'
-          require 'lit/adapters/redis_storage'
-          return RedisStorage.new
-        else
-          require 'lit/adapters/hash_storage'
-          return HashStorage.new
+    when 'redis'
+      require 'lit/adapters/redis_storage'
+      return RedisStorage.new
+    else
+      require 'lit/adapters/hash_storage'
+      return HashStorage.new
     end
   end
 end

@@ -3,6 +3,11 @@
 # `nil` will let everyone in.
 Lit.authentication_function = <%= @authentication_function || 'nil' %>
 
+# Which authentication verification function to use (ie. :user_signed_in)?
+# This is used together with frontend translation module to determine, if
+# helper button should be applied and translations wrapped in custom span
+Lit.authentication_verification = <%= @authentication_verification || 'nil' %>
+
 # Either 'redis' or 'hash'. Hash is the fastest, but will fail in multiprocess
 # environment
 Lit.key_value_engine = '<%= @key_value_engine %>'

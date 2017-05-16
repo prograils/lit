@@ -18,10 +18,30 @@ Highly inspired by Copycopter by thoughtbot.
 5. Easy to install - works as an engine, comes with simple generator
 6. You can always export all translations to plain old YAML file
 7. Has build in wysiwyg editor ([jQuery TE](http://jqueryte.com/))
+8. Some possibilities of translating apps directly, inline in frontend
 
 ### Screenshots
 
 Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
+
+### Frontend inline translation
+
+Frontend inline translation gets enabled in three steps:
+
+1. define `Lit.euthentication_verification` setting. It has to be symbol, to
+   wchich you're app will respond with either `true` or `false`, and not
+   redirect (like ie `:authenticate_user?` is doing
+2. include `Lit::FrontendHelper` in your `ApplicationController`
+3. add required assets to layout via `lit_frontend_assets` function (add it
+   somewhere within `<head></head>`.
+
+There are two gotchas:
+
+1. You have to call translations using `t()` or `translate()`, not `I18n.t`
+   which is not (yet?) hooked
+2. Once enabled, all translations be rendered inside `<span />` tag, what may
+   break your layout (ie if you're using translated values as button values or
+   as placeholders, ete). To avoid that add `skip_lit: true` to `t()` call.
 
 ### So... again - what is it and how to use it?
 *Lit* is Rails engine - it runs in it's own namespace, by default it's avaulable under `/lit`. It provides UI for managing translations of your app.

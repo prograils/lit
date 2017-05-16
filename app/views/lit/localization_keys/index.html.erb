@@ -8,10 +8,10 @@
         <strong><%= lk.localization_key %></strong>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
-          <%= link_to lit.star_localization_key_path(lk), :remote=>true, :class=>"star_icon" do %>
+          <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon' do %>
             <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
           <% end %>
-          <%= link_to lit.localization_key_path(lk), :method=>:delete, :data=>{:confirm=>t('lit.common.you_sure', :default=>"Are you sure?")}, :remote=>true do %>
+          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: t('lit.common.you_sure', default: "Are you sure?")}, remote: true do %>
             <%= draw_icon 'trash-o' %>
           <% end %>
         </div>
