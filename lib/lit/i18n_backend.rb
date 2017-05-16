@@ -22,9 +22,9 @@ module Lit
 
     def available_locales
       return @available_locales_cache unless @available_locales_cache.nil?
-      locales = ::Rails.configuration.i18n.available_locales
-      if locales && !locales.empty?
-        @available_locales_cache = locales.map(&:to_sym)
+      @locales ||= ::Rails.configuration.i18n.available_locales
+      if @locales && !@locales.empty?
+        @available_locales_cache = @locales.map(&:to_sym)
       else
         @available_locales_cache = Lit::Locale.ordered.visible.map { |l| l.locale.to_sym }
       end
@@ -58,10 +58,10 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      if should_cache?(key_with_locale)
+
+      if content.nil? || should_cache?(key_with_locale)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
-
 
         # so there is no content in cache - it might not be if ie. we're doing
         # fallback to already existing language
@@ -106,19 +106,21 @@ module Lit
       content
     end
 
-    def store_item(locale, data, scope = [], unless_changed = false)
+    def store_item(locale, data, scope = [], startup_process = false)
       if data.respond_to?(:to_hash)
         # ActiveRecord::Base.transaction do
           data.to_hash.each do |key, value|
-            store_item(locale, value, scope + [key], unless_changed)
+            store_item(locale, value, scope + [key], startup_process)
           end
         # end
       elsif data.respond_to?(:to_str)
         key = ([locale] + scope).join('.')
-        @cache.update_locale(key, data, false, unless_changed)
+        return if startup_process && @cache.keys.member?(key)
+        @cache.update_locale(key, data, false, startup_process)
       elsif data.nil?
+        return if startup_process
         key = ([locale] + scope).join('.')
-        @cache.delete_locale(key, unless_changed)
+        @cache.delete_locale(key)
       end
     end
 
@@ -155,8 +157,8 @@ module Lit
     end
 
     def valid_locale?(locale)
-      locales = ::Rails.configuration.i18n.available_locales
-      !locales || locales.map(&:to_s).include?(locale.to_s)
+      @locales ||= ::Rails.configuration.i18n.available_locales
+      !@locales || @locales.map(&:to_s).include?(locale.to_s)
     end
 
     def is_ignored_key(key_without_locale)
