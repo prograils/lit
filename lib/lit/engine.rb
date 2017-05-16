@@ -10,7 +10,7 @@ module Lit
     end
     initializer 'lit.assets.precompile' do |app|
       app.config.assets.precompile += %w(lit/application.css lit/application.js)
-      app.config.assets.precompile += %w(lit/lit_frontend.css lit/lt_frontend.js)
+      app.config.assets.precompile += %w(lit/lit_frontend.css lit/lit_frontend.js)
     end
   end
 end

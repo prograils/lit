@@ -13,7 +13,6 @@ module Lit
   mattr_accessor :api_key
   mattr_accessor :all_translations_are_html_safe
   mattr_accessor :set_last_updated_at_upon_creation
-  mattr_accessor :overwrite_helper
 
   class << self
     attr_accessor :loader
@@ -40,6 +39,8 @@ module Lit
 
   def self.check_if_table_exists
     Lit::Locale.table_exists?
+  rescue
+    false
   end
 
   def self.get_key_value_engine

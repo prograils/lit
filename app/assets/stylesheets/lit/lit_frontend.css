@@ -9,11 +9,11 @@
   right: 20px;
   z-index: 100;
   background-color: red;
-  height: 20px;
-  border-radius: 10px;
+  border-radius: 4px;
   display: block;
-  padding: 2px;
+  padding: 5px;
   cursor: pointer;
+  color: white;
 }
 #lit_button_wrapper.lit-highlight-enabled{
   background-color: lightgreen;

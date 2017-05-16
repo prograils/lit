@@ -1,40 +1,42 @@
 module Lit
   module FrontendHelper
     include ActionView::Helpers::TranslationHelper
-    def translate_with_lit(key, options = {})
-      key = scope_key_by_partial(key)
-      ret = translate_without_lit(key, options)
-      if lit_authorized?
-        ret = content_tag :span,
-                          class: 'lit-key-generic',
-                          data: { key: key, locale: I18n.locale } do
-          ret
+    module TranslationKeyWrapper
+      def translate(key, options = {})
+        options = options.with_indifferent_access
+        key = scope_key_by_partial(key)
+        ret = super(key, options)
+        if !options[:skip_lit] && lit_authorized?
+          ret = content_tag :span,
+                            class: 'lit-key-generic',
+                            data: { key: key, locale: I18n.locale } do
+            ret
+          end
         end
+        ret
       end
-      ret
-    end
-    alias_method_chain :translate, :lit
 
-    def t_with_lit(key, options = {})
-      translate_with_lit(key, options)
+      def t(key, options = {})
+        translate(key, options)
+      end
     end
-    alias_method_chain :t, :lit
+    prepend Lit::FrontendHelper::TranslationKeyWrapper
 
-    def javascript_lit_files
+    def javascript_lit_tag
       javascript_include_tag 'lit/lit_frontend'
     end
 
-    def stylesheet_lit_files
+    def stylesheet_lit_tag
       stylesheet_link_tag 'lit/lit_frontend'
     end
 
-    def lit_frontend_files
+    def lit_frontend_assets
       return unless lit_authorized?
       meta = content_tag :meta,
                          '',
                          value: lit.find_localization_localization_keys_path,
                          name: 'lit-url-base'
-      safe_join([javascript_lit_files, stylesheet_lit_files, meta])
+      safe_join([javascript_lit_tag, stylesheet_lit_tag, meta])
     end
 
     def lit_authorized?
