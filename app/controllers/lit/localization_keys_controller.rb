@@ -1,6 +1,6 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
-    before_filter :get_localization_scope, except: [:destroy, :find_localization]
+    before_action :get_localization_scope, except: [:destroy, :find_localization]
 
     def index
       get_localization_keys
@@ -46,14 +46,18 @@ module Lit
     private
 
     def get_localization_scope
-      @search_options = params.slice(*valid_keys)
+      @search_options = if params.respond_to?(:permit)
+                          params.permit(*valid_keys)
+                        else
+                          params.slice(*valid_keys)
+                        end
       @search_options[:include_completed] = '1' if @search_options.empty?
-      @scope = LocalizationKey.uniq.preload(localizations: :locale).search(@search_options)
+      @scope = LocalizationKey.distinct.preload(localizations: :locale).search(@search_options)
     end
 
     def get_localization_keys
       key_parts = @search_options[:key_prefix].to_s.split('.').length
-      @prefixes = @scope.reorder(nil).uniq.pluck(:localization_key).map { |lk| lk.split('.').shift(key_parts + 1).join('.') }.uniq.sort
+      @prefixes = @scope.reorder(nil).distinct.pluck(:localization_key).map { |lk| lk.split('.').shift(key_parts + 1).join('.') }.uniq.sort
       if @search_options[:key_prefix].present?
         parts = @search_options[:key_prefix].split('.')
         @parent_prefix = parts[0, parts.length - 1].join('.')
@@ -61,7 +65,7 @@ module Lit
       if defined?(Kaminari) and @scope.respond_to?(Kaminari.config.page_method_name)
         @localization_keys = @scope.send(Kaminari.config.page_method_name, params[:page])
       else
-        @localization_keys = @scope.all
+        @localization_keys = @scope
       end
     end
 

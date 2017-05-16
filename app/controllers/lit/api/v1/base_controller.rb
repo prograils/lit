@@ -4,7 +4,7 @@ module Lit
       class BaseController < ActionController::Base
         layout nil
         respond_to :json
-        before_filter :authenticate_requests!
+        before_action :authenticate_requests!
 
         private
 

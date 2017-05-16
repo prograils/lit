@@ -1,7 +1,7 @@
 module Lit
   class LocalizationsController < ::Lit::ApplicationController
-    before_filter :find_localization_key
-    before_filter :find_localization
+    before_action :find_localization_key
+    before_action :find_localization
 
     def show
       render json: { value: @localization.get_value }
@@ -43,7 +43,7 @@ module Lit
     end
 
     def clear_params
-      if defined?(::ActionController::StrongParameters)
+      if params.respond_to?(:permit)
         # allow translated_value to be an array
         if @localization.value.is_a?(Array)
           params.require(:localization).permit(:locale_id, translated_value: [])

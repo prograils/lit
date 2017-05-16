@@ -1,8 +1,12 @@
 module Lit
   class ApplicationController < ActionController::Base
-    before_filter :authenticate
-    before_filter :stop_hits_counter
-    after_filter :restore_hits_counter
+    unless respond_to?(:before_action)
+      alias_method :before_action, :before_filter
+      alias_method :after_action, :after_filter
+    end
+    before_action :authenticate
+    before_action :stop_hits_counter
+    after_action :restore_hits_counter
 
     private
 

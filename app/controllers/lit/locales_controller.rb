@@ -3,7 +3,7 @@ require_dependency 'lit/application_controller'
 module Lit
   class LocalesController < ApplicationController
     def index
-      @locales = Locale.ordered.all
+      @locales = Locale.ordered
 
       respond_to do |format|
         format.html # index.html.erb

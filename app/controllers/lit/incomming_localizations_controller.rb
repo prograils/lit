@@ -2,10 +2,10 @@ require_dependency 'lit/application_controller'
 
 module Lit
   class IncommingLocalizationsController < ApplicationController
-    before_filter :find_source
+    before_action :find_source
 
     def index
-      @incomming_localizations = @source.incomming_localizations.all
+      @incomming_localizations = @source.incomming_localizations
     end
 
     def accept
