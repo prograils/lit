@@ -1,4 +1,5 @@
 appraise 'rails-4.2' do
+  source 'https://rubygems.org'
   gem 'rails', '4.2.9'
   gem 'devise'
   gem 'pg'
@@ -15,6 +16,7 @@ appraise 'rails-4.2' do
 end
 
 appraise 'rails-5' do
+  source 'https://rubygems.org'
   gem 'rails', '5.0.1'
   gem 'devise'
   gem 'pg'
