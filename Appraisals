@@ -31,4 +31,5 @@ appraise 'rails-5' do
   gem 'coffee-rails'
   gem 'pry-rails'
   gem 'rails-controller-testing'
+  gem 'minitest', '~> 5.10', '> 5.10.2'
 end
