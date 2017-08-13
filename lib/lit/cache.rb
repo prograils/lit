@@ -301,5 +301,14 @@ module Lit
     def self.split_key(key)
       key.split('.', 2)
     end
+
+    def self.flatten_hash(hash_to_flatten, parent = [])
+      hash_to_flatten.flat_map do |key, value|
+        case value
+        when Hash then flatten_hash(value, parent + [key])
+        else [(parent + [key]).join('.'), value]
+        end
+      end
+    end
   end
 end
