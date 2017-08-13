@@ -27,6 +27,7 @@ module Lit
         keys = Lit.ignored_keys.split(',').map(&:strip)
         Lit.ignored_keys = keys
       end
+      Lit.ignore_yaml_on_startup = true if Lit.ignore_yaml_on_startup.nil?
       Lit.ignored_keys = [] unless Lit.ignored_keys.is_a?(Array)
       # if loading all translations on start, migrations have to be already
       # performed, fails on first deploy
