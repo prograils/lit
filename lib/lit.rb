@@ -13,6 +13,7 @@ module Lit
   mattr_accessor :api_key
   mattr_accessor :all_translations_are_html_safe
   mattr_accessor :set_last_updated_at_upon_creation
+  mattr_accessor :store_request_info
 
   class << self
     attr_accessor :loader

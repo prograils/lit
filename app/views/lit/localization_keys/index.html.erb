@@ -8,10 +8,15 @@
         <strong><%= lk.localization_key %></strong>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
-          <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon' do %>
+          <% if Lit.store_request_info %>
+            <%= link_to '#', class: 'request_info_link title',  title: 'Show / hide request' do %>
+              <%= draw_icon 'link' %>
+            <% end %>
+          <% end %>
+          <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>
             <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
           <% end %>
-          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: t('lit.common.you_sure', default: "Are you sure?")}, remote: true do %>
+          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
             <%= draw_icon 'trash-o' %>
           <% end %>
         </div>
@@ -35,6 +40,19 @@
               </tr>
               <tr class="hidden localization_versions_row" data-id="<%= localization.id %>">
                 <td colspan="2" class="localization_versions"></td>
+              </tr>
+            <% end %>
+            <% if Lit.store_request_info %>
+              <tr class="hidden request_info_row">
+                <td colspan="2">
+                  <strong>Translation key recently displayed on following pages:</strong>
+                  <ul>
+                    <% Lit.init.cache.get_request_info(lk.localization_key).split(' ').reverse.each do |l| %>
+                      <li><%= link_to l, l %></li>
+                   <% end %>
+                  </ul>
+                  <em>Note: you might not have access to those pages!</em>
+                </td>
               </tr>
             <% end %>
           </table>

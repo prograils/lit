@@ -20,12 +20,14 @@ module Lit
   class Cache
     def initialize
       @hits_counter = Lit.get_key_value_engine
+      @request_info_store = Lit.get_key_value_engine
       @hits_counter_working = true
       @keys = nil
     end
 
     def [](key)
       update_hits_count(key)
+      store_request_info(key)
       ret = localizations[key]
       ret
     end
@@ -291,12 +293,26 @@ module Lit
     end
 
     def update_hits_count(key)
-      if @hits_counter_working
-        key_without_locale = split_key(key).last
-        @hits_counter.incr('hits_counter.' + key)
-        @hits_counter.incr('global_hits_counter.' + key_without_locale)
-      end
+      return unless @hits_counter_working
+      key_without_locale = split_key(key).last
+      @hits_counter.incr('hits_counter.' + key)
+      @hits_counter.incr('global_hits_counter.' + key_without_locale)
     end
+
+    def store_request_info(key)
+      return unless Lit.store_request_info
+      return unless Thread.current[:lit_current_request_path].present?
+      key_without_locale = split_key(key).last
+      info = get_request_info(key_without_locale)
+      parts = info.split(' ').push(Thread.current[:lit_current_request_path]).uniq
+      parts.shift if parts.count > 10
+      @request_info_store['request_info.' + key_without_locale] = parts.join ' '
+    end
+
+    def get_request_info(key_without_locale)
+      @request_info_store['request_info.' + key_without_locale].to_s
+    end
+    public :get_request_info
 
     def self.split_key(key)
       key.split('.', 2)

@@ -22,3 +22,5 @@ $(document).ready ->
     $parent.children('td').html('')
   $('tr.localization_key_row').on 'click', 'input.wysiwyg_switch', (e)->
     $(this).parents('form').find("textarea").jqte()
+  $('tr.localization_key_row').on 'click', '.request_info_link', (e)->
+    $(this).parents('tr.localization_key_row').find(".request_info_row").toggleClass('hidden')
