@@ -3,13 +3,17 @@ require 'test_helper'
 module Lit
   class Api::V1::LocalizationKeysControllerTest < ActionController::TestCase
     def setup
+      Lit::Localization.delete_all
+      Lit::LocalizationKey.delete_all
+      Lit::LocalizationVersion.delete_all
+      Lit.loader = nil
       Lit.api_enabled = true
       Lit.api_key = 'test'
       Lit::Engine.routes.clear!
       Dummy::Application.reload_routes!
       @routes = Lit::Engine.routes
       request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials('test')
-      I18n.t('scope.text_with_translation_in_english')
+      Lit.init
     end
     test 'should get index' do
       get :index, format: :json

@@ -90,8 +90,8 @@ module Lit
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = (uri.port == 443)
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        res = http.start do |http|
-          http.request(req)
+        res = http.start do |http_started|
+          http_started.request(req)
         end
         if res.is_a?(Net::HTTPSuccess)
           result = JSON.parse(res.body)

@@ -8,7 +8,7 @@ module Lit
   mattr_accessor :storage_options
   mattr_accessor :humanize_key
   mattr_accessor :ignored_keys
-  mattr_accessor :fallback
+  mattr_accessor :ignore_yaml_on_startup
   mattr_accessor :api_enabled
   mattr_accessor :api_key
   mattr_accessor :all_translations_are_html_safe
@@ -23,7 +23,6 @@ module Lit
     if loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
-      Lit.fallback = true if Lit.fallback.nil?
       if Lit.ignored_keys.is_a?(String)
         keys = Lit.ignored_keys.split(',').map(&:strip)
         Lit.ignored_keys = keys
@@ -52,6 +51,10 @@ module Lit
       require 'lit/adapters/hash_storage'
       return HashStorage.new
     end
+  end
+
+  def self.fallback=(_value)
+    ::Rails.logger.error "[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead"
   end
 end
 

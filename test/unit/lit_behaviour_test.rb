@@ -12,6 +12,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     @old_load_path = I18n.load_path
     @old_humanize_key = Lit.humanize_key
     @old_backend = I18n.backend
+    @old_ignore = Lit.ignore_yaml_on_startup
 
     I18n.load_path = []
     Lit.humanize_key = false
@@ -23,6 +24,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     Lit.humanize_key = @old_humanize_key
     I18n.backend = @old_backend
     I18n.load_path = @old_load_path
+    Lit.ignore_yaml_on_startup = @old_ignore
     super
   end
 
@@ -100,14 +102,14 @@ class LitBehaviourTest < ActiveSupport::TestCase
   end
 
   test 'it stores translations upon first invokation' do
-    key = 'test.of.storge'
+    key = 'test.of.storage'
     I18n.t(key)
     assert Lit::LocalizationKey.where(localization_key: key).exists?
   end
 
   test 'it wont store key if prefix is added to ignored' do
     old_loader = Lit.loader
-    key = 'test.of.storge'
+    key = 'test.of.storage'
     existing_key = 'existing.string'
     Lit.ignored_keys = ['test.of']
     Lit.loader = nil
@@ -121,7 +123,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
 
   test 'it wont store key if ignored_key prefix is a string' do
     old_loader = Lit.loader
-    first_key = 'test.of.storge'
+    first_key = 'test.of.storage'
     second_key = 'secondary.key.to.test'
     existing_key = 'existing.string'
     Lit.ignored_keys = 'test.of, secondary.key '
@@ -174,6 +176,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
   end
 
   test 'it will overwrite existing values with those from yaml for unchanged localizations' do
+    Lit.ignore_yaml_on_startup = false
     load_sample_yml('en.yml')
     old_loader = Lit.loader
     Lit.loader = nil
@@ -196,7 +199,6 @@ class LitBehaviourTest < ActiveSupport::TestCase
     # Swap yml file and reload Lit, changes in yml file should be visible
     I18n.load_path = []
     load_sample_yml('en_changed.yml')
-
     Lit.loader = nil
     Lit.init
     assert_equal 'barbar', I18n.t('foo')

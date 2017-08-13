@@ -2,6 +2,13 @@ require 'test_helper'
 
 module Lit
   class LocalizationTest < ActiveSupport::TestCase
+    def setup
+      Lit::Localization.delete_all
+      Lit::LocalizationKey.delete_all
+      Lit::LocalizationVersion.delete_all
+      Lit.loader = nil
+      Lit.init
+    end
     test 'does not create version upon creation' do
       I18n.locale = :en
       assert_no_difference 'Lit::LocalizationVersion.count' do

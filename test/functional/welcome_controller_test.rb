@@ -1,6 +1,14 @@
 require 'test_helper'
 
 class WelcomeControllerTest < ActionController::TestCase
+  def setup
+    Lit::Localization.delete_all
+    Lit::LocalizationKey.delete_all
+    Lit::LocalizationVersion.delete_all
+    Lit.loader = nil
+    Lit.init
+  end
+
   test 'should properly show index' do
     # $redis.flushall
     get :index, locale: :en

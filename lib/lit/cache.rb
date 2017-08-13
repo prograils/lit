@@ -21,6 +21,7 @@ module Lit
     def initialize
       @hits_counter = Lit.get_key_value_engine
       @hits_counter_working = true
+      @keys = nil
     end
 
     def [](key)
@@ -203,8 +204,9 @@ module Lit
               value = parse_value(value, locale) unless value.nil?
             end
             if value.nil?
-              if Lit.fallback
-                @locale_cache.keys.each do |lc|
+              if fallbacks = ::Rails.application.config.i18n.fallbacks
+                keys = fallbacks == true ? @locale_cache.keys : fallbacks
+                keys.map(&:to_s).each do |lc|
                   if lc != locale.locale
                     nk = "#{lc}.#{key_without_locale}"
                     v = localizations[nk]
@@ -295,6 +297,7 @@ module Lit
         @hits_counter.incr('global_hits_counter.' + key_without_locale)
       end
     end
+
     def self.split_key(key)
       key.split('.', 2)
     end

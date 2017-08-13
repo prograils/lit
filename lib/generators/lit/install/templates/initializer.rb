@@ -25,9 +25,10 @@ Lit.all_translations_are_html_safe = false
 # <span title="translation missing string"></span>
 Lit.humanize_key = false
 
-# Decide if missing translations will fallback to first found translated value
-# (same key, different language)
-Lit.fallback = false
+# If set to `true` will always parse yaml files upon startup and update cache
+# values with ones with yaml - but only, if those keys haven't been changed via
+# web ui before
+Lit.ignore_yaml_on_startup = true
 
 # API enabled? API allows third party browsing your translations, as well as
 # synchronizing them between environments

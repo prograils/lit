@@ -2,6 +2,7 @@ require 'redis'
 module Lit
   extend self
   def redis
+    $redis ||= nil
     $redis = Redis.new(url: determine_redis_provider) unless $redis
     $redis
   end

@@ -55,7 +55,7 @@ Dummy::Application.configure do
   # See everything in the log (default is :info)
   config.log_level = :debug
 
-  # config.i18n.fallbacks = true
+  config.i18n.fallbacks = false
 
   config.active_support.test_order = :sorted
 end

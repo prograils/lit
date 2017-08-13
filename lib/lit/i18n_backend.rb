@@ -13,7 +13,7 @@ module Lit
     end
 
     def translate(locale, key, options = {})
-      content = super(locale, key, options.merge(fallback: Lit.fallback))
+      content = super(locale, key, options)
       if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
       else
@@ -60,7 +60,7 @@ module Lit
       return content if parts.size <= 1
 
 
-      if content.nil? || should_cache?(key_with_locale)
+      if content.nil? && should_cache?(key_with_locale)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
 
@@ -71,11 +71,11 @@ module Lit
           if options[:default].present?
             # default most likely will be an array
             if options[:default].is_a?(Array)
-              default = options[:default].map do |key|
-                if key.is_a?(Symbol)
-                  I18n.normalize_keys(nil, key.to_s, options[:scope], options[:separator]).join('.').to_sym
+              default = options[:default].map do |key_or_value|
+                if key_or_value.is_a?(Symbol)
+                  I18n.normalize_keys(nil, key_or_value.to_s, options[:scope], options[:separator]).join('.').to_sym
                 else
-                  key
+                  key_or_value
                 end
               end
             else
@@ -108,16 +108,17 @@ module Lit
     end
 
     def store_item(locale, data, scope = [], startup_process = false)
+      key = ([locale] + scope).join('.')
       if data.respond_to?(:to_hash)
         # ActiveRecord::Base.transaction do
           data.to_hash.each do |key, value|
             store_item(locale, value, scope + [key], startup_process)
           end
         # end
-      elsif data.respond_to?(:to_str)
+      elsif data.respond_to?(:to_str) || data.is_a?(Array)
         key = ([locale] + scope).join('.')
-        return if startup_process && @cache.keys.member?(key)
-        @cache.update_locale(key, data, false, startup_process)
+        return if startup_process && @cache.keys.member?(key) && Lit.ignore_yaml_on_startup
+        @cache.update_locale(key, data, data.is_a?(Array), startup_process)
       elsif data.nil?
         return if startup_process
         key = ([locale] + scope).join('.')
