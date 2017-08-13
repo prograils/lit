@@ -83,6 +83,17 @@ gem 'lit'
 
 You may want to take a look at generated initializer in `config/initializers/lit.rb` and change some default configuration options.
 
+### 0.2 -> 0.3 upgrade guide
+
+TODO
+
+### Storing request info
+
+TODO
+
+### On-side live translations
+
+TODO
 
 ### ToDo
 
@@ -94,14 +105,14 @@ You may want to take a look at generated initializer in `config/initializers/lit
 * ~~Support for array types (ie. `date.abbr_day_names`)~~
 * ~~Generator~~
 * ~~Support for wysiwyg~~
-* Better cache
+* ~~Better cache~~
 * ~~Support for other key value providers (ie. Redis does not support Array types in easy way)~~ (not applicable, as array storage works now with redis).
 * Integration with ActiveAdmin
 * Support for Proc defaults (like in `I18n.t('not_exising_keys', default: lambda{|_, options| 'text'})` )
 
 ### Testing
 
-For local testing [wwtd](https://github.com/grosser/wwtd) gem comes into play, run tests via: `wwtd --local`. Run migrations using command `RAILS_ENV=test bundle exec rake db:migrate`.
+For local testing [Appraisal](https://github.com/thoughtbot/appraisal) gem comes into play, run tests via: `bundle exec appraisal rails-4.2 rake test`.
 
 ### License
 
