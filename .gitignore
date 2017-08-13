@@ -11,4 +11,5 @@ test/dummy/.sass-cache
 Gemfile.lock
 vendor/bundle
 gemfiles/*.lock
-
+/tags
+.ruby-version
