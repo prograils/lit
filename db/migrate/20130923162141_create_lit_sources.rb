@@ -1,4 +1,4 @@
-class CreateLitSources < ActiveRecord::Migration
+class CreateLitSources < Rails::VERSION::MAJOR >= 5 ? ActiveRecord::Migration[4.2] : ActiveRecord::Migration
   def change
     create_table :lit_sources do |t|
       t.string :identifier

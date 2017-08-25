@@ -1,4 +1,4 @@
-class CreateLitIncommingLocalizations < ActiveRecord::Migration
+class CreateLitIncommingLocalizations < Rails::VERSION::MAJOR >= 5 ? ActiveRecord::Migration[4.2] : ActiveRecord::Migration
   def change
     create_table :lit_incomming_localizations do |t|
       t.text :translated_value
