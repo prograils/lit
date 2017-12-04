@@ -1,6 +1,6 @@
 appraise 'rails-4.2' do
   source 'https://rubygems.org'
-  gem 'rails', '4.2.9'
+  gem 'rails', '4.2.10'
   gem 'devise'
   gem 'pg'
   gem 'redis'
@@ -9,7 +9,7 @@ appraise 'rails-4.2' do
   gem 'test_declarative'
   gem 'mocha'
   gem 'webmock'
-  gem 'sass-rails'
+  gem 'sass-rails', '~> 4.0.0'
   gem 'jquery-rails'
   gem 'coffee-rails'
   gem 'pry-rails'

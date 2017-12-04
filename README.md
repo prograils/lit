@@ -114,6 +114,8 @@ TODO
 
 For local testing [Appraisal](https://github.com/thoughtbot/appraisal) gem comes into play, run tests via: `bundle exec appraisal rails-4.2 rake test`.
 
+Please remember to edit `test/dummy/config/database.yml` file 
+
 ### License
 
 Lit is free software, and may be redistributed under the terms specified in the MIT-LICENSE file.
