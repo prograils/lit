@@ -26,10 +26,12 @@ module Lit
     end
 
     def [](key)
+      key_without_locale = split_key(key).last
       update_hits_count(key)
-      store_request_info(key)
-      ret = localizations[key]
-      ret
+      store_request_info(key_without_locale)
+      localization = localizations[key]
+      update_request_keys(key_without_locale, localization)
+      localization
     end
 
     def []=(key, value)
@@ -220,11 +222,9 @@ module Lit
             localization.update_default_value(value)
           end
           return localization
-
         end
-      else
-        nil
       end
+      nil
     end
 
     def find_localization_for_delete(locale, key_without_locale)
@@ -299,15 +299,25 @@ module Lit
       @hits_counter.incr('global_hits_counter.' + key_without_locale)
     end
 
-    def store_request_info(key)
+    def store_request_info(key_without_locale)
       return unless Lit.store_request_info
       return unless Thread.current[:lit_current_request_path].present?
-      key_without_locale = split_key(key).last
       info = get_request_info(key_without_locale)
       parts = info.split(' ').push(Thread.current[:lit_current_request_path]).uniq
       parts.shift if parts.count > 10
       @request_info_store['request_info.' + key_without_locale] = parts.join ' '
     end
+
+    def update_request_keys(key_without_locale, localization)
+      return if Thread.current[:lit_request_keys].nil?
+      Thread.current[:lit_request_keys] ||= {}
+      Thread.current[:lit_request_keys][key_without_locale] = localization
+    end
+
+    def request_keys
+      Thread.current[:lit_request_keys] || {}
+    end
+    public :request_keys
 
     def get_request_info(key_without_locale)
       @request_info_store['request_info.' + key_without_locale].to_s

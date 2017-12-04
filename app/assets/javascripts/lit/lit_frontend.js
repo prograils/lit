@@ -91,6 +91,12 @@
         });
       }
     });
+    $('.lit-translations-info .lit-open-button').click(function(){
+      $('.lit-translations-info').toggleClass('collapsed expanded');
+    });
+    $('.lit-translations-info .lit-close-button').click(function(){
+      $('.lit-translations-info').toggleClass('collapsed expanded');
+    });
   });
 
 }).call(this);
