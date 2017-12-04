@@ -17,7 +17,7 @@ end
 
 appraise 'rails-5' do
   source 'https://rubygems.org'
-  gem 'rails', '5.0.1'
+  gem 'rails', '5.0.6'
   gem 'devise'
   gem 'pg'
   gem 'redis'
@@ -26,10 +26,10 @@ appraise 'rails-5' do
   gem 'test_declarative'
   gem 'mocha'
   gem 'webmock'
-  gem 'sass-rails'
+  gem 'sass-rails', '~> 5.0.0'
   gem 'jquery-rails'
   gem 'coffee-rails'
   gem 'pry-rails'
   gem 'rails-controller-testing'
-  gem 'minitest', '~> 5.10', '> 5.10.2'
+  gem 'minitest', '~> 5.10'
 end
