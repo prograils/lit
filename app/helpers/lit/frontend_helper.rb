@@ -37,6 +37,7 @@ module Lit
 
     def lit_translations_info
       return if Thread.current[:lit_request_keys].nil?
+      return unless lit_authorized?
       content_tag :div, class: 'lit-translations-info collapsed' do
         concat content_tag :span, 'Show translations', class: 'lit-open-button'
         concat content_tag :span, 'X', class: 'lit-close-button'
