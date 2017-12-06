@@ -1,5 +1,6 @@
-class CreateLitSources < ActiveRecord::Migration
-  def change
+class LitCreateLitSources < ActiveRecord::Migration
+  def up
+    return if table_exists?(:lit_sources)
     create_table :lit_sources do |t|
       t.string :identifier
       t.string :url
@@ -8,5 +9,9 @@ class CreateLitSources < ActiveRecord::Migration
 
       t.timestamps
     end
+  end
+
+  def down
+    drop_table :lit_sources
   end
 end

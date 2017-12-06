@@ -10,13 +10,6 @@ module Lit
 
       desc 'Automates Lit installation'
 
-      def copy_migrations
-        puts 'Copying Lit migrations...'
-        Dir.chdir(::Rails.root) do
-          `rake lit:install:migrations`
-        end
-      end
-
       def set_authentication_function
         @authentication_function = options['authentication-function'].presence ||
               ask("What's the authentication function, ie. :authenticate_user! :").presence ||

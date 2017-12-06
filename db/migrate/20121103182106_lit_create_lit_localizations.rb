@@ -1,5 +1,6 @@
-class CreateLitLocalizations < ActiveRecord::Migration
-  def change
+class LitCreateLitLocalizations < ActiveRecord::Migration
+  def up
+    return if table_exists?(:lit_localizations)
     create_table :lit_localizations do |t|
       t.references :locale
       t.references :localization_key
@@ -11,5 +12,10 @@ class CreateLitLocalizations < ActiveRecord::Migration
     end
     add_index :lit_localizations, :locale_id
     add_index :lit_localizations, :localization_key_id
+  end
+
+  def down
+    remove_index :lit_localizations, :locale_id
+    remove_index :lit_localizations, :localization_key_id
   end
 end
