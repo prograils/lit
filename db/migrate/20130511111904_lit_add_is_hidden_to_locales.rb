@@ -1,7 +1,7 @@
 class LitAddIsHiddenToLocales < ActiveRecord::Migration
   def up
     return if column_exists?(:lit_locales, :is_hidden)
-    add_column :lit_locales, :is_hidden, :boolean, :default=>false
+    add_column :lit_locales, :is_hidden, :boolean, default: false
   end
 
   def down

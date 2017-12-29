@@ -6,7 +6,7 @@ class LitCreateLitLocalizations < ActiveRecord::Migration
       t.references :localization_key
       t.text :default_value
       t.text :translated_value
-      t.boolean :is_changed, :default=>false
+      t.boolean :is_changed, default: false
 
       t.timestamps
     end

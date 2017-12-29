@@ -6,7 +6,7 @@ class LitCreateLitLocalizationKeys < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :lit_localization_keys, :localization_key, :unique=>true
+    add_index :lit_localization_keys, :localization_key, unique: true
   end
 
   def down

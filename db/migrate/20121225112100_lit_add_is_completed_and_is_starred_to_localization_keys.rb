@@ -1,8 +1,11 @@
 class LitAddIsCompletedAndIsStarredToLocalizationKeys < ActiveRecord::Migration
   def up
-    return if column_exists?(:lit_localization_keys, :is_completed)
-    add_column :lit_localization_keys, :is_completed, :boolean, :default=>false
-    add_column :lit_localization_keys, :is_starred, :boolean, :default=>false
+    unless column_exists?(:lit_localization_keys, :is_completed)
+      add_column :lit_localization_keys, :is_completed, :boolean, default: false
+    end
+    unless column_exists?(:lit_localization_keys, :is_starred)
+      add_column :lit_localization_keys, :is_starred, :boolean, default: false
+    end
   end
 
   def down
