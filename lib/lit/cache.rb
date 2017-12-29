@@ -112,7 +112,6 @@ module Lit
       localization_keys.clear
       load_all_translations
     end
-
     alias_method :clear, :reset
 
     def find_locale(locale_key)
@@ -186,44 +185,40 @@ module Lit
     end
 
     def find_localization(locale, key_without_locale, value = nil, force_array = false, update_value = false)
-      unless value.is_a?(Hash)
-        ActiveRecord::Base.transaction do
-          localization_key = find_localization_key(key_without_locale)
-          localization = Lit::Localization.where(locale_id: locale.id).
-                            where(localization_key_id: localization_key.id).first_or_initialize
-          if update_value || localization.new_record?
-            if value.is_a?(Array)
-              unless force_array
-                new_value = nil
-                value_clone = value.dup
-                while (v = value_clone.shift) && v.present?
-                  pv = parse_value(v, locale)
-                  new_value = pv unless pv.nil?
-                end
-                value = new_value
+      return nil if value.is_a?(Hash)
+      ActiveRecord::Base.transaction do
+        localization_key = find_localization_key(key_without_locale)
+        localization = Lit::Localization.where(locale_id: locale.id). \
+                          where(localization_key_id: localization_key.id).first_or_initialize
+        if update_value || localization.new_record?
+          if value.is_a?(Array)
+            unless force_array
+              new_value = nil
+              value_clone = value.dup
+              while (v = value_clone.shift) && v.present?
+                pv = parse_value(v, locale)
+                new_value = pv unless pv.nil?
               end
-            else
-              value = parse_value(value, locale) unless value.nil?
+              value = new_value
             end
-            if value.nil?
-              if fallbacks = ::Rails.application.config.i18n.fallbacks
-                keys = fallbacks == true ? @locale_cache.keys : fallbacks
-                keys.map(&:to_s).each do |lc|
-                  if lc != locale.locale
-                    nk = "#{lc}.#{key_without_locale}"
-                    v = localizations[nk]
-                    value = v if v.present? && value.nil?
-                  end
-                end
-              end
-            end
-            localization.update_default_value(value)
+          else
+            value = parse_value(value, locale) unless value.nil?
           end
-          return localization
-
+          if value.nil?
+            if fallbacks = ::Rails.application.config.i18n.fallbacks
+              keys = fallbacks == true ? @locale_cache.keys : fallbacks
+              keys.map(&:to_s).each do |lc|
+                if lc != locale.locale
+                  nk = "#{lc}.#{key_without_locale}"
+                  v = localizations[nk]
+                  value = v if v.present? && value.nil?
+                end
+              end
+            end
+          end
+          localization.update_default_value(value)
         end
-      else
-        nil
+        return localization
       end
     end
 

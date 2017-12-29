@@ -1,20 +1,20 @@
 <h1>
-  <%= t('.header', :default=>"Hello header") %>
+  <%= t('.header', default: 'Hello header') %>
 </h1>
 <p id="welcome">
-<%= t('scope.hello_world', :default=>"Hello there") %>
+<%= t('scope.hello_world', default: 'Hello there') %>
 </p>
 <p>
 <%= t('scope.text_without_default') %>
 </p>
 <p>
-<%= t('scope.text_with_default', :default=>"Default content") %>
+<%= t('scope.text_with_default', default: 'Default content') %>
 </p>
 <p>
 <%= t('scope.some_strange_key') %>
 </p>
 <p>
-<%= t('scope.simple_test_with_default_value', :default=>"Simple test with default value") %>
+<%= t('scope.simple_test_with_default_value', default: "Simple test with default value") %>
 </p>
 <p>
 <%= t('scope.text_with_translation_in_english') %>

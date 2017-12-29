@@ -42,7 +42,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     end
   end
 
-  test 'should not save in other languages then I18n.available_locales' do
+  test 'should not save in other languages than I18n.available_locales' do
     ::Rails.configuration.i18n.stubs(:available_locales).returns([:fr])
     I18n.backend.expects(:store_item).times(0)
     I18n.backend.store_translations(:dk, foo: 'foo')

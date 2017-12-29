@@ -87,13 +87,27 @@ You may want to take a look at generated initializer in `config/initializers/lit
 
 TODO
 
+### On-site live translations
+
+1. Include Lit::FrontendHelper in your `ApplicationController`
+```ruby
+include Lit::FrontendHelper
+```
+
+2. In you layout file include lit assets
+```erb
+<% if admin_user_signed_in? %>
+  <%= lit_frontend_assets %>
+<% end %>
+```
+
+3. You're good to go - now log in to lit (if required) and open your frontend in seperate tab (to have session persisted). On the bottom-right of your page you should see "Enable / disable lit highlight" - after enabling it you'll be able to click and translate phrases directly in your frontend
+
 ### Storing request info
 
 TODO
 
-### On-side live translations
 
-TODO
 
 ### ToDo
 
@@ -114,7 +128,7 @@ TODO
 
 For local testing [Appraisal](https://github.com/thoughtbot/appraisal) gem comes into play, run tests via: `bundle exec appraisal rails-4.2 rake test`.
 
-Please remember to edit `test/dummy/config/database.yml` file 
+Please remember to edit `test/dummy/config/database.yml` file
 
 ### License
 

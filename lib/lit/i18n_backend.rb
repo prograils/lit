@@ -10,9 +10,14 @@ module Lit
       @cache = cache
       @available_locales_cache = nil
       @translations = {}
+      reserved_keys = I18n.const_get :RESERVED_KEYS
+      reserved_keys << :lit_default_copy
+      I18n.send(:remove_const, :RESERVED_KEYS)
+      I18n.const_set(:RESERVED_KEYS, reserved_keys)
     end
 
     def translate(locale, key, options = {})
+      options[:lit_default_copy] = options[:default].dup if can_dup_default(options)
       content = super(locale, key, options)
       if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
@@ -49,6 +54,15 @@ module Lit
 
     private
 
+    def can_dup_default(options = {})
+      return false unless options.key?(:default)
+      return true if options[:default].is_a?(String)
+      return true if options[:default].is_a?(Array) && \
+                     (options[:default].first.is_a?(String) || \
+                      options[:default].first.is_a?(Symbol))
+      false
+    end
+
     def lookup(locale, key, scope = [], options = {})
       init_translations unless initialized?
 
@@ -59,27 +73,26 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-
       if content.nil? && should_cache?(key_with_locale)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
-
         # so there is no content in cache - it might not be if ie. we're doing
         # fallback to already existing language
         if content.nil?
           # check if default was provided
-          if options[:default].present?
+          if options[:lit_default_copy].present?
             # default most likely will be an array
-            if options[:default].is_a?(Array)
-              default = options[:default].map do |key_or_value|
+            if options[:lit_default_copy].is_a?(Array)
+              default = options[:lit_default_copy].map do |key_or_value|
                 if key_or_value.is_a?(Symbol)
                   I18n.normalize_keys(nil, key_or_value.to_s, options[:scope], options[:separator]).join('.').to_sym
                 else
                   key_or_value
                 end
               end
+              default = default.first if default.is_a?(Array)
             else
-              default = options[:default]
+              default = options[:lit_default_copy]
             end
             content = default
           end

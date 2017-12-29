@@ -26,7 +26,7 @@
               <%- localization = localization_for(locale, lk) %>
               <tr>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization) %>" data-editing=0 data-content="">
-                  <%= render :partial=>"localization_row", :locals=>{:localization=>Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
+                  <%= render :partial=>"localization_row", locals: {localization: Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
                 </td>
                 <td class="locale_row">
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
@@ -65,6 +65,8 @@
 <% if defined?(Kaminari)  %>
   <%= paginate @localization_keys, :theme=>"lit" %>
 <% end %>
+
+
 <% content_for(:sidebar) do %>
   <div class="well">
     <%= form_tag '', :class=>"form-search", :method=>:get do |f| %>
