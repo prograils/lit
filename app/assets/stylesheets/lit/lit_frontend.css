@@ -26,3 +26,61 @@
   border-bottom: 1px solid red;
 
 }
+.lit-translations-info.collapsed {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  z-index: 100;
+  background-color: green;
+  border-radius: 4px;
+  display: block;
+  padding: 5px;
+  cursor: pointer;
+  color: white;
+}
+.lit-translations-info.expanded{
+  position: absolute;
+  display: block;
+  width: 80%;
+  overflow: auto;
+  height: 80%;
+  right: 10%;
+  left: 10%;
+  top: 10%;
+  background-color: rgba(240, 240, 240, 0.9);
+  border: 1px solid black;
+  z-index: 90;
+}
+
+.lit-translations-info.collapsed span.lit-open-button{
+  display: block;
+}
+.lit-translations-info.expanded span.lit-open-button{
+  display: none;
+}
+.lit-translations-info.collapsed span.lit-close-button{
+  display: none;
+}
+.lit-translations-info.expanded span.lit-close-button{
+  display: block;
+  position: fixed;
+  right: 10%;
+  border: 2px solid black;
+  font-size: 12pt;
+  font-weight: bold;
+  background-color: white;
+  padding: 10px 10px 5px;
+}
+.lit-translations-info.collapsed ul.lit-translations-list{
+  display: none;
+}
+.lit-translations-info.expanded ul.lit-translations-list{
+}
+
+.lit-translations-info.expanded ul.lit-translations-list li{
+  margin: 5px;
+}
+
+.lit-translations-info.expanded #lit_textarea{
+  padding: 2px;
+}
