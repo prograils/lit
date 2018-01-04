@@ -63,7 +63,7 @@ module Lit
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
-      localization = find_localization(locale, key_without_locale, value, force_array, true)
+      localization = find_localization(locale, key_without_locale, value: value, force_array: force_array, update_value: true)
       return localization.get_value if startup_process && localization.is_changed?
       localizations[key] = localization.get_value if localization
     end
@@ -96,7 +96,7 @@ module Lit
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
-      localization = find_localization(locale, key_without_locale)
+      localization = find_localization(locale, key_without_locale, default_fallback: true)
       localizations[key] = localization.get_value if localization
     end
 
@@ -186,7 +186,7 @@ module Lit
       @localization_keys ||= Lit.get_key_value_engine
     end
 
-    def find_localization(locale, key_without_locale, value = nil, force_array = false, update_value = false)
+    def find_localization(locale, key_without_locale, value: nil, force_array: false, update_value: false, default_fallback: false)
       return nil if value.is_a?(Hash)
       ActiveRecord::Base.transaction do
         localization_key = find_localization_key(key_without_locale)
@@ -194,28 +194,14 @@ module Lit
                           where(localization_key_id: localization_key.id).first_or_initialize
         if update_value || localization.new_record?
           if value.is_a?(Array)
-            unless force_array
-              new_value = nil
-              value_clone = value.dup
-              while (v = value_clone.shift) && v.present?
-                pv = parse_value(v, locale)
-                new_value = pv unless pv.nil?
-              end
-              value = new_value
-            end
+            value = parse_array_value(value) unless force_array
+          elsif !value.nil?
+            value = parse_value(value, locale)
           else
-            value = parse_value(value, locale) unless value.nil?
-          end
-          if value.nil?
-            if fallbacks = ::Rails.application.config.i18n.fallbacks
-              keys = fallbacks == true ? @locale_cache.keys : fallbacks
-              keys.map(&:to_s).each do |lc|
-                if lc != locale.locale
-                  nk = "#{lc}.#{key_without_locale}"
-                  v = localizations[nk]
-                  value = v if v.present? && value.nil?
-                end
-              end
+            if ::Rails.application.config.i18n.fallbacks
+              value = fallback_localization(locale, key_without_locale)
+            elsif default_fallback
+              value = fallback_to_default(localization_key, localization)
             end
           end
           localization.update_default_value(value)
@@ -223,6 +209,28 @@ module Lit
         return localization
       end
       nil
+    end
+
+    # fallback to translation in different locale
+    def fallback_localization(locale, key_without_locale)
+      value = nil
+      return nil unless fallbacks = ::Rails.application.config.i18n.fallbacks
+      keys = fallbacks == true ? @locale_cache.keys : fallbacks
+      keys.map(&:to_s).each do |lc|
+        if lc != locale.locale && value.nil?
+          nk = "#{lc}.#{key_without_locale}"
+          v = localizations[nk]
+          value = v if v.present? && value.nil?
+        end
+      end
+      value
+    end
+
+    # tries to get `default_value` from localization_key - checks other
+    # localizations
+    def fallback_to_default(localization_key, localization)
+      localization_key.localizations.where.not(default_value: nil). \
+        where.not(id: localization.id).first&.default_value
     end
 
     def find_localization_for_delete(locale, key_without_locale)
@@ -263,6 +271,16 @@ module Lit
           new_value = nil # was v.call - requires more love
         else
           new_value = v.to_s
+      end
+      new_value
+    end
+
+    def parse_array_value(value)
+      new_value = nil
+      value_clone = value.dup
+      while (v = value_clone.shift) && v.present?
+        pv = parse_value(v, locale)
+        new_value = pv unless pv.nil?
       end
       new_value
     end

@@ -103,7 +103,6 @@ module Lit
         ret
       end
     end
-
     helper_method :localization_for
 
     def has_versions?(localization)
@@ -113,7 +112,6 @@ module Lit
       end
       @_versions[localization.id].to_i > 0
     end
-
     helper_method :has_versions?
   end
 end
