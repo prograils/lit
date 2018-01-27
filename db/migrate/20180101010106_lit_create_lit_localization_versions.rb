@@ -1,4 +1,6 @@
-class LitCreateLitLocalizationVersions < ActiveRecord::Migration[5.1]
+class LitCreateLitLocalizationVersions < Rails::VERSION::MAJOR >= 5   ?
+                                         ActiveRecord::Migration[4.2] :
+                                         ActiveRecord::Migration
   def up
     return if table_exists?(:lit_localization_versions)
     create_table :lit_localization_versions do |t|

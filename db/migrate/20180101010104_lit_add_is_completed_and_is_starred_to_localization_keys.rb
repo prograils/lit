@@ -1,4 +1,6 @@
-class LitAddIsCompletedAndIsStarredToLocalizationKeys < ActiveRecord::Migration[5.1]
+class LitAddIsCompletedAndIsStarredToLocalizationKeys < Rails::VERSION::MAJOR >= 5   ?
+                                                        ActiveRecord::Migration[4.2] :
+                                                        ActiveRecord::Migration
   def up
     unless column_exists?(:lit_localization_keys, :is_completed)
       add_column :lit_localization_keys, :is_completed, :boolean, default: false
