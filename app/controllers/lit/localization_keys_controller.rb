@@ -1,7 +1,7 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
     before_action :get_localization_scope, except: [:destroy, :find_localization]
-    include LocalizationsHelper
+
     def index
       get_localization_keys
     end
