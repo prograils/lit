@@ -1,4 +1,4 @@
-class LitCreateLitLocales < ActiveRecord::Migration
+class LitCreateLitLocales < ActiveRecord::Migration[5.1]
   def up
     return if table_exists?(:lit_locales)
     create_table :lit_locales do |t|
