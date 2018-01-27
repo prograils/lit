@@ -1,4 +1,4 @@
-class LitCreateLitLocalizationKeys < ActiveRecord::Migration
+class LitCreateLitLocalizationKeys < ActiveRecord::Migration[5.1]
   def up
     return if table_exists?(:lit_localization_keys)
     create_table :lit_localization_keys do |t|
