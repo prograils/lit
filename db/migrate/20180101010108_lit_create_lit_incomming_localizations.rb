@@ -13,10 +13,7 @@ class LitCreateLitIncommingLocalizations < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
-    add_index :lit_incomming_localizations, :locale_id
-    add_index :lit_incomming_localizations, :localization_key_id
-    add_index :lit_incomming_localizations, :localization_id
-    add_index :lit_incomming_localizations, :source_id
+
     add_index :lit_incomming_localizations, :incomming_id
   end
 
