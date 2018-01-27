@@ -1,4 +1,4 @@
-class LitCreateLitSources < ActiveRecord::Migration
+class LitCreateLitSources < ActiveRecord::Migration[5.1]
   def up
     return if table_exists?(:lit_sources)
     create_table :lit_sources do |t|
