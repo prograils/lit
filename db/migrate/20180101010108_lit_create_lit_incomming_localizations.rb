@@ -10,7 +10,7 @@ class LitCreateLitIncommingLocalizations < Rails::VERSION::MAJOR >= 5  ?
       t.integer :localization_id
       t.string :locale_str
       t.string :localization_key_str
-      t.integer :source
+      t.integer :source_id
       t.integer :incomming_id
 
       t.timestamps
