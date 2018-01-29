@@ -1,13 +1,13 @@
-<%= form_for [@localization_key, @localization], :html=>{:remote=>true} do |f| %>
+<%= form_for @localization, url: lit.localization_key_localization_path(@localization_key, @localization, format: :js), html: {remote: true} do |f| %>
   <%- f.label :translated_value %>
   <% if @localization.translated_value.is_a?(Array) %>
     <ul style="list-style: none;">
       <% @localization.translated_value.each do |l| %>
-        <li><%= text_field_tag 'localization[translated_value][]', l, :class=>"form-control input-xlarge" %></li>
+        <li><%= text_field_tag 'localization[translated_value][]', l, class: 'form-control input-xlarge' %></li>
       <% end %>
     </ul>
   <% else %>
-    <%= f.text_area :translated_value, :size=>"40x2", :class=>"form-control input-xxlarge" %>
+    <%= f.text_area :translated_value, size: '40x2', class: 'form-control input-xxlarge' %>
     <% if allow_wysiwyg_editor?(@localization_key.localization_key) %>
       <br />
       <label>
@@ -17,7 +17,7 @@
     <% end %>
   <% end %>
 
-  <button class="btn btn-primary btn-sm" type="submit"><%= t('lit.common.update', :default=>"Update") %></button>
-  <button class="btn btn-default btn-sm cancel" type="reset"><%= t('lit.common.cancel', :default=>'Cancel') %></button>
+  <button class="btn btn-primary btn-sm" type="submit"><%= I18n.t('lit.common.update', default: "Update") %></button>
+  <button class="btn btn-default btn-sm cancel" type="reset"><%= I18n.t('lit.common.cancel', default: 'Cancel') %></button>
 <% end %>
 

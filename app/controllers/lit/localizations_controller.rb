@@ -10,7 +10,7 @@ module Lit
     def edit
       @localization.translated_value = @localization.get_value
       respond_to do |format|
-        format.js {render layout: false}
+        format.js
       end
     end
 

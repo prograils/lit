@@ -6,7 +6,7 @@
   </ul>
 <% else %>
   <% if localization.nil? %>
-    <em title="<%= t('.value_not_yet_translated', default: 'Value not yet translated') %>">null</em>
+    <em title="<%= I18n.t('.value_not_yet_translated', default: 'Value not yet translated') %>">null</em>
   <% else %>
     <%= localization %>
   <% end %>
