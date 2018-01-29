@@ -82,7 +82,7 @@ $ LOCALES=en,de rake lit:export
 ### On-site live translations
 
 1. Add `Lit::FrontendHelper` to your `ApplicationController`
-2. 
+
 	```ruby
 	helper Lit::FrontendHelper
 	```
@@ -97,8 +97,9 @@ $ LOCALES=en,de rake lit:export
 
 3. You're good to go - now log in to lit (if required) and open your frontend in separate tab (to have session persisted). On the bottom-right of your page you should see "Enable / disable lit highlight" - after enabling it you'll be able to click and translate phrases directly in your frontend
 
-4. Once enabled, all translations called via `t` helper function be rendered inside `<span />` tag, what may break your layout (ie if you're using translated values as button values or
-   as placeholders, etc). To avoid that add `skip_lit: true` to `t()` call or use `I18n.t`.
+4. Once enabled, all translations called via `t` helper function be rendered inside `<span />` tag, what may break your layout (ie if you're using translated values as button values or as placeholders, etc). To avoid that add `skip_lit: true` to `t()` call or use `I18n.t`.
+
+5. This feature requires jQuery! (at least for now)
 
 ### Storing request info
 
@@ -139,7 +140,7 @@ Lit.store_request_info = true
 
 4. From now on you'll be able to see all translation keys that were used to render current page. This feature works great with on-site live translations!
 
-5. Lit authorized user must be signed in for this feature to work!
+5. Lit authorized user must be signed in for this feature to work! This feature requires jQuery!
 
 
 
