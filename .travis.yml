@@ -3,11 +3,12 @@ sudo: false
 rvm:
   - 2.3.4
   - 2.4.1
+  - 2.5.0
 gemfile:
-  - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_5.gemfile
+  - gemfiles/rails_4.2.gemfile
 services:
-  - redis-server
+ - redis-server
 env:
   - LIT_STORAGE=hash
   - LIT_STORAGE=redis

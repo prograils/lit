@@ -1,18 +1,21 @@
-class LitCreateLitIncommingLocalizations < ActiveRecord::Migration
+class LitCreateLitIncommingLocalizations < Rails::VERSION::MAJOR >= 5  ?
+                                          ActiveRecord::Migration[4.2] :
+                                          ActiveRecord::Migration
   def up
     return if table_exists?(:lit_incomming_localizations)
     create_table :lit_incomming_localizations do |t|
       t.text :translated_value
-      t.references :locale
-      t.references :localization_key
-      t.references :localization
+      t.integer :locale_id
+      t.integer :localization_key_id
+      t.integer :localization_id
       t.string :locale_str
       t.string :localization_key_str
-      t.references :source
+      t.integer :source_id
       t.integer :incomming_id
 
       t.timestamps
     end
+
     add_index :lit_incomming_localizations, :locale_id
     add_index :lit_incomming_localizations, :localization_key_id
     add_index :lit_incomming_localizations, :localization_id
