@@ -42,7 +42,7 @@
           <%= draw_icon 'check', class: 'icon-white' %>
           <%= t('lit.common.accept', default: 'Accept') %>
         <% end %>
-        <%= link_to source_incomming_localization_path(@source, il, format: :js), class: 'btn btn-danger btn-sm', remote: true, method: delete, data: {confirm: I18n.t('lit.common.you_sure', default: 'Are you sure?')} do %>
+        <%= link_to source_incomming_localization_path(@source, il, format: :js), class: 'btn btn-danger btn-sm', remote: true, method: :delete, data: {confirm: I18n.t('lit.common.you_sure', default: 'Are you sure?')} do %>
           <%= draw_icon 'times', class: "icon-white" %>
           <%= I18n.t('lit.common.reject', :default=>"Reject") %>
         <% end %>
