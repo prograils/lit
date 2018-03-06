@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gem "rails", "4.2.10"
 gem "devise"
-gem "pg"
+gem "pg", "~> 0.18.4"
 gem "redis"
 gem "capybara"
 gem "database_cleaner"
