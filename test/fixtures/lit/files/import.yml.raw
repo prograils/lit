@@ -1,0 +1,6 @@
+en:
+  hello:
+    world: 'Test'
+    nothing:
+    not_nil: ''
+
