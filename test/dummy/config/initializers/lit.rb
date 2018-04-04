@@ -1,7 +1,7 @@
 Lit.authentication_function = :authenticate_admin!
 Lit.authentication_verification = :admin_signed_in?
 Lit.key_value_engine = ENV['LIT_STORAGE'] || 'redis'
-Lit.humanize_key = true
+Lit.humanize_key = false
 Lit.ignore_yaml_on_startup = true
 Lit.api_enabled = true
 Lit.api_key = 'ala'

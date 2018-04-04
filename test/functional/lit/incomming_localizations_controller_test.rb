@@ -11,9 +11,23 @@ module Lit
         to_return(body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
       @source = lit_sources(:test)
     end
+
     test 'should get index' do
-      get :index, source_id: @source.id
+      if new_controller_test_format?
+        get :index, params: { source_id: @source.id }
+      else
+        get :index, source_id: @source.id
+      end
       assert_response :success
+    end
+
+    test 'should properly return to index' do
+      if new_controller_test_format?
+        get :accept_all, params: { source_id: @source.id }
+      else
+        get :accept_all, source_id: @source.id
+      end
+      assert_response :redirect
     end
   end
 end

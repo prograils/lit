@@ -95,3 +95,7 @@ class ActionController::TestCase
     nil
   end
 end
+
+def new_controller_test_format?
+  Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
+end

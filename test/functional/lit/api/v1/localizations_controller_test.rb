@@ -28,7 +28,12 @@ module Lit
       l.translated_value = 'test'
       l.is_changed = true
       l.save
-      get :index, format: :json, after: 2.seconds.ago.to_s(:db)
+      if new_controller_test_format?
+        get :index, params: { format: :json, after: 2.seconds.ago.to_s(:db) }
+      else
+        get :index, format: :json, after: 2.seconds.ago.to_s(:db)
+      end
+
       assert_response :success
       assert_equal 1, assigns(:localizations).count
       assert response.body =~ /#{l.value}/

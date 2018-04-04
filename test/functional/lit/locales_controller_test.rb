@@ -16,13 +16,21 @@ module Lit
     end
 
     test 'should hide locale' do
-      put :hide, id: @locale, locale: {}, format: :js
+      if new_controller_test_format?
+        put :hide, params: { id: @locale, locale: {}, format: :js }
+      else
+        put :hide, id: @locale, locale: {}, format: :js
+      end
       assert assigns(:locale).is_hidden?
     end
 
     test 'should destroy locale' do
       assert_difference('Locale.count', -1) do
-        delete :destroy, id: @locale
+        if new_controller_test_format?
+          delete :destroy, params: { id: @locale }
+        else
+          delete :destroy, id: @locale
+        end
       end
     end
   end

@@ -13,7 +13,7 @@ module Lit
       @incomming_localization.accept
       Lit.init.cache.refresh_key @incomming_localization.full_key
       respond_to do |format|
-        format.html { redirect_to :back }
+        format.html { redirect_to_back_or_default(fallback_location: source_incomming_localizations_path(@source)) }
         format.js
       end
     end
@@ -23,12 +23,12 @@ module Lit
         li.accept
         Lit.init.cache.refresh_key li.full_key
       end
-      redirect_to :back
+      redirect_to_back_or_default(fallback_location: source_incomming_localizations_path(@source))
     end
 
     def reject_all
       @source.incomming_localizations.destroy_all
-      redirect_to :back
+      redirect_to_back_or_default(fallback_location: source_incomming_localizations_path(@source))
     end
 
     def destroy

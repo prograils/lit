@@ -18,6 +18,7 @@ class BackendTest < ActionDispatch::IntegrationTest
     lk = Lit::LocalizationKey.find_by(localization_key: 'prograils.swag')
     assert lk.present?
     visit('/lit/localization_keys')
-    assert lk.localizations(true).map(&:default_value).compact.count == Lit::Locale.all.count
+    lk.reload
+    assert lk.localizations.map(&:default_value).compact.count == Lit::Locale.all.count
   end
 end

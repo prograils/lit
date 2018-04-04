@@ -70,13 +70,13 @@ module Lit
       s = self
       if options[:order] && order_options.include?(options[:order])
         column, order = options[:order].split(' ')
-        s = s.order("#{Lit::LocalizationKey.quoted_table_name}.#{connection.quote_column_name(column)} #{order}")
+        s = s.order(FakeLocalizationKey.arel_table[column.to_sym].send(order.to_sym))
       else
         s = s.ordered
       end
-      localization_key_col = Lit::LocalizationKey.arel_table[:localization_key]
-      default_value_col = Lit::Localization.arel_table[:default_value]
-      translated_value_col = Lit::Localization.arel_table[:translated_value]
+      localization_key_col = FakeLocalizationKey.arel_table[:localization_key]
+      default_value_col = FakeLocalization.arel_table[:default_value]
+      translated_value_col = FakeLocalization.arel_table[:translated_value]
       if options[:key_prefix].present?
         q = "#{options[:key_prefix]}%"
         s = s.where(localization_key_col.matches(q))
@@ -95,6 +95,13 @@ module Lit
         s = s.not_completed
       end
       s
+    end
+
+    class FakeLocalizationKey < ActiveRecord::Base
+      self.table_name = 'lit_localization_keys'
+    end
+    class FakeLocalization < ActiveRecord::Base
+      self.table_name = 'lit_localizations'
     end
   end
 end

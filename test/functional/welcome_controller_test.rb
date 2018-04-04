@@ -11,19 +11,31 @@ class WelcomeControllerTest < ActionController::TestCase
 
   test 'should properly show index' do
     # $redis.flushall
-    get :index, locale: :en
+    if new_controller_test_format?
+      get :index, params: { locale: :en }
+    else
+      get :index, locale: :en
+    end
     assert_response :success
     assert I18n.locale == :en
   end
 
   test 'should properly load value from yaml' do
-    get :index, locale: :en
+    if new_controller_test_format?
+      get :index, params: { locale: :en }
+    else
+      get :index, locale: :en
+    end
     assert Lit::LocalizationKey.where(localization_key: 'date.abbr_day_names').exists?
     assert_equal I18n.t('date.abbr_day_names'), %w( Sun Mon Tue Wed Thu Fri Sat )
   end
 
   test 'should properly store key with default value' do
-    get :index, locale: :en
+    if new_controller_test_format?
+      get :index, params: { locale: :en }
+    else
+      get :index, locale: :en
+    end
     localization_key = Lit::LocalizationKey.where(localization_key: 'scope.text_with_default').first
     assert localization_key.present?
     locale = Lit::Locale.find_by(locale: :en)

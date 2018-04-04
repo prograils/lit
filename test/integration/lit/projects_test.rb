@@ -2,6 +2,14 @@
 require 'test_helper'
 
 class ProjectsTest < ActionDispatch::IntegrationTest
+  setup do
+    @old = Lit.humanize_key
+    Lit.humanize_key = true
+  end
+  teardown do
+    Lit.humanize_key = @old
+  end
+
   test 'should display translated project name' do
     visit('/en/projects/new')
     locale = Lit::Locale.where('locale=?', 'en').first

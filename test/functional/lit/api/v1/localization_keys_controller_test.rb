@@ -19,6 +19,7 @@ module Lit
       get :index, format: :json
       assert_response :success
     end
+
     test 'should only changed records' do
       I18n.l(Time.now)
       Lit::LocalizationKey.update_all ['updated_at=?', 2.hours.ago]
@@ -28,7 +29,12 @@ module Lit
       l.localizations.each do |loc|
         loc.update_column :is_changed, true
       end
-      get :index, format: :json, after: I18n.l(2.seconds.ago)
+      if new_controller_test_format?
+        get :index, params: { format: :json, after: I18n.l(2.seconds.ago) }
+      else
+        get :index, format: :json, after: I18n.l(2.seconds.ago)
+      end
+
       assert_response :success
       assert_equal 1, assigns(:localization_keys).count
       assert response.body =~ /#{l.localization_key}/

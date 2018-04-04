@@ -6,6 +6,7 @@ module Lit
 
     setup do
       Lit.authentication_function = nil
+      I18n.locale = :en
       @routes = Lit::Engine.routes
       @localization_key = lit_localization_keys(:hello_world)
     end
@@ -18,12 +19,39 @@ module Lit
     # Lit.loader.cache is a fresh object.
     test 'should destroy localization key when Lit.loader.cache is fresh object' do
       with_fresh_cache do
-        delete :destroy, id: @localization_key.id, format: :js
+        if new_controller_test_format?
+          delete :destroy, params: { id: @localization_key.id, format: :js }
+        else
+          delete :destroy, id: @localization_key.id, format: :js
+        end
+
         assert_response :success
         assert assigns(:localization_key).destroyed?
         assert Lit::LocalizationKey.where(id: @localization_key.id).first.nil?
         assert !Lit.init.cache.has_key?("#{I18n.locale}.#{@localization_key.localization_key}")
       end
+    end
+
+    test 'should find string value' do
+      if new_controller_test_format?
+        get :index, params: { key: 'value', include_completed: 1 }
+      else
+        get :index, key: 'value', include_completed: 1
+      end
+      assert_response :success
+      assert assigns(:localization_keys).include?(lit_localization_keys(:string))
+      assert_not assigns(:localization_keys).include?(lit_localization_keys(:array))
+    end
+
+    test 'should find array value' do
+      if new_controller_test_format?
+        get :index, params: { key: 'two', include_completed: 1 }
+      else
+        get :index, key: 'two', include_completed: 1
+      end
+      assert_response :success
+      assert_not assigns(:localization_keys).include?(lit_localization_keys(:string))
+      assert assigns(:localization_keys).include?(lit_localization_keys(:array))
     end
 
     private

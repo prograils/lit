@@ -2,7 +2,7 @@
 
 string:
   locale: en
-  localization_key: array
+  localization_key: string
   translated_value: value
   default_value: value
   created_at: <%= Time.current %>
