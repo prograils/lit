@@ -1,4 +1,6 @@
-class DeviseCreateAdmins < ActiveRecord::Migration
+class DeviseCreateAdmins < Rails::VERSION::MAJOR >= 5   ?
+                           ActiveRecord::Migration[4.2] :
+                           ActiveRecord::Migration
   def change
     create_table(:admins) do |t|
       ## Database authenticatable
