@@ -8,7 +8,7 @@ module Lit
   end
 
   def determine_redis_provider
-    ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL']
+    Lit.redis_url || ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL']
   end
 
   class RedisStorage

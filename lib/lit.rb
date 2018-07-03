@@ -5,6 +5,7 @@ module Lit
   mattr_accessor :authentication_function
   mattr_accessor :authentication_verification
   mattr_accessor :key_value_engine
+  mattr_accessor :redis_url
   mattr_accessor :storage_options
   mattr_accessor :humanize_key
   mattr_accessor :ignored_keys

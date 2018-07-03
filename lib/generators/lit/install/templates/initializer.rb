@@ -12,6 +12,10 @@ Lit.authentication_verification = <%= @authentication_verification || 'nil' %>
 # environment
 Lit.key_value_engine = '<%= @key_value_engine %>'
 
+# Redis URL to use when key_value_engine is 'redis'
+# When set to `nil`, it uses the REDIS_URL environment variable.
+# Lit.redis_url = 'redis://redis-server:6379/0'
+
 # Pass extra options to key_value_neinge, ie. prefix for redis (only one
 # supported at the moment)
 # Lit.storage_options = { prefix: "my_project" }
