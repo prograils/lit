@@ -17,13 +17,12 @@ module Lit
     end
 
     def translate(locale, key, options = {})
-      options[:lit_default_copy] = options[:default].dup if can_dup_default(options)
       content = super(locale, key, options)
-      if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
-        content.html_safe
-      else
-        content
-      end
+      content.blank? ? content : spanify(content, locale, key)
+    end
+
+    def spanify(content, locale, key)
+      format('<span class="lit-key-generic" data-key="%s" data-locale="%s">%s</span>', key, locale, content).html_safe
     end
 
     def available_locales
