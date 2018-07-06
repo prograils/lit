@@ -1,23 +1,5 @@
 module Lit
   module FrontendHelper
-    include ActionView::Helpers::TranslationHelper
-    module TranslationKeyWrapper
-      def translate(key, options = {})
-        options = options.with_indifferent_access
-        key = scope_key_by_partial(key)
-        ret = super(key, options)
-        if !options[:skip_lit] && lit_authorized?
-          ret = get_translateable_span(key, ret)
-        end
-        ret
-      end
-
-      def t(key, options = {})
-        translate(key, options)
-      end
-    end
-    prepend Lit::FrontendHelper::TranslationKeyWrapper
-
     def javascript_lit_tag
       javascript_include_tag 'lit/lit_frontend'
     end
