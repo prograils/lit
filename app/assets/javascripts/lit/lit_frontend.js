@@ -9,9 +9,12 @@
   buildLocalizationForm = function(e){
     var $this = $(this);
     var meta = $('meta[name="lit-url-base"]');
-    if(meta.length > 0){
+
+    if(meta.length > 0)
       getLocalizationPath($this, meta);
-    }
+    else
+      console.error('cannot find lit base url');
+
     e.stopPropagation();
     return false;
   };
@@ -59,8 +62,8 @@
         console.log('saved ' + elem.data('key'));
       },
       error: function(){
-        console.log('problem saving ' + elem.data('key'));
-        alert('ups, ops, something went wrong');
+        console.error('cannot save ' + elem.data('key'));
+        alert('cannot save ' + elem.data('key'));
       }
     });
   };
