@@ -47,7 +47,7 @@ Lit.set_last_updated_at_upon_creation = true
 
 # Store request info - this will store in cache additional info about request
 # path that triggered translation key to be displayed / accessed
-# For more infor please check README.md
+# For more information please check the README.md
 Lit.store_request_info = false
 
 # Initialize lit
