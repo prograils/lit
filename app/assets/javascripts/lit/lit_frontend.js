@@ -38,7 +38,6 @@
     removeLitForm();
     var $this = $(elem);
     $this.attr('contenteditable', true);
-    $this.html( value );
     $this.focus();
     $this.on('blur', function(){
       submitForm($this, $this.html(), update_path);
