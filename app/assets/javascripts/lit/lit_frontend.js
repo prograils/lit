@@ -11,11 +11,10 @@
     var meta = $('meta[name="lit-url-base"]');
     if(meta.length > 0){
       getLocalizationPath($this, meta);
-      //replaceWithForm(e.currentTarget, value, update_path)
     }
     e.stopPropagation();
     return false;
-  }
+  };
 
   getLocalizationPath = function(elem, metaElem) {
     $.getJSON(metaElem.attr('value'),
@@ -38,7 +37,7 @@
   replaceWithForm = function(elem, value, update_path){
     removeLitForm();
     var $this = $(elem);
-    $this.attr('contentEditable', true);
+    $this.attr('contenteditable', true);
     $this.html( value );
     $this.focus();
     $this.on('blur', function(){
@@ -67,7 +66,7 @@
 
   removeLitForm = function(){
     $('#litForm').remove();
-  }
+  };
 
   $(document).ready(function(){
     $('<div id="lit_button_wrapper" />').appendTo('body');
