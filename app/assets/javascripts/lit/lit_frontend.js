@@ -11,11 +11,15 @@
     var meta = $('meta[name="lit-url-base"]');
     if(meta.length > 0){
       getLocalizationPath($this, meta);
-      //replaceWithForm(e.currentTarget, value, update_path)
+    }
+    else
+    {
+      console.error('cannot lit base url');
+      alert('cannot lit base url');
     }
     e.stopPropagation();
     return false;
-  }
+  };
 
   getLocalizationPath = function(elem, metaElem) {
     $.getJSON(metaElem.attr('value'),
@@ -38,8 +42,7 @@
   replaceWithForm = function(elem, value, update_path){
     removeLitForm();
     var $this = $(elem);
-    $this.attr('contentEditable', true);
-    $this.html( value );
+    $this.attr('contenteditable', true);
     $this.focus();
     $this.on('blur', function(){
       submitForm($this, $this.html(), update_path);
@@ -59,15 +62,15 @@
         console.log('saved ' + elem.data('key'));
       },
       error: function(){
-        console.log('problem saving ' + elem.data('key'));
-        alert('ups, ops, something went wrong');
+        console.error('cannot save ' + elem.data('key'));
+        alert('cannot save ' + elem.data('key'));
       }
     });
   };
 
   removeLitForm = function(){
     $('#litForm').remove();
-  }
+  };
 
   $(document).ready(function(){
     $('<div id="lit_button_wrapper" />').appendTo('body');

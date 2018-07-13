@@ -69,7 +69,7 @@ module Lit
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
 
-      ## check in cache or in simple backend
+      # check in cache or in simple backend
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
@@ -116,7 +116,7 @@ module Lit
           end
         end
       end
-      ## return translated content
+      # return translated content
       content
     end
 
