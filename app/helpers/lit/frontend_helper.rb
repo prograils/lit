@@ -10,6 +10,7 @@ module Lit
               rescue I18n::MissingTranslationData
                 key.split('.')[-1].humanize rescue key
               end
+        key = pluralize_key(key, options[:count]) if options[:count]
         if !options[:skip_lit] && lit_authorized?
           ret = get_translateable_span(key, ret)
         end
@@ -18,6 +19,17 @@ module Lit
 
       def t(key, options = {})
         translate(key, options)
+      end
+
+      def pluralize_key(key, count)
+        key + case count
+              when 0
+                '.zero'
+              when 1
+                '.one'
+              else
+                '.other'
+              end
       end
     end
     prepend Lit::FrontendHelper::TranslationKeyWrapper
