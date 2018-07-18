@@ -26,4 +26,11 @@ namespace :lit do
       end
     end
   end
+
+  desc 'Remove all translations'
+  task clear: :environment do
+    Lit::LocalizationKey.destroy_all
+    Lit::IncommingLocalization.destroy_all
+    Lit.init.cache.reset
+  end
 end
