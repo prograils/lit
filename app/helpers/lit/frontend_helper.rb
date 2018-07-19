@@ -5,8 +5,16 @@ module Lit
       def translate(key, options = {})
         options = options.with_indifferent_access
         key = scope_key_by_partial(key)
-        content = super(key, options)
 
+        if count = options[:count]
+          pluralizer = I18n.backend.send(:pluralizer, locale)
+          if pluralizer.respond_to?(:call)
+            last = (count == 0) ? :zero : pluralizer.call(count)
+            key = format('%s.%s', key, last)
+          end
+        end
+
+        content = super(key, options)
         if !options[:skip_lit] && lit_authorized?
           content = get_translateable_span(key, content)
         end
