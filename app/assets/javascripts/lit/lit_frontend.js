@@ -7,7 +7,13 @@
     replaceWithForm, submitForm, removeLitForm;
 
   buildLocalizationForm = function(e){
+    e.stopPropagation();
+
     var $this = $(this);
+
+    if($this.is(':focus'))
+      return false;
+
     var meta = $('meta[name="lit-url-base"]');
 
     if(meta.length > 0)
@@ -15,7 +21,6 @@
     else
       console.error('cannot find lit base url');
 
-    e.stopPropagation();
     return false;
   };
 
