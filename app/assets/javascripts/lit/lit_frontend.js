@@ -78,14 +78,14 @@
     $btn.on('click', function(){
       removeLitForm();
       if($btn.hasClass('lit-highlight-enabled')){
-        $('.lit-key-generic').removeClass('lit-key-highlight').off('click.form');
+        $('.lit-key-generic').removeClass('lit-key-highlight').off('click.lit');
         $btn.removeClass('lit-highlight-enabled');
         $('.lit-key-generic').each(function(_, elem){
           $elem = $(elem);
           $elem.attr('title', $elem.data('old-title') || '');
         });
       }else{
-        $('.lit-key-generic').addClass('lit-key-highlight').on('click.form', buildLocalizationForm);
+        $('.lit-key-generic').addClass('lit-key-highlight').on('click.lit', buildLocalizationForm);
         $btn.addClass('lit-highlight-enabled');
         $('.lit-key-generic').each(function(_, elem){
           $elem = $(elem);
