@@ -3,6 +3,7 @@ require 'i18n'
 module Lit
   class I18nBackend
     include I18n::Backend::Simple::Implementation
+    include I18n::Backend::Pluralization
 
     attr_reader :cache
 
