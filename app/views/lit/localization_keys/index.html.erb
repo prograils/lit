@@ -16,7 +16,7 @@
           <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>
             <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
           <% end %>
-          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
+          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: I18n.t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
             <%= draw_icon 'trash-o' %>
           <% end %>
         </div>
@@ -81,7 +81,7 @@
       </div>
       <label class="checkbox">
         <%= check_box_tag :include_completed, '1', @search_options[:include_completed].to_i==1 %>
-        <%= t('.is_completed', :default=>"Include completed") %>
+        <%= I18n.t('.is_completed', :default=>"Include completed") %>
       </label>
     <% end %>
     <ul class="nav nav-pills nav-stacked">
@@ -97,11 +97,11 @@
           starred
         <% end %>
       </li>
-      <li class="nav-header"><%= t(".order_by", :default => "Order by") %>:</li>
+      <li class="nav-header"><%= I18n.t(".order_by", :default => "Order by") %>:</li>
       <% Lit::LocalizationKey.order_options.each do |order| %>
         <li class="<%= "active" if order == @search_options[:order]  %>">
           <%= link_to url_for(@search_options.merge(:order => order)) do %>
-            <%= t("lit.order_options.#{order.gsub(" ", "_")}", :default => order.humanize) %>
+            <%= I18n.t("lit.order_options.#{order.gsub(" ", "_")}", :default => order.humanize) %>
           <% end %>
         </li>
       <% end %>

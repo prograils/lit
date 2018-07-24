@@ -1,8 +1,8 @@
 <span class="pull-right"><%= draw_icon 'times', :class=>"close_versions" %></span>
 <table class="table table-condensed">
   <tr>
-    <th><%= t('lit.common.previous_versions') %></th>
-    <th width="25%"><%= t('lit.common.changed_at') %></th>
+    <th><%= I18n.t('lit.common.previous_versions') %></th>
+    <th width="25%"><%= I18n.t('lit.common.changed_at') %></th>
   </tr>
   <% @versions.each do |v| %>
     <tr>

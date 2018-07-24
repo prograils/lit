@@ -8,6 +8,16 @@ namespace :lit do
     end
   end
 
+  desc 'Exports translated strings from lit to config/locales/%{locale}.yml file.'
+  task export_splitted: :environment do
+    hash = YAML.load(Lit.init.cache.export)
+    hash.keys.each do |locale|
+      path = Rails.root.join('config', 'locales', format('%s.yml', locale))
+      File.write(path, hash.slice(locale).to_yaml)
+      puts format('Successfully exported %s.', path)
+    end
+  end
+
   desc 'Reads config/locales/#{ENV["FILES"]} files and calls I18n.t() on keys forcing Lit to import given LOCALE to cache / to display them in UI. Skips nils by default (change by setting ENV["SKIP_NIL"] = false'
   task raw_import: :environment do
     return 'you need to define FILES env' if ENV['FILES'].blank?
@@ -25,5 +35,12 @@ namespace :lit do
         end
       end
     end
+  end
+
+  desc 'Remove all translations'
+  task clear: :environment do
+    Lit::LocalizationKey.destroy_all
+    Lit::IncommingLocalization.destroy_all
+    Lit.init.cache.reset
   end
 end

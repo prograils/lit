@@ -70,6 +70,7 @@ You may also give it extra env variables to limit the export results.
 $ LOCALES=en,de rake lit:export
 ```
 
+Using the task `lit:export_splitted` does the same as `lit:export` but splits the locales by their name (`config/locales/en.yml`, etc).
 
 ### 0.2 -> 0.3 upgrade guide
 

@@ -7,15 +7,22 @@
     replaceWithForm, submitForm, removeLitForm;
 
   buildLocalizationForm = function(e){
-    var $this = $(this);
-    var meta = $('meta[name="lit-url-base"]');
-    if(meta.length > 0){
-      getLocalizationPath($this, meta);
-      //replaceWithForm(e.currentTarget, value, update_path)
-    }
     e.stopPropagation();
+
+    var $this = $(this);
+
+    if($this.is(':focus'))
+      return false;
+
+    var meta = $('meta[name="lit-url-base"]');
+
+    if(meta.length > 0)
+      getLocalizationPath($this, meta);
+    else
+      console.error('cannot find lit base url');
+
     return false;
-  }
+  };
 
   getLocalizationPath = function(elem, metaElem) {
     $.getJSON(metaElem.attr('value'),
@@ -38,8 +45,9 @@
   replaceWithForm = function(elem, value, update_path){
     removeLitForm();
     var $this = $(elem);
-    $this.attr('contentEditable', true);
-    $this.html( value );
+    $this.attr('contenteditable', true);
+    if(value)
+      $this.html(value);
     $this.focus();
     $this.on('blur', function(){
       submitForm($this, $this.html(), update_path);
@@ -59,15 +67,15 @@
         console.log('saved ' + elem.data('key'));
       },
       error: function(){
-        console.log('problem saving ' + elem.data('key'));
-        alert('ups, ops, something went wrong');
+        console.error('cannot save ' + elem.data('key'));
+        alert('cannot save ' + elem.data('key'));
       }
     });
   };
 
   removeLitForm = function(){
     $('#litForm').remove();
-  }
+  };
 
   $(document).ready(function(){
     $('<div id="lit_button_wrapper" />').appendTo('body');
@@ -75,14 +83,14 @@
     $btn.on('click', function(){
       removeLitForm();
       if($btn.hasClass('lit-highlight-enabled')){
-        $('.lit-key-generic').removeClass('lit-key-highlight').off('click.form');
+        $('.lit-key-generic').removeClass('lit-key-highlight').off('click.lit');
         $btn.removeClass('lit-highlight-enabled');
         $('.lit-key-generic').each(function(_, elem){
           $elem = $(elem);
           $elem.attr('title', $elem.data('old-title') || '');
         });
       }else{
-        $('.lit-key-generic').addClass('lit-key-highlight').on('click.form', buildLocalizationForm);
+        $('.lit-key-generic').addClass('lit-key-highlight').on('click.lit', buildLocalizationForm);
         $btn.addClass('lit-highlight-enabled');
         $('.lit-key-generic').each(function(_, elem){
           $elem = $(elem);

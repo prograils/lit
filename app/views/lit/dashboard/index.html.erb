@@ -1,5 +1,5 @@
 <strong>All localization keys</strong> <%= Lit::LocalizationKey.count(:id) %><br/>
 <% @locales.each do |l| %>
-  <strong><%= image_tag "lit/famfamfam_flags/#{l.locale[0,2]}.png" %> <%= t("lit.locale_to_languages.#{l.locale}", :default=>l.locale) %>:</strong> <span title="<%= "#{l.get_changed_localizations_count}/#{l.get_all_localizations_count}" %>"><%= l.get_translated_percentage %>%</span><br/>
+  <strong><%= image_tag "lit/famfamfam_flags/#{l.locale[0,2]}.png" %> <%= I18n.t("lit.locale_to_languages.#{l.locale}", :default=>l.locale) %>:</strong> <span title="<%= "#{l.get_changed_localizations_count}/#{l.get_all_localizations_count}" %>"><%= l.get_translated_percentage %>%</span><br/>
 <% end %>
 

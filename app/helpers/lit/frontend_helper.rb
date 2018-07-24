@@ -5,11 +5,12 @@ module Lit
       def translate(key, options = {})
         options = options.with_indifferent_access
         key = scope_key_by_partial(key)
-        ret = super(key, options)
+        content = super(key, options)
+
         if !options[:skip_lit] && lit_authorized?
-          ret = get_translateable_span(key, ret)
+          content = get_translateable_span(key, content)
         end
-        ret
+        content
       end
 
       def t(key, options = {})
