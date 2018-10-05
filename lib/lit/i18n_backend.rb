@@ -11,10 +11,9 @@ module Lit
       @cache = cache
       @available_locales_cache = nil
       @translations = {}
-      reserved_keys = I18n.const_get :RESERVED_KEYS
-      reserved_keys << :lit_default_copy
+      reserved_keys = I18n.const_get(:RESERVED_KEYS) + %i[lit_default_copy]
       I18n.send(:remove_const, :RESERVED_KEYS)
-      I18n.const_set(:RESERVED_KEYS, reserved_keys)
+      I18n.const_set(:RESERVED_KEYS, reserved_keys.freeze)
     end
 
     def translate(locale, key, options = {})

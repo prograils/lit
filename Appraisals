@@ -52,3 +52,22 @@ appraise 'rails-5.1' do
   gem 'rails-controller-testing'
   gem 'minitest', '~> 5.10'
 end
+
+appraise 'rails-5.2' do
+  source 'https://rubygems.org'
+  gem 'rails', '5.2.1'
+  gem 'devise', '~> 4.5.0'
+  gem 'pg', '~> 1.1.3'
+  gem 'redis'
+  gem 'capybara'
+  gem 'database_cleaner'
+  gem 'test_declarative'
+  gem 'mocha'
+  gem 'webmock'
+  gem 'sass-rails', '~> 5.0.7'
+  gem 'jquery-rails'
+  gem 'coffee-rails'
+  gem 'pry-rails'
+  gem 'rails-controller-testing'
+  gem 'minitest', '~> 5.11.3'
+end
