@@ -207,6 +207,14 @@ class LitBehaviourTest < ActiveSupport::TestCase
     Lit.loader = old_loader
   end
 
+  test 'it replaces nil ("translation missing") values with new defaults' do
+    assert_nil find_localization_for('foo', :en)
+    I18n.t('foo')
+    assert_not_nil find_localization_for('foo', :en)
+    I18n.t('foo', default: 'bar')
+    assert_equal 'bar', I18n.t('foo')
+  end
+
   private
 
   def find_localization_for(key, locale)
