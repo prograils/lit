@@ -207,12 +207,14 @@ class LitBehaviourTest < ActiveSupport::TestCase
     Lit.loader = old_loader
   end
 
-  test 'it does not overwrite values in DB with nil if default option is removed from I18n.t call after value is deleted from redis' do
-    I18n.t('foo', default: 'bar')
-    assert_equal 'bar', find_localization_for('foo', :en).value
-    $redis.flushdb # rubocop:disable Style/GlobalVars
-    I18n.t('foo')
-    assert_equal 'bar', find_localization_for('foo', :en).value
+  if Lit.key_value_engine == 'redis'
+    test 'it does not overwrite values in DB with nil if default option is removed from I18n.t call after value is deleted from redis' do
+      I18n.t('foo', default: 'bar')
+      assert_equal 'bar', find_localization_for('foo', :en).value
+      $redis.flushdb # rubocop:disable Style/GlobalVars
+      I18n.t('foo')
+      assert_equal 'bar', find_localization_for('foo', :en).value
+    end
   end
 
   private
