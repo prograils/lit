@@ -1,6 +1,7 @@
 require 'logger'
 require 'lit/i18n_backend'
 require 'lit/cache'
+require 'lit/export'
 
 module Lit
   class Loader

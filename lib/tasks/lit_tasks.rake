@@ -1,8 +1,11 @@
 namespace :lit do
   desc 'Exports translated strings from lit to config/locales/lit.yml file.'
   task export: :environment do
-    if yml = Lit.init.cache.export
-      path = Rails.root.join('config', 'locales', 'lit.yml')
+    locale_keys = ENV['LOCALES'].to_s.split(',') || []
+    export_format = ENV['FORMAT'].presence&.downcase&.to_sym || :yaml
+
+    if yml = Lit::Export.call(locale_keys: locale_keys, format: export_format)
+      path = Rails.root.join('config', 'locales', "lit.#{file_extension(export_format)}")
       File.new(path, 'w').write(yml)
       puts "Successfully exported #{path}."
     end
@@ -10,9 +13,12 @@ namespace :lit do
 
   desc 'Exports translated strings from lit to config/locales/%{locale}.yml file.'
   task export_splitted: :environment do
-    hash = YAML.load(Lit.init.cache.export)
+    locale_keys = ENV['LOCALES'].to_s.split(',') || []
+    export_format = ENV['FORMAT'].presence&.downcase&.to_sym || :yaml
+
+    hash = YAML.load(Lit::Export.call(locale_keys: locale_keys, format: export_format))
     hash.keys.each do |locale|
-      path = Rails.root.join('config', 'locales', format('%s.yml', locale))
+      path = Rails.root.join('config', 'locales', format("%s.#{file_extension(export_format)}", locale))
       File.write(path, hash.slice(locale).to_yaml)
       puts format('Successfully exported %s.', path)
     end
@@ -42,5 +48,13 @@ namespace :lit do
     Lit::LocalizationKey.destroy_all
     Lit::IncommingLocalization.destroy_all
     Lit.init.cache.reset
+  end
+
+  def file_extension(format)
+    case format.to_sym
+    when :yaml then 'yml'
+    when :csv then 'csv'
+    else raise ArgumentError
+    end
   end
 end
