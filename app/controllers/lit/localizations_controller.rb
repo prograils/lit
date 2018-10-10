@@ -28,6 +28,11 @@ module Lit
       end
     end
 
+    def change_completed
+      @localization.toggle(:is_changed).save!
+      respond_to :js
+    end
+
     def previous_versions
       @versions = @localization.versions.order('created_at DESC')
       respond_to :js

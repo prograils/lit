@@ -17,13 +17,16 @@ Lit::Engine.routes.draw do
   resources :localization_keys, only: [:index, :destroy] do
     member do
       get :star
+      get :change_completed
     end
     collection do
       get :starred
       get :find_localization
+      get :not_translated
     end
     resources :localizations, only: [:edit, :update, :show] do
       member do
+        put :change_completed
         get :previous_versions
       end
     end

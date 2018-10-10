@@ -4,9 +4,10 @@ module Lit
     serialize :default_value
 
     ## SCOPES
-    scope :changed, proc { where(is_changed: true) }
+    scope :changed, -> { where is_changed: true }
+    scope :not_changed, -> { where is_changed: false }
     # @HACK: dirty, find a way to round date to full second
-    scope :after, proc { |dt|
+    scope :after, lambda { |dt|
       where('updated_at >= ?', dt + 1.second)
         .where('is_changed = true')
     }
@@ -28,10 +29,8 @@ module Lit
 
     ## BEFORE & AFTER
     with_options if: :translated_value_changed? do |o|
-      o.before_update :update_should_mark_localization_key_completed
       o.before_update :create_version
     end
-    after_update :mark_localization_key_completed
 
     def to_s
       get_value
@@ -72,17 +71,6 @@ module Lit
     end
 
     private
-
-    def update_should_mark_localization_key_completed
-      return if translated_value == translated_value_was
-      @should_mark_localization_key_completed = true
-    end
-
-    def mark_localization_key_completed
-      return if !instance_variable_defined?(:@should_mark_localization_key_completed) || \
-                @should_mark_localization_key_completed
-      localization_key.mark_completed!
-    end
 
     def create_version
       if translated_value.present?
