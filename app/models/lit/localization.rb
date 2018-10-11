@@ -14,7 +14,7 @@ module Lit
 
     ## ASSOCIATIONS
     belongs_to :locale
-    belongs_to :localization_key, touch: true
+    belongs_to :localization_key
     has_many :localization_versions, dependent: :destroy
     has_many :versions, class_name: '::Lit::LocalizationVersion'
 
@@ -31,7 +31,8 @@ module Lit
     with_options if: :translated_value_changed? do |o|
       o.before_update :create_version
     end
-    after_update :update_cache
+    after_commit :update_cache, on: :update
+    after_commit :update_localization_key, on: :update
 
     def to_s
       get_value
@@ -75,6 +76,10 @@ module Lit
 
     def update_cache
       Lit.init.cache.update_cache full_key, get_value
+    end
+
+    def update_localization_key
+      localization_key.touch
     end
 
     def create_version
