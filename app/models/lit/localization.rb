@@ -79,7 +79,7 @@ module Lit
     end
 
     def update_localization_key
-      localization_key.touch
+      localization_key.check_completed
     end
 
     def create_version

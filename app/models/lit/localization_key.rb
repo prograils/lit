@@ -26,9 +26,6 @@ module Lit
       attr_accessible :localization_key
     end
 
-    ## BEFORE & AFTER
-    after_commit :check_completed, on: :update
-
     def to_s
       localization_key
     end
@@ -91,6 +88,11 @@ module Lit
       end
     end
 
+    def check_completed
+      self.is_completed = localizations.changed.count == localizations.count
+      save! if is_completed_changed?
+    end
+
     class FakeLocalizationKey < ActiveRecord::Base
       self.table_name = 'lit_localization_keys'
     end
@@ -98,11 +100,5 @@ module Lit
       self.table_name = 'lit_localizations'
     end
 
-    private
-
-    def check_completed
-      self.is_completed = localizations.changed.count == localizations.count
-      save! if is_completed_changed?
-    end
   end
 end
