@@ -10,7 +10,7 @@
               <%= draw_icon 'link' %>
             <% end %>
           <% end %>
-          <%= link_to lit.change_completed_localization_key_path(lk), remote: true, class: 'check_icon title', title: 'Complete / incomplete translation key' do %>
+          <%= link_to lit.change_completed_localization_key_path(lk), method: :put, remote: true, class: 'check_icon title', title: 'Complete / incomplete translation key' do %>
             <%= draw_icon lk.is_starred? ? 'check-circle' : 'check-circle-o' %>
           <% end %>
           <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>

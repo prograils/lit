@@ -11,12 +11,24 @@ module Lit
       @localization_key = lit_localization_keys(:hello_world)
     end
 
+    # GET /localization_keys/not_translated
+    test 'should return only not completed localization keys' do
+      @localization_key.update is_completed: true
+      get :not_translated
+      assert_response :success
+      assert_not assigns(:localization_keys).include?(
+        lit_localization_keys(:hello_world)
+      )
+    end
+
     # There where a bug - if someone tries to destroy localization key
     # `Lit.init.cache.delete_key` method is involved. This method was calling
     # `delete` on `@localization_keys` which could be nil and lead to
     # "NoMethodError: undefined method `delete' for nil:NilClass" error. This
     # test ensures lit/localization_keys#destroys works as expected when
     # Lit.loader.cache is a fresh object.
+
+    # DELETE /localization_keys/:id
     test 'should destroy localization key when Lit.loader.cache is fresh object' do
       with_fresh_cache do
         if new_controller_test_format?
@@ -32,6 +44,7 @@ module Lit
       end
     end
 
+    # GET /localization_keys
     test 'should find string value' do
       if new_controller_test_format?
         get :index, params: { key: 'value', include_completed: 1 }
@@ -43,6 +56,7 @@ module Lit
       assert_not assigns(:localization_keys).include?(lit_localization_keys(:array))
     end
 
+    # GET /localization_keys
     test 'should find array value' do
       if new_controller_test_format?
         get :index, params: { key: 'two', include_completed: 1 }
@@ -52,6 +66,18 @@ module Lit
       assert_response :success
       assert_not assigns(:localization_keys).include?(lit_localization_keys(:string))
       assert assigns(:localization_keys).include?(lit_localization_keys(:array))
+    end
+
+    # PUT /localization_keys/:id/change_completed
+    test 'should change localization key to completed' do
+      assert_not @localization_key.is_completed
+      if new_controller_test_format?
+        put :change_completed, params: { id: @localization_key.id }, format: :js
+      else
+        put :change_completed, id: @localization_key.id, format: :js
+      end
+      assert_response :success
+      assert @localization_key.reload.is_completed
     end
 
     private

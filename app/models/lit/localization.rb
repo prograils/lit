@@ -31,6 +31,7 @@ module Lit
     with_options if: :translated_value_changed? do |o|
       o.before_update :create_version
     end
+    after_update :update_cache
 
     def to_s
       get_value
@@ -71,6 +72,10 @@ module Lit
     end
 
     private
+
+    def update_cache
+      Lit.init.cache.update_cache full_key, get_value
+    end
 
     def create_version
       if translated_value.present?

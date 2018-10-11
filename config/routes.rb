@@ -17,7 +17,7 @@ Lit::Engine.routes.draw do
   resources :localization_keys, only: [:index, :destroy] do
     member do
       get :star
-      get :change_completed
+      put :change_completed
     end
     collection do
       get :starred
