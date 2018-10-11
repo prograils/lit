@@ -81,9 +81,6 @@ module Lit
         ).or(localization_key_col.matches(q_underscore))
         s = s.joins([:localizations]).where(cond)
       end
-      unless options[:include_completed].to_i == 1
-        s = s.not_completed
-      end
       s
     end
 

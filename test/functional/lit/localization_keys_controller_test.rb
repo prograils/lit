@@ -47,9 +47,9 @@ module Lit
     # GET /localization_keys
     test 'should find string value' do
       if new_controller_test_format?
-        get :index, params: { key: 'value', include_completed: 1 }
+        get :index, params: { key: 'value' }
       else
-        get :index, key: 'value', include_completed: 1
+        get :index, key: 'value'
       end
       assert_response :success
       assert assigns(:localization_keys).include?(lit_localization_keys(:string))
@@ -59,9 +59,9 @@ module Lit
     # GET /localization_keys
     test 'should find array value' do
       if new_controller_test_format?
-        get :index, params: { key: 'two', include_completed: 1 }
+        get :index, params: { key: 'two' }
       else
-        get :index, key: 'two', include_completed: 1
+        get :index, key: 'two'
       end
       assert_response :success
       assert_not assigns(:localization_keys).include?(lit_localization_keys(:string))

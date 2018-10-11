@@ -65,8 +65,8 @@ module Lit
                         else
                           params.slice(*valid_keys)
                         end
-      @search_options[:include_completed] = '1' if @search_options.empty?
-      @scope = LocalizationKey.distinct.preload(localizations: :locale).search(@search_options)
+      @scope = LocalizationKey.distinct.preload(localizations: :locale)
+                                       .search(@search_options)
     end
 
     def get_localization_keys
@@ -84,7 +84,7 @@ module Lit
     end
 
     def valid_keys
-      %w( key include_completed key_prefix order )
+      %w( key key_prefix order )
     end
 
     def grouped_localizations
