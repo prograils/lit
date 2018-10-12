@@ -83,7 +83,7 @@ module Lit
 
     def change_all_completed
       self.class.transaction do
-        toggle(:is_completed).save
+        toggle(:is_completed).save!
         localizations.update_all is_changed: is_completed
       end
     end

@@ -5,17 +5,13 @@ module Lit
     fixtures 'lit/localization_keys'
 
     setup do
-      @lk = lit_localization_keys(:hello_world)
+      @lk = Lit::LocalizationKey.create(localization_key: 'testing')
       @locale_en = Lit::Locale.create(locale: :en)
       @locale_pl = Lit::Locale.create(locale: :pl)
       @loc1 = @lk.localizations.create translated_value: 'test',
                                        locale: @locale_en
       @loc2 = @lk.localizations.create translated_value: 'test',
                                        locale: @locale_pl
-    end
-
-    teardown do
-      Lit.init.cache.reset
     end
 
     test 'uniqueness checking' do
