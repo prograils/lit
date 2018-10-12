@@ -31,7 +31,6 @@ module Lit
       o.before_update :create_version
     end
     after_commit :update_cache, on: :update
-    after_commit :update_localization_key, on: :update
 
     def to_s
       get_value
@@ -75,10 +74,6 @@ module Lit
 
     def update_cache
       Lit.init.cache.update_cache full_key, get_value
-    end
-
-    def update_localization_key
-      localization_key.check_completed
     end
 
     def create_version
