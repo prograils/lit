@@ -4,11 +4,11 @@ module Lit
     before_action :find_localization
 
     def show
-      render json: { value: @localization.get_value }
+      render json: { value: @localization.translation }
     end
 
     def edit
-      @localization.translated_value = @localization.get_value
+      @localization.translated_value = @localization.translation
       respond_to do |format|
         format.js
       end
@@ -17,13 +17,13 @@ module Lit
     def update
       if @localization.update_attributes(clear_params)
         @localization.update_column :is_changed, true
-        Lit.init.cache.update_cache @localization.full_key, @localization.get_value
+        Lit.init.cache.update_cache @localization.full_key, @localization.translation
       end
       @localization.reload
       respond_to do |f|
         f.js
         f.json do
-          render json: { value: @localization.get_value }
+          render json: { value: @localization.translation }
         end
       end
     end

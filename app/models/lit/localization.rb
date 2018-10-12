@@ -4,11 +4,11 @@ module Lit
     serialize :default_value
 
     ## SCOPES
-    scope :changed, proc { where(is_changed: true) }
+    scope :changed, -> { where(is_changed: true) }
     # @HACK: dirty, find a way to round date to full second
-    scope :after, proc { |dt|
+    scope :after, lambda { |dt|
       where('updated_at >= ?', dt + 1.second)
-        .where('is_changed = true')
+        .where(is_changed: true)
     }
 
     ## ASSOCIATIONS
@@ -21,8 +21,8 @@ module Lit
     validates :locale_id,
               presence: true
 
+    ## ACCESSIBLE
     unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
       attr_accessible :translated_value, :locale_id
     end
 
@@ -34,19 +34,19 @@ module Lit
     after_update :mark_localization_key_completed
 
     def to_s
-      get_value
+      translation
     end
 
     def full_key
       [locale.locale, localization_key.localization_key].join('.')
     end
 
-    def get_value
+    def translation
       is_changed? && !translated_value.nil? ? translated_value : default_value
     end
 
     def value
-      get_value
+      translation
     end
 
     def localization_key_str
@@ -85,10 +85,9 @@ module Lit
     end
 
     def create_version
-      if translated_value.present?
-        l = localization_versions.new
-        l.translated_value = translated_value_was || default_value
-      end
+      return if translated_value.blank?
+      translated_value = translated_value_was || default_value
+      localization_versions.new(translated_value: translated_value)
     end
   end
 end

@@ -64,8 +64,8 @@ module Lit
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value: value, force_array: force_array, update_value: true)
-      return localization.get_value if startup_process && localization.is_changed?
-      localizations[key] = localization.get_value if localization
+      return localization.translation if startup_process && localization.is_changed?
+      localizations[key] = localization.translation if localization
     end
 
     def update_cache(key, value)
@@ -87,7 +87,7 @@ module Lit
       if !first || (!localizations.has_key?(first.full_key) ||
         !localizations.has_key?(last.full_key))
         Localization.includes([:locale, :localization_key]).find_each do |l|
-          localizations[l.full_key] = l.get_value
+          localizations[l.full_key] = l.translation
         end
       end
     end
@@ -97,7 +97,7 @@ module Lit
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, default_fallback: true)
-      localizations[key] = localization.get_value if localization
+      localizations[key] = localization.translation if localization
     end
 
     def delete_key(key)
@@ -137,7 +137,7 @@ module Lit
       end
       db_localizations = {}
       localizations_scope.find_each do |l|
-        db_localizations[l.full_key] = l.get_value
+        db_localizations[l.full_key] = l.translation
       end
       exported_keys = nested_string_keys_to_hash(db_localizations)
       exported_keys.to_yaml
@@ -261,7 +261,7 @@ module Lit
           if lk
             loca = Lit::Localization.where(locale_id: locale.id).
                         where(localization_key_id: lk.id).first
-            new_value = loca.get_value if loca && loca.get_value.present?
+            new_value = loca.translation if loca && loca.translation.present?
           end
         when String then
           new_value = v
