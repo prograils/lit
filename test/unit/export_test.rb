@@ -6,10 +6,15 @@ class ExportTest < ActiveSupport::TestCase
   fixtures :all
 
   def setup
+    DatabaseCleaner.start
     # ensure :pl also has a localization filled in
     I18n.with_locale(:pl) do
       I18n.t(Lit::Localization.first.localization_key.localization_key, default: 'blabla')
     end
+  end
+
+  def teardown
+    DatabaseCleaner.clean
   end
 
   test 'exports all locales to yaml when locale keys not specified' do
