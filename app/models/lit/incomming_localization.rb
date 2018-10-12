@@ -8,7 +8,7 @@ module Lit
     belongs_to :localization
     belongs_to :source
 
-    ## ACCESSIBLE
+    ## ACCESSORS
     attr_accessible unless defined?(::ActionController::StrongParameters)
 
     ## BEFORE & AFTER
@@ -49,8 +49,7 @@ module Lit
     def set_localization
       return if locale.blank? || localization_key.blank?
       self.localization = localization_key.localizations
-                                          .where(locale_id: locale_id)
-                                          .first
+                                          .find_by(locale_id: locale_id)
     end
 
     def update_existing_localization_data

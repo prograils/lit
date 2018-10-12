@@ -24,7 +24,7 @@ module Lit
       if defined?(ActiveJob)
         SynchronizeSourceJob.perform_later(@source)
       else
-        @source.synchronize
+        SynchronizeSourceService.new(@source).execute
       end
       redirect_to lit.source_incomming_localizations_path(@source)
     end

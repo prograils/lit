@@ -21,7 +21,7 @@ module Lit
               presence: true,
               uniqueness: { if: :localization_key_changed? }
 
-    ## ACCESSIBLE
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
       attr_accessible :localization_key
     end

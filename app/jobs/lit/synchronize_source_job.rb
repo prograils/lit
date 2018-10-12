@@ -4,7 +4,7 @@ module Lit
       queue_as :default
 
       def perform(source)
-        source.synchronize
+        SynchronizeSourceService.new(source).execute
       end
     end
   end

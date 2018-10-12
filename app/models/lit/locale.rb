@@ -14,7 +14,7 @@ module Lit
     after_save :reset_available_locales_cache
     after_destroy :reset_available_locales_cache
 
-    ## ACCESSIBLE
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
       attr_accessible :locale
     end

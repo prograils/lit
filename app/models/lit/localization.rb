@@ -21,7 +21,7 @@ module Lit
     validates :locale_id,
               presence: true
 
-    ## ACCESSIBLE
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
       attr_accessible :translated_value, :locale_id
     end
