@@ -3,11 +3,11 @@ module Lit
     attr_accessor :interpolated_key
 
     ## SCOPES
-    scope :completed, proc { where(is_completed: true) }
-    scope :not_completed, proc { where(is_completed: false) }
-    scope :starred, proc { where(is_starred: true) }
-    scope :ordered, proc { order('localization_key asc') }
-    scope :after, proc { |dt|
+    scope :completed, -> { where(is_completed: true) }
+    scope :not_completed, -> { where(is_completed: false) }
+    scope :starred, -> { where(is_starred: true) }
+    scope :ordered, -> { order(localization_key: :asc) }
+    scope :after, lambda { |dt|
       joins(:localizations)
         .where('lit_localization_keys.updated_at >= ?', dt)
         .where('lit_localizations.is_changed = true')
@@ -21,8 +21,8 @@ module Lit
               presence: true,
               uniqueness: { if: :localization_key_changed? }
 
+    ## ACCESSIBLE
     unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
       attr_accessible :localization_key
     end
 
@@ -38,9 +38,9 @@ module Lit
           new_created = true
         end
       end
-      if new_created
-        Lit::LocalizationKey.update_all ['is_completed=?', false], ['id=? and is_completed=?', id, false]
-      end
+      return unless new_created
+      Lit::LocalizationKey.update_all ['is_completed=?', false],
+                                      ['id=? and is_completed=?', id, false]
     end
 
     def mark_completed
@@ -57,10 +57,12 @@ module Lit
     end
 
     def self.order_options
-      ['localization_key asc', 'localization_key desc', 'created_at asc', 'created_at desc', 'updated_at asc', 'updated_at desc']
+      ['localization_key asc', 'localization_key desc', 'created_at asc',
+       'created_at desc', 'updated_at asc', 'updated_at desc']
     end
 
-    # it can be overridden in parent application, for example: {:order => "created_at desc"}
+    # it can be overridden in parent application,
+    # for example: {:order => "created_at desc"}
     def self.default_search_options
       {}
     end
