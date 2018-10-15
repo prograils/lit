@@ -20,7 +20,8 @@ class ExportTest < ActiveSupport::TestCase
   test 'exports all locales to yaml when locale keys not specified' do
     yaml = Lit::Export.call(locale_keys: [], format: :yaml)
     parsed_yaml = YAML.load(yaml)
-    assert parsed_yaml.keys == Lit::Localization.joins(:locale).distinct.pluck('locale')
+    assert(parsed_yaml.keys.sort ==
+      Lit::Localization.joins(:locale).distinct.pluck('locale').sort)
   end
 
   test 'exports selected locales to yaml when locale keys specified' do
