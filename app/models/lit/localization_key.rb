@@ -68,42 +68,7 @@ module Lit
     end
 
     def self.search(options = {})
-      options = options.to_h.reverse_merge(default_search_options).with_indifferent_access
-      s = self
-      if options[:order] && order_options.include?(options[:order])
-        column, order = options[:order].split(' ')
-        s = s.order(FakeLocalizationKey.arel_table[column.to_sym].send(order.to_sym))
-      else
-        s = s.ordered
-      end
-      localization_key_col = FakeLocalizationKey.arel_table[:localization_key]
-      default_value_col = FakeLocalization.arel_table[:default_value]
-      translated_value_col = FakeLocalization.arel_table[:translated_value]
-      if options[:key_prefix].present?
-        q = "#{options[:key_prefix]}%"
-        s = s.where(localization_key_col.matches(q))
-      end
-      if options[:key].present?
-        q = "%#{options[:key]}%"
-        q_underscore = "%#{options[:key].parameterize.underscore}%"
-        cond = localization_key_col.matches(q).or(
-            default_value_col.matches(q).or(
-                translated_value_col.matches(q)
-            )
-        ).or(localization_key_col.matches(q_underscore))
-        s = s.joins([:localizations]).where(cond)
-      end
-      unless options[:include_completed].to_i == 1
-        s = s.not_completed
-      end
-      s
-    end
-
-    class FakeLocalizationKey < ActiveRecord::Base
-      self.table_name = 'lit_localization_keys'
-    end
-    class FakeLocalization < ActiveRecord::Base
-      self.table_name = 'lit_localizations'
+      LocalizationKeySearchQuery.new(self, options).perform
     end
   end
 end
