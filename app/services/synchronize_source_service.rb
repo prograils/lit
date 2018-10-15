@@ -4,14 +4,10 @@ class SynchronizeSourceService
   end
 
   def execute
-    after = if @source.last_updated_at.nil?
-              nil
-            else
-              @source.last_updated_at.to_s(:db)
-            end
+    after = @source.last_updated_at&.to_s(:db)
     @result = interactor.send_request Lit::Source::LOCALIZATIONS_PATH,
                                       after: after
-    return if @result.nil? || !@result.is_a?(Array)
+    return unless @result&.is_a?(Array)
     synchronize_localizations
     update_timestamps
   end
@@ -35,14 +31,7 @@ class SynchronizeSourceService
   end
 
   def find_incomming_localization(localization)
-    if ::Rails::VERSION::MAJOR < 4
-      Lit::IncommingLocalization.where(incomming_id: localization['id'])
-                                .first_or_initialize
-    else
-      Lit::IncommingLocalization.find_or_initialize_by(
-        incomming_id: localization['id']
-      )
-    end
+    Lit::IncommingLocalization.find_or_initialize_by incomming_id: localization['id']
   end
 
   def find_localization_key(inc_loc)
@@ -54,7 +43,7 @@ class SynchronizeSourceService
     last_change = Time.parse(last_change) if last_change.present?
     @source.touch_last_updated_at last_change
     @source.update_column(:sync_complete, true)
-    @source.save
+    @source.save!
   end
 
   def interactor

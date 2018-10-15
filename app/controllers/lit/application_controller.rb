@@ -36,7 +36,7 @@ module Lit
     end
 
     def referer
-      request.env['HTTP_REFERER']
+      request.referer
     end
   end
 end

@@ -71,7 +71,7 @@ module Lit
     def assign_new_localization_key
       self.localization_key =
         Lit::LocalizationKey.where(localization_key: localization_key_str)
-                            .first_or_create
+                            .first_or_create!
     end
 
     def assign_new_localization

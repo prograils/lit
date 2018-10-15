@@ -13,7 +13,7 @@ module Lit
     validates :api_key, :identifier, :url,
               presence: true
     validates :url,
-              format: { with: %r{\Ahttps?:\/\/.*\/.*[^\/]\Z}i }
+              format: { with: %r{\Ahttps?://.*/.*[^/]\Z}i }
 
     ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
