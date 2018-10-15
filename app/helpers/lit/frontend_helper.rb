@@ -1,24 +1,26 @@
 module Lit
   module FrontendHelper
     include ActionView::Helpers::TranslationHelper
+
     module TranslationKeyWrapper
       def translate(key, options = {})
+        count = options[:count]
         options = options.with_indifferent_access
         key = scope_key_by_partial(key)
-
-        if count = options[:count]
-          pluralizer = I18n.backend.send(:pluralizer, locale)
-          if pluralizer.respond_to?(:call)
-            last = (count == 0) ? :zero : pluralizer.call(count)
-            key = format('%s.%s', key, last)
-          end
-        end
+        key = pluralized_key(key, count) if count
 
         content = super(key, options)
         if !options[:skip_lit] && lit_authorized?
           content = get_translateable_span(key, content)
         end
         content
+      end
+
+      def pluralized_key(key, count)
+        pluralizer = I18n.backend.send(:pluralizer, locale)
+        return unless pluralizer.respond_to?(:call)
+        last = count.zero? ? :zero : pluralizer.call(count)
+        format '%<key>s.%<last>s', key: key, last: last
       end
 
       def t(key, options = {})
@@ -41,7 +43,7 @@ module Lit
                          '',
                          value: lit.find_localization_localization_keys_path,
                          name: 'lit-url-base'
-      safe_join([javascript_lit_tag, stylesheet_lit_tag, meta])
+      safe_join [javascript_lit_tag, stylesheet_lit_tag, meta]
     end
 
     def lit_translations_info
@@ -50,23 +52,24 @@ module Lit
       content_tag :div, class: 'lit-translations-info collapsed' do
         concat content_tag :span, 'Show translations', class: 'lit-open-button'
         concat content_tag :span, 'X', class: 'lit-close-button'
-        concat(content_tag(:ul, class: 'lit-translations-list') do
-          Lit.init.cache.request_keys.each do |k, v|
-            concat(content_tag(:li) do
-              concat content_tag :code, "#{k}:"
-              concat get_translateable_span(k, v, alternative_text: '[empty]')
-            end)
+        concat translations_list_content_tag
+      end
+    end
+
+    def translations_list_content_tag
+      content_tag :ul, class: 'lit-translations-list' do
+        Lit.init.cache.request_keys.each do |k, v|
+          concat content_tag(:li) do
+            concat content_tag :code, "#{k}:"
+            concat get_translateable_span(k, v, alternative_text: '[empty]')
           end
-        end)
+        end
       end
     end
 
     def lit_authorized?
-      if Lit.authentication_verification.present?
-        send(Lit.authentication_verification)
-      else
-        true
-      end
+      return false if Lit.authentication_verification.blank?
+      send Lit.authentication_verification
     end
 
     def get_translateable_span(key, localization, alternative_text: nil)
