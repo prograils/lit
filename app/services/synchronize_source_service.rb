@@ -9,9 +9,9 @@ class SynchronizeSourceService
             else
               @source.last_updated_at.to_s(:db)
             end
-    result = interactor.send_request(Lit::Source::LOCALIZATIONS_PATH, after: after)
-    return if result.present?
-    return unless result.is_a? Array
+    @result = interactor.send_request Lit::Source::LOCALIZATIONS_PATH,
+                                      after: after
+    return if @result.nil? || !@result.is_a?(Array)
     synchronize_localizations
     update_timestamps
   end
@@ -19,14 +19,14 @@ class SynchronizeSourceService
   private
 
   def synchronize_localizations
-    result.each { |localization| synchronize_localization localization }
+    @result.each { |localization| synchronize_localization localization }
   end
 
   def synchronize_localization(localization)
     inc_loc = find_incomming_localization(localization)
     inc_loc.source = @source
     inc_loc.locale_str = localization['locale_str']
-    inc_loc.locale = Locale.find_by(locale: localization['locale_str'])
+    inc_loc.locale = Lit::Locale.find_by(locale: localization['locale_str'])
     inc_loc.localization_key_str = localization['localization_key_str']
     inc_loc.localization_key = find_localization_key(inc_loc)
     return if inc_loc.duplicated?(localization['value'])
@@ -36,17 +36,17 @@ class SynchronizeSourceService
 
   def find_incomming_localization(localization)
     if ::Rails::VERSION::MAJOR < 4
-      IncommingLocalization.where(incomming_id: localization['id'])
-                           .first_or_initialize
+      Lit::IncommingLocalization.where(incomming_id: localization['id'])
+                                .first_or_initialize
     else
-      IncommingLocalization.find_or_initialize_by(
+      Lit::IncommingLocalization.find_or_initialize_by(
         incomming_id: localization['id']
       )
     end
   end
 
   def find_localization_key(inc_loc)
-    LocalizationKey.find_by localization_key: inc_loc.localization_key_str
+    Lit::LocalizationKey.find_by localization_key: inc_loc.localization_key_str
   end
 
   def update_timestamps
