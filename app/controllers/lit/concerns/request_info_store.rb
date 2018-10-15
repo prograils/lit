@@ -9,7 +9,7 @@ module Lit
       private
 
       def store_request_path
-        Thread.current[:lit_current_request_path] = request&.path
+        Thread.current[:lit_current_request_path] = request.try(:path)
       end
     end
   end

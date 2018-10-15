@@ -1,14 +1,16 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
-    before_action :get_localization_scope, except: [:destroy, :find_localization]
+    before_action :find_localization_scope, except: %i[destroy find_localization]
+    before_action :find_localization_key, only: %i[star destroy]
 
     def index
       get_localization_keys
     end
 
     def find_localization
-      localization_key = Lit::LocalizationKey. \
-                         find_by!(localization_key: params[:key])
+      localization_key = Lit::LocalizationKey.find_by!(
+        localization_key: params[:key]
+      )
       locale = Lit::Locale.find_by!(locale: params[:locale])
       localization = localization_key.localizations.find_by(locale_id: locale)
       render json: {
@@ -19,7 +21,7 @@ module Lit
     def starred
       @scope = @scope.where(is_starred: true)
 
-      if defined?(Kaminari) && \
+      if defined?(Kaminari) &&
          @scope.respond_to?(Kaminari.config.page_method_name)
         @scope = @scope.send(Kaminari.config.page_method_name, params[:page])
       end
@@ -28,14 +30,12 @@ module Lit
     end
 
     def star
-      @localization_key = LocalizationKey.find params[:id].to_i
-      @localization_key.is_starred = !@localization_key.is_starred?
+      @localization_key.toggle :is_starred
       @localization_key.save
       respond_to :js
     end
 
     def destroy
-      @localization_key = LocalizationKey.find params[:id].to_i
       @localization_key.destroy
       I18n.backend.available_locales.each do |l|
         Lit.init.cache.delete_key "#{l}.#{@localization_key.localization_key}"
@@ -45,14 +45,20 @@ module Lit
 
     private
 
-    def get_localization_scope
+    def find_localization_key
+      @localization_key = LocalizationKey.find params[:id].to_i
+    end
+
+    def find_localization_scope
       @search_options = if params.respond_to?(:permit)
                           params.permit(*valid_keys)
                         else
                           params.slice(*valid_keys)
                         end
       @search_options[:include_completed] = '1' if @search_options.empty?
-      @scope = LocalizationKey.distinct.preload(localizations: :locale).search(@search_options)
+      @scope = LocalizationKey.distinct
+                              .preload(localizations: :locale)
+                              .search(@search_options)
     end
 
     def get_localization_keys
@@ -70,7 +76,7 @@ module Lit
     end
 
     def valid_keys
-      %w( key include_completed key_prefix order )
+      %w[key include_completed key_prefix order]
     end
 
     def grouped_localizations
@@ -105,13 +111,15 @@ module Lit
     end
     helper_method :localization_for
 
-    def has_versions?(localization)
+    def versions?(localization)
       @_versions ||= begin
         ids = grouped_localizations.values.map(&:values).flatten.map(&:id)
-        Lit::Localization.where(id: ids).joins(:versions).group("#{Lit::Localization.quoted_table_name}.id").count
+        Lit::Localization.where(id: ids).joins(:versions).group(
+          "#{Lit::Localization.quoted_table_name}.id"
+        ).count
       end
       @_versions[localization.id].to_i > 0
     end
-    helper_method :has_versions?
+    helper_method :versions?
   end
 end

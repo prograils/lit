@@ -15,10 +15,7 @@ module Lit
     end
 
     def update
-      if @localization.update_attributes(clear_params)
-        @localization.update_column :is_changed, true
-        Lit.init.cache.update_cache @localization.full_key, @localization.translation
-      end
+      after_update_operations if @localization.update_attributes(clear_params)
       @localization.reload
       respond_to do |f|
         f.js
@@ -29,19 +26,25 @@ module Lit
     end
 
     def previous_versions
-      @versions = @localization.versions.order('created_at DESC')
+      @versions = @localization.versions.order(created_at: :desc)
       respond_to :js
     end
 
     private
 
     def find_localization_key
-      @localization_key = Lit::LocalizationKey. \
-                          find(params[:localization_key_id])
+      @localization_key =
+        Lit::LocalizationKey.find(params[:localization_key_id])
     end
 
     def find_localization
       @localization = @localization_key.localizations.find(params[:id])
+    end
+
+    def after_update_operations
+      @localization.update_column :is_changed, true
+      Lit.init.cache.update_cache @localization.full_key,
+                                  @localization.translation
     end
 
     def clear_params

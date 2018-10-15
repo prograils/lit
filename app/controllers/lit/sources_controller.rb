@@ -2,24 +2,20 @@ require_dependency 'lit/application_controller'
 
 module Lit
   class SourcesController < ApplicationController
+    before_action :find_source, except: %i[index new create]
     def index
       @sources = Source.all
     end
 
-    def show
-      @source = Source.find(params[:id])
-    end
+    def show; end
 
     def new
       @source = Source.new
     end
 
-    def edit
-      @source = Source.find(params[:id])
-    end
+    def edit; end
 
     def synchronize
-      @source = Source.find(params[:id])
       @source.update_column(:sync_complete, false)
       if defined?(ActiveJob)
         SynchronizeSourceJob.perform_later(@source)
@@ -30,7 +26,6 @@ module Lit
     end
 
     def touch
-      @source = Source.find(params[:id])
       @source.touch_last_updated_at!
       redirect_to request.env['HTTP_REFERER'].present? ? :back : @source
     end
@@ -45,7 +40,6 @@ module Lit
     end
 
     def update
-      @source = Source.find(params[:id])
       if @source.update_attributes(clear_params)
         redirect_to @source, notice: 'Source was successfully updated.'
       else
@@ -54,17 +48,19 @@ module Lit
     end
 
     def destroy
-      @source = Source.find(params[:id])
       @source.destroy
       redirect_to sources_url
     end
 
     def sync_complete
-      @source = Source.find(params[:id])
       render json: { sync_complete: @source.sync_complete }
     end
 
     private
+
+    def find_source
+      @source = Source.find(params[:id])
+    end
 
     def clear_params
       if defined?(::ActionController::StrongParameters)
