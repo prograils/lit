@@ -9,7 +9,7 @@ module Lit
     # @HACK: dirty, find a way to round date to full second
     scope :after, lambda { |dt|
       where('updated_at >= ?', dt + 1.second)
-        .where('is_changed = true')
+        .where(is_changed: true)
     }
 
     ## ASSOCIATIONS
@@ -21,8 +21,8 @@ module Lit
     ## VALIDATIONS
     validates :locale, presence: true
 
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
       attr_accessible :translated_value, :locale_id
     end
 
@@ -33,19 +33,19 @@ module Lit
     after_commit :update_cache, on: :update
 
     def to_s
-      get_value
+      translation
     end
 
     def full_key
       [locale.locale, localization_key.localization_key].join('.')
     end
 
-    def get_value
+    def translation
       is_changed? && !translated_value.nil? ? translated_value : default_value
     end
 
     def value
-      get_value
+      translation
     end
 
     def localization_key_str
@@ -73,14 +73,13 @@ module Lit
     private
 
     def update_cache
-      Lit.init.cache.update_cache full_key, get_value
+      Lit.init.cache.update_cache full_key, translation
     end
 
     def create_version
-      if translated_value.present?
-        l = localization_versions.new
-        l.translated_value = translated_value_was || default_value
-      end
+      return if translated_value.blank?
+      translated_value = translated_value_was || default_value
+      localization_versions.new(translated_value: translated_value)
     end
   end
 end

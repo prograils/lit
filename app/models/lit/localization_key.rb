@@ -3,11 +3,11 @@ module Lit
     attr_accessor :interpolated_key
 
     ## SCOPES
-    scope :completed, proc { where(is_completed: true) }
-    scope :not_completed, proc { where(is_completed: false) }
-    scope :starred, proc { where(is_starred: true) }
-    scope :ordered, proc { order('localization_key asc') }
-    scope :after, proc { |dt|
+    scope :completed, -> { where(is_completed: true) }
+    scope :not_completed, -> { where(is_completed: false) }
+    scope :starred, -> { where(is_starred: true) }
+    scope :ordered, -> { order(localization_key: :asc) }
+    scope :after, lambda { |dt|
       joins(:localizations)
         .where('lit_localization_keys.updated_at >= ?', dt)
         .where('lit_localizations.is_changed = true')
@@ -21,8 +21,8 @@ module Lit
               presence: true,
               uniqueness: { if: :localization_key_changed? }
 
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
       attr_accessible :localization_key
     end
 
@@ -41,47 +41,24 @@ module Lit
           new_created = true
         end
       end
-      if new_created
-        Lit::LocalizationKey.update_all ['is_completed=?', false], ['id=? and is_completed=?', id, false]
-      end
+      return unless new_created
+      Lit::LocalizationKey.update_all ['is_completed=?', false],
+                                      ['id=? and is_completed=?', id, false]
     end
 
     def self.order_options
-      ['localization_key asc', 'localization_key desc', 'created_at asc', 'created_at desc', 'updated_at asc', 'updated_at desc']
+      ['localization_key asc', 'localization_key desc', 'created_at asc',
+       'created_at desc', 'updated_at asc', 'updated_at desc']
     end
 
-    # it can be overridden in parent application, for example: {:order => "created_at desc"}
+    # it can be overridden in parent application,
+    # for example: {:order => "created_at desc"}
     def self.default_search_options
       {}
     end
 
     def self.search(options = {})
-      options = options.to_h.reverse_merge(default_search_options).with_indifferent_access
-      s = self
-      if options[:order] && order_options.include?(options[:order])
-        column, order = options[:order].split(' ')
-        s = s.order(FakeLocalizationKey.arel_table[column.to_sym].send(order.to_sym))
-      else
-        s = s.ordered
-      end
-      localization_key_col = FakeLocalizationKey.arel_table[:localization_key]
-      default_value_col = FakeLocalization.arel_table[:default_value]
-      translated_value_col = FakeLocalization.arel_table[:translated_value]
-      if options[:key_prefix].present?
-        q = "#{options[:key_prefix]}%"
-        s = s.where(localization_key_col.matches(q))
-      end
-      if options[:key].present?
-        q = "%#{options[:key]}%"
-        q_underscore = "%#{options[:key].parameterize.underscore}%"
-        cond = localization_key_col.matches(q).or(
-            default_value_col.matches(q).or(
-                translated_value_col.matches(q)
-            )
-        ).or(localization_key_col.matches(q_underscore))
-        s = s.joins([:localizations]).where(cond)
-      end
-      s
+      LocalizationKeySearchQuery.new(self, options).perform
     end
 
     def change_all_completed
@@ -89,13 +66,6 @@ module Lit
         toggle(:is_completed).save!
         localizations.update_all is_changed: is_completed
       end
-    end
-
-    class FakeLocalizationKey < ActiveRecord::Base
-      self.table_name = 'lit_localization_keys'
-    end
-    class FakeLocalization < ActiveRecord::Base
-      self.table_name = 'lit_localizations'
     end
 
     private

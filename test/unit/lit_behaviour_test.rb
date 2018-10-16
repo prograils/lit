@@ -159,7 +159,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     foo_loc.update(translated_value: 'barbar', is_changed: true)
     nil_loc.update(translated_value: 'new one', is_changed: true)
     [foo_loc, nil_loc].each do |loc|
-      Lit.init.cache.update_cache loc.full_key, loc.get_value
+      Lit.init.cache.update_cache loc.full_key, loc.translation
     end
 
     # Translations should be changed as intended
