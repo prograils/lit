@@ -19,7 +19,7 @@ module Lit
       respond_to do |f|
         f.js
         f.json do
-          render json: { value: @localization.reload.get_value }
+          render json: { value: @localization.reload.translation }
         end
       end
     end

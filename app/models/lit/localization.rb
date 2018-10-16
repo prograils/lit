@@ -73,7 +73,7 @@ module Lit
     private
 
     def update_cache
-      Lit.init.cache.update_cache full_key, get_value
+      Lit.init.cache.update_cache full_key, translation
     end
 
     def create_version
