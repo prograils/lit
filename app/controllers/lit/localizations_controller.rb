@@ -15,17 +15,20 @@ module Lit
     end
 
     def update
-      if @localization.update_attributes(clear_params)
+      if @localization.update(clear_params)
         @localization.update_column :is_changed, true
-        Lit.init.cache.update_cache @localization.full_key, @localization.get_value
       end
-      @localization.reload
       respond_to do |f|
         f.js
         f.json do
-          render json: { value: @localization.get_value }
+          render json: { value: @localization.reload.get_value }
         end
       end
+    end
+
+    def change_completed
+      @localization.toggle(:is_changed).save!
+      respond_to :js
     end
 
     def previous_versions

@@ -12,6 +12,7 @@ module Lit
       @localization = lit_localizations(:array)
     end
 
+    # GET /localization_keys/:localization_key_id/localizations/:id/edit
     test 'should get edit' do
       if new_controller_test_format?
         get :edit,
@@ -31,6 +32,7 @@ module Lit
       assert_not_nil assigns(:localization)
     end
 
+    # GET /localization_keys/:localization_key_id/localizations/:id/previous_versions
     test 'should get previous_versions' do
       if new_controller_test_format?
         get :previous_versions,
@@ -50,6 +52,7 @@ module Lit
       assert_not_nil assigns(:versions)
     end
 
+    # PUT /localization_keys/:localization_key_id/localizations/:id
     test 'should update localization when translated_value is a string' do
       @localization = lit_localizations(:string)
       @localization.update_attribute(:is_changed, false)
@@ -80,6 +83,7 @@ module Lit
       assert_equal true, @localization.is_changed?
     end
 
+    # PUT /localization_keys/:localization_key_id/localizations/:id
     test 'should update localization when translated_value is a array' do
       @localization = lit_localizations(:array)
       if new_controller_test_format?
@@ -108,6 +112,7 @@ module Lit
       assert_equal %w(three two one), @localization.translated_value
     end
 
+    # PUT /localization_keys/:localization_key_id/localizations/:id
     test 'should set is_changed to true' do
       @localization = lit_localizations(:string)
       assert_equal false, @localization.is_changed?
@@ -117,8 +122,8 @@ module Lit
               localization_key_id: @localization.localization_key.id,
               id: @localization.id,
               localization: {
-                  translated_value: 'new-value',
-                  locale_id: @localization.locale_id
+                translated_value: 'new-value',
+                locale_id: @localization.locale_id
               },
               format: :js
             }
@@ -127,8 +132,8 @@ module Lit
             localization_key_id: @localization.localization_key.id,
             id: @localization.id,
             localization: {
-                translated_value: 'new-value',
-                locale_id: @localization.locale_id
+              translated_value: 'new-value',
+              locale_id: @localization.locale_id
             },
             format: :js
       end
@@ -136,6 +141,27 @@ module Lit
       assert_response :success
       @localization.reload
       assert_equal true, @localization.is_changed?
+    end
+
+    # PUT /localization_keys/:localization_key_id/localizations/:id/change_completed
+    test 'changes is_change state to opposite' do
+      assert_equal false, @localization.is_changed?
+      if new_controller_test_format?
+        put :change_completed,
+            params: {
+              localization_key_id: @localization.localization_key.id,
+              id: @localization.id,
+              format: :js
+            }
+      else
+        put :change_completed,
+            localization_key_id: @localization.localization_key.id,
+            id: @localization.id,
+            format: :js
+      end
+
+      assert_response :success
+      assert_equal true, @localization.reload.is_changed?
     end
   end
 end

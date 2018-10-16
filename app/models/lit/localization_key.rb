@@ -26,6 +26,9 @@ module Lit
       attr_accessible :localization_key
     end
 
+    ## BEFORE AND AFTER
+    after_commit :check_completed, on: :update
+
     def to_s
       localization_key
     end
@@ -41,19 +44,6 @@ module Lit
       if new_created
         Lit::LocalizationKey.update_all ['is_completed=?', false], ['id=? and is_completed=?', id, false]
       end
-    end
-
-    def mark_completed
-      self.is_completed = localizations.changed.count(:id) == localizations.count
-    end
-
-    def mark_completed!
-      save if mark_completed
-    end
-
-    def mark_all_completed!
-      localizations.update_all(['is_changed=?', true])
-      mark_completed!
     end
 
     def self.order_options
@@ -91,10 +81,14 @@ module Lit
         ).or(localization_key_col.matches(q_underscore))
         s = s.joins([:localizations]).where(cond)
       end
-      unless options[:include_completed].to_i == 1
-        s = s.not_completed
-      end
       s
+    end
+
+    def change_all_completed
+      self.class.transaction do
+        toggle(:is_completed).save!
+        localizations.update_all is_changed: is_completed
+      end
     end
 
     class FakeLocalizationKey < ActiveRecord::Base
@@ -102,6 +96,13 @@ module Lit
     end
     class FakeLocalization < ActiveRecord::Base
       self.table_name = 'lit_localizations'
+    end
+
+    private
+
+    def check_completed
+      self.is_completed = localizations.changed.count == localizations.count
+      save! if is_completed_changed?
     end
   end
 end

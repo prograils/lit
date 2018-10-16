@@ -1,8 +1,15 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
-    before_action :get_localization_scope, except: [:destroy, :find_localization]
+    before_action :get_localization_scope, except: %i[destroy find_localization]
+    before_action :find_localization_key,
+                  only: %i[change_completed destroy star]
 
     def index
+      get_localization_keys
+    end
+
+    def not_translated
+      @scope = @scope.not_completed
       get_localization_keys
     end
 
@@ -28,14 +35,17 @@ module Lit
     end
 
     def star
-      @localization_key = LocalizationKey.find params[:id].to_i
       @localization_key.is_starred = !@localization_key.is_starred?
       @localization_key.save
       respond_to :js
     end
 
+    def change_completed
+      @localization_key.change_all_completed
+      respond_to :js
+    end
+
     def destroy
-      @localization_key = LocalizationKey.find params[:id].to_i
       @localization_key.destroy
       I18n.backend.available_locales.each do |l|
         Lit.init.cache.delete_key "#{l}.#{@localization_key.localization_key}"
@@ -45,14 +55,18 @@ module Lit
 
     private
 
+    def find_localization_key
+      @localization_key = LocalizationKey.find(params[:id])
+    end
+
     def get_localization_scope
       @search_options = if params.respond_to?(:permit)
                           params.permit(*valid_keys)
                         else
                           params.slice(*valid_keys)
                         end
-      @search_options[:include_completed] = '1' if @search_options.empty?
-      @scope = LocalizationKey.distinct.preload(localizations: :locale).search(@search_options)
+      @scope = LocalizationKey.distinct.preload(localizations: :locale)
+                                       .search(@search_options)
     end
 
     def get_localization_keys
@@ -70,7 +84,7 @@ module Lit
     end
 
     def valid_keys
-      %w( key include_completed key_prefix order )
+      %w( key key_prefix order )
     end
 
     def grouped_localizations
