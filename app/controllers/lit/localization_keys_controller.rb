@@ -1,9 +1,16 @@
 module Lit
   class LocalizationKeysController < ::Lit::ApplicationController
-    before_action :find_localization_scope, except: %i[destroy find_localization]
-    before_action :find_localization_key, only: %i[star destroy]
+    before_action :find_localization_scope,
+                  except: %i[destroy find_localization]
+    before_action :find_localization_key,
+                  only: %i[star destroy change_completed]
 
     def index
+      get_localization_keys
+    end
+
+    def not_translated
+      @scope = @scope.not_completed
       get_localization_keys
     end
 
@@ -35,6 +42,11 @@ module Lit
       respond_to :js
     end
 
+    def change_completed
+      @localization_key.change_all_completed
+      respond_to :js
+    end
+
     def destroy
       @localization_key.destroy
       I18n.backend.available_locales.each do |l|
@@ -55,7 +67,6 @@ module Lit
                         else
                           params.slice(*valid_keys)
                         end
-      @search_options[:include_completed] = '1' if @search_options.empty?
       @scope = LocalizationKey.distinct
                               .preload(localizations: :locale)
                               .search(@search_options)
@@ -76,7 +87,7 @@ module Lit
     end
 
     def valid_keys
-      %w[key include_completed key_prefix order]
+      %w[key key_prefix order]
     end
 
     def grouped_localizations

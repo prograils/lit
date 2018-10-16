@@ -49,9 +49,11 @@ class ActiveSupport::TestCase
   end
   setup do
     clear_redis
+    DatabaseCleaner.start
     Lit.init.cache.reset
   end
   teardown do
+    DatabaseCleaner.clean
     WebMock.reset!
   end
 end

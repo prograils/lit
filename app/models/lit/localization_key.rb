@@ -26,6 +26,9 @@ module Lit
       attr_accessible :localization_key
     end
 
+    ## BEFORE AND AFTER
+    after_commit :check_completed, on: :update
+
     def to_s
       localization_key
     end
@@ -43,19 +46,6 @@ module Lit
                                       ['id=? and is_completed=?', id, false]
     end
 
-    def mark_completed
-      self.is_completed = localizations.changed.count(:id) == localizations.count
-    end
-
-    def mark_completed!
-      save if mark_completed
-    end
-
-    def mark_all_completed!
-      localizations.update_all(['is_changed=?', true])
-      mark_completed!
-    end
-
     def self.order_options
       ['localization_key asc', 'localization_key desc', 'created_at asc',
        'created_at desc', 'updated_at asc', 'updated_at desc']
@@ -69,6 +59,20 @@ module Lit
 
     def self.search(options = {})
       LocalizationKeySearchQuery.new(self, options).perform
+    end
+
+    def change_all_completed
+      self.class.transaction do
+        toggle(:is_completed).save!
+        localizations.update_all is_changed: is_completed
+      end
+    end
+
+    private
+
+    def check_completed
+      self.is_completed = localizations.changed.count == localizations.count
+      save! if is_completed_changed?
     end
   end
 end

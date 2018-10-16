@@ -16,13 +16,17 @@ module Lit
 
     def update
       after_update_operations if @localization.update_attributes(clear_params)
-      @localization.reload
       respond_to do |f|
         f.js
         f.json do
-          render json: { value: @localization.translation }
+          render json: { value: @localization.reload.get_value }
         end
       end
+    end
+
+    def change_completed
+      @localization.toggle(:is_changed).save!
+      respond_to :js
     end
 
     def previous_versions
@@ -43,8 +47,6 @@ module Lit
 
     def after_update_operations
       @localization.update_column :is_changed, true
-      Lit.init.cache.update_cache @localization.full_key,
-                                  @localization.translation
     end
 
     def clear_params
