@@ -30,15 +30,16 @@ namespace :lit do
     return 'you need to define LOCALE env' if ENV['LOCALE'].blank?
     files = ENV['FILES'].to_s.split(',')
     locale = ENV['LOCALE'].to_s
+    skip_nil = ['1', 'true'].include?(ENV['SKIP_NIL'])
     I18n.with_locale(locale) do
       files.each do |file|
         locale_file = File.open(Rails.root.join('config', 'locales', file))
-        yml = YAML.load(locale_file)[locale]
-        Hash[*Lit::Cache.flatten_hash(yml)].each do |key, default_translation|
-          next if default_translation.nil? && ENV.fetch('SKIP_NIL', 'true') == 'true'
-          puts key
-          I18n.t(key, default: default_translation)
-        end
+        Lit::Import.call(
+          input: locale_file,
+          locale_keys: [locale],
+          format: :yaml,
+          skip_nil: skip_nil
+        )
       end
     end
   end
