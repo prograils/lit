@@ -10,13 +10,14 @@ module Lit
 
     attr_reader :input, :locale_keys, :format, :skip_nil
 
-    def initialize(input:, locale_keys: [], format:, skip_nil: true, dry_run: false)
+    def initialize(input:, locale_keys: [], format:, skip_nil: true, dry_run: false, raw: true)
       raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
       @input = input
       @locale_keys = locale_keys
       @format = format
       @skip_nil = skip_nil
       @dry_run = dry_run
+      @raw = raw
     end
 
     def perform
@@ -33,7 +34,7 @@ module Lit
           Hash[*Lit::Cache.flatten_hash(yml)].each do |key, default_translation|
             next if default_translation.nil? && skip_nil
             puts key
-            I18n.t(key, default: default_translation)
+            upsert(locale, key, default_translation)
           end
         end
       end
@@ -50,9 +51,7 @@ module Lit
           next unless locale_keys.blank? || locale_keys.map(&:to_sym).include?(locale.to_sym)
           next if value.nil? && skip_nil
           puts key
-          I18n.with_locale(locale) do
-            I18n.t(key, default: value)
-          end
+          upsert(locale, key, value)
         end
       end
     rescue CSV::MalformedCSVError => e
@@ -99,15 +98,43 @@ module Lit
       @locales_in_csv ||= parsed_csv.first.drop(1)
     end
 
-    private
+    # This is mean to insert a value for a key in a given locale
+    # using some kind of strategy which depends on the service's options.
+    #
+    # For instance, when @raw option is true (it's the default),
+    # if a key already exists, it overrides the default_value of the
+    # existing localization key; otherwise, with @raw set to false,
+    # it keeps the default as it is and, no matter if a translated value
+    # is there, translated_value is overridden with the imported one
+    # and is_changed is set to true.
+    def upsert(locale, key, value) # rubocop:disable Metrics/MethodLength
+      I18n.with_locale(locale) do
+        if I18n.t(key, default: value) != value
+          # this indicates that this translation already exists
+          existing_translation =
+            Lit::Localization.joins(:locale, :localization_key)
+                             .find_by('localization_key = ? and locale = ?',
+                                      key, locale)
+          existing_translation.update(
+            if @raw
+              { default_value: value }
+            else
+              { translated_value: value, is_changed: true }
+            end
+          )
+        end
+      end
+    end
 
-    def concatenate_arrays(csv)
+    def concatenate_arrays(csv) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/LineLength
       csv.inject([]) do |accu, row|
         if row.first == accu.last&.first # equal keys
           accu.tap do
             accu[-1] = [
               row.first,
-              *accu[-1].drop(1).map { |x| Array.wrap(x) }.zip(row.drop(1)).map(&:flatten)
+              *accu[-1].drop(1)
+                       .map { |x| Array.wrap(x) }
+                       .zip(row.drop(1)).map(&:flatten)
             ]
           end
         else
@@ -118,7 +145,7 @@ module Lit
 
     def replace_blanks(csv)
       csv.drop(1).each do |row|
-        row.replace(row.map { |cell| cell.presence })
+        row.replace(row.map(&:presence))
       end
     end
   end

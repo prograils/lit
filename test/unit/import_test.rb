@@ -59,7 +59,7 @@ class ImportTest < ActiveSupport::TestCase
     verify_array
   end
 
-  test 'overrides existing localization values' do
+  test 'overrides existing default localization values in raw (default) mode' do
     input = imported_file('import.csv')
     I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
     I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
@@ -68,8 +68,24 @@ class ImportTest < ActiveSupport::TestCase
       Lit::LocalizationKey.find_by(localization_key: 'scopes.foo').localizations.joins(:locale)
 
     # TODO: Should it become default_value or translated_value?!
-    assert(foo_key_localizations.find_by("locale = 'pl'").value == 'foo pl')
-    assert(foo_key_localizations.find_by("locale = 'en'").value == 'foo en')
+    assert(foo_key_localizations.find_by("locale = 'pl'").default_value == 'foo pl')
+    assert(foo_key_localizations.find_by("locale = 'en'").default_value == 'foo en')
+  end
+
+  test 'overrides existing default localization values in non-raw mode' do
+    input = imported_file('import.csv')
+    I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
+    I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
+    Lit::Import.call(input: input, format: :csv, raw: false)
+    foo_key_localizations =
+      Lit::LocalizationKey.find_by(localization_key: 'scopes.foo').localizations.joins(:locale)
+
+    pl_localization = foo_key_localizations.find_by("locale = 'pl'")
+    en_localization = foo_key_localizations.find_by("locale = 'en'")
+    assert(pl_localization.translated_value == 'foo pl')
+    assert(pl_localization.is_changed?)
+    assert(en_localization.translated_value == 'foo en')
+    assert(en_localization.is_changed?)
   end
 
   def imported_file(name)

@@ -31,6 +31,7 @@ namespace :lit do
     files = ENV['FILES'].to_s.split(',')
     locale = ENV['LOCALE'].to_s
     skip_nil = ['1', 'true'].include?(ENV['SKIP_NIL'])
+    raw = ['0', 'false'].exclude?(ENV['RAW'])
     I18n.with_locale(locale) do
       files.each do |file|
         locale_file = File.open(Rails.root.join('config', 'locales', file))
@@ -38,7 +39,8 @@ namespace :lit do
           input: locale_file,
           locale_keys: [locale],
           format: :yaml,
-          skip_nil: skip_nil
+          skip_nil: skip_nil,
+          raw: raw
         )
       end
     end
