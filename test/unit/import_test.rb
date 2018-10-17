@@ -59,6 +59,19 @@ class ImportTest < ActiveSupport::TestCase
     verify_array
   end
 
+  test 'overrides existing localization values' do
+    input = imported_file('import.csv')
+    I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
+    I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
+    Lit::Import.call(input: input, format: :csv)
+    foo_key_localizations =
+      Lit::LocalizationKey.find_by(localization_key: 'scopes.foo').localizations.joins(:locale)
+
+    # TODO: Should it become default_value or translated_value?!
+    assert(foo_key_localizations.find_by("locale = 'pl'").value == 'foo pl')
+    assert(foo_key_localizations.find_by("locale = 'en'").value == 'foo en')
+  end
+
   def imported_file(name)
     File.read(Lit::Engine.root.join('test', 'fixtures', 'lit', 'files', name))
   end
