@@ -109,19 +109,13 @@ module Lit
     # and is_changed is set to true.
     def upsert(locale, key, value) # rubocop:disable Metrics/MethodLength
       I18n.with_locale(locale) do
-        if I18n.t(key, default: value) != value
+        if I18n.t(key, default: value) != value && !@raw
           # this indicates that this translation already exists
           existing_translation =
             Lit::Localization.joins(:locale, :localization_key)
                              .find_by('localization_key = ? and locale = ?',
                                       key, locale)
-          existing_translation.update(
-            if @raw
-              { default_value: value }
-            else
-              { translated_value: value, is_changed: true }
-            end
-          )
+          existing_translation.update(translated_value: value, is_changed: true)
         end
       end
     end
