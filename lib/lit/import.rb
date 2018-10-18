@@ -109,7 +109,15 @@ module Lit
     # and is_changed is set to true.
     def upsert(locale, key, value) # rubocop:disable Metrics/MethodLength
       I18n.with_locale(locale) do
-        if I18n.t(key, default: value) != value && !@raw
+        # when an array has to be inserted with a default value, it needs to
+        # be done like:
+        # I18n.t('foo', default: [['bar', 'baz']])
+        # because without the double array, array items are treated as fallback keys
+        # - then, the last array element is the final fallback; so in this case we
+        # don't specify fallback keys and only specify the final fallback, which
+        # is the array
+        val = value.is_a?(Array) ? [value] : value
+        if I18n.t(key, default: val) != value && !@raw
           # this indicates that this translation already exists
           existing_translation =
             Lit::Localization.joins(:locale, :localization_key)
