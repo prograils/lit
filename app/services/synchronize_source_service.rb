@@ -4,10 +4,6 @@ class SynchronizeSourceService
   end
 
   def execute
-    after = @source.last_updated_at&.to_s(:db)
-    @result = interactor.send_request Lit::Source::LOCALIZATIONS_PATH,
-                                      after: after
-    return unless @result&.is_a?(Array)
     synchronize_localizations
     update_timestamps
   end
@@ -15,34 +11,47 @@ class SynchronizeSourceService
   private
 
   def synchronize_localizations
-    @result.each { |localization| synchronize_localization localization }
+    after_date = @source.last_updated_at&.to_s(:db)
+    result = interactor.send_request Lit::Source::LOCALIZATIONS_PATH,
+                                     after: after_date
+    return unless result&.is_a?(Array)
+    result.each { |loc| synchronize_localization loc }
   end
 
-  def synchronize_localization(localization)
-    inc_loc = find_incomming_localization(localization)
+  def synchronize_localization(loc)
+    inc_loc = find_incomming_localization(loc)
+    return if inc_loc.duplicated?(loc['value'])
     inc_loc.source = @source
-    inc_loc.locale_str = localization['locale_str']
-    inc_loc.locale = Lit::Locale.find_by(locale: localization['locale_str'])
-    inc_loc.localization_key_str = localization['localization_key_str']
+    inc_loc.locale_str = loc['locale_str']
+    inc_loc.locale = Lit::Locale.find_by(locale: loc['locale_str'])
+    inc_loc.localization_key_str = loc['localization_key_str']
+    inc_loc.localization_key_is_deleted = localization_key_deleted?(loc)
     inc_loc.localization_key = find_localization_key(inc_loc)
-    return if inc_loc.duplicated?(localization['value'])
+    inc_loc.translated_value = loc['value']
     inc_loc.save!
-    inc_loc.update_column(:translated_value, localization['value'])
   end
 
   def find_incomming_localization(localization)
-    Lit::IncommingLocalization.find_or_initialize_by incomming_id: localization['id']
+    Lit::IncommingLocalization.find_or_initialize_by(
+      incomming_id: localization['id']
+    )
   end
 
   def find_localization_key(inc_loc)
-    Lit::LocalizationKey.find_by localization_key: inc_loc.localization_key_str
+    Lit::LocalizationKey.find_by(
+      localization_key: inc_loc.localization_key_str
+    )
+  end
+
+  def localization_key_deleted?(loc)
+    loc['localization_key_is_deleted'] || false
   end
 
   def update_timestamps
     last_change = @source.last_change
     last_change = Time.parse(last_change) if last_change.present?
-    @source.touch_last_updated_at last_change
-    @source.update_column(:sync_complete, true)
+    @source.assign_last_updated_at(last_change)
+    @source.sync_complete = true
     @source.save!
   end
 
