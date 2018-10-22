@@ -48,7 +48,7 @@ module Lit
     end
 
     def destroy
-      @localization_key.destroy
+      @localization_key.update is_deleted: true
       I18n.backend.available_locales.each do |l|
         Lit.init.cache.delete_key "#{l}.#{@localization_key.localization_key}"
       end
@@ -67,7 +67,7 @@ module Lit
                         else
                           params.slice(*valid_keys)
                         end
-      @scope = LocalizationKey.distinct
+      @scope = LocalizationKey.distinct.active
                               .preload(localizations: :locale)
                               .search(@search_options)
     end
@@ -125,7 +125,7 @@ module Lit
     def versions?(localization)
       @_versions ||= begin
         ids = grouped_localizations.values.map(&:values).flatten.map(&:id)
-        Lit::Localization.where(id: ids).joins(:versions).group(
+        Lit::Localization.active.where(id: ids).joins(:versions).group(
           "#{Lit::Localization.quoted_table_name}.id"
         ).count
       end
