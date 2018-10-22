@@ -308,9 +308,11 @@ module Lit
     end
 
     def find_or_create_localization_key(key_without_locale)
-      localization_key = Lit::LocalizationKey.find_or_create_by!(
+      localization_key = Lit::LocalizationKey.find_by(
         localization_key: key_without_locale
       )
+      localization_key.is_deleted = false
+      localization_key.save!
       localization_keys[key_without_locale] = localization_key.id
       localization_key
     end
