@@ -3,7 +3,7 @@ module Lit
     module V1
       class BaseController < ActionController::Base
         layout nil
-        respond_to :json
+        respond_to :json if ::Rails::VERSION::MAJOR < 5
         before_action :authenticate_requests!
 
         private
