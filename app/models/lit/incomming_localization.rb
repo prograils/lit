@@ -12,7 +12,7 @@ module Lit
     attr_accessible unless defined?(::ActionController::StrongParameters)
 
     ## BEFORE & AFTER
-    before_create :set_localization
+    before_validation :set_localization, on: :create
 
     def translation
       translated_value
@@ -25,6 +25,7 @@ module Lit
     def accept
       if localization.present?
         update_existing_localization_data
+        update_existing_localization_key_data
       else
         assign_new_localization_data
       end
@@ -53,9 +54,16 @@ module Lit
     end
 
     def update_existing_localization_data
-      localization.translated_value = translated_value
-      localization.is_changed = true
-      localization.save!
+      localization.update_attributes!(
+        translated_value: translated_value,
+        is_changed: true
+      )
+    end
+
+    def update_existing_localization_key_data
+      localization_key.update_attributes!(
+        is_deleted: localization_key_is_deleted
+      )
     end
 
     def assign_new_localization_data
@@ -70,8 +78,10 @@ module Lit
 
     def assign_new_localization_key
       self.localization_key =
-        Lit::LocalizationKey.where(localization_key: localization_key_str)
-                            .first_or_create!
+        Lit::LocalizationKey.where(
+          localization_key: localization_key_str,
+          is_deleted: localization_key_is_deleted
+        ).first_or_create!
     end
 
     def assign_new_localization

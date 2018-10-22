@@ -11,6 +11,10 @@ module Lit
       where('updated_at >= ?', dt + 1.second)
         .where(is_changed: true)
     }
+    scope :active, lambda {
+      joins(:localization_key)
+        .where(Lit::LocalizationKey.table_name => { is_deleted: false })
+    }
 
     ## ASSOCIATIONS
     belongs_to :locale
@@ -50,6 +54,10 @@ module Lit
 
     def localization_key_str
       localization_key.localization_key
+    end
+
+    def localization_key_is_deleted
+      localization_key.is_deleted
     end
 
     def locale_str

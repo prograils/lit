@@ -7,6 +7,7 @@ module Lit
     scope :not_completed, -> { where(is_completed: false) }
     scope :starred, -> { where(is_starred: true) }
     scope :ordered, -> { order(localization_key: :asc) }
+    scope :active, -> { where(is_deleted: false) }
     scope :after, lambda { |dt|
       joins(:localizations)
         .where('lit_localization_keys.updated_at >= ?', dt)
