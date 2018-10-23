@@ -23,7 +23,8 @@ module Lit
 
     def fetch_localizations
       if params[:after].present?
-        after_date = Time.parse(params[:after])
+        after_date = Time.parse("#{params[:after]} #{Time.zone.name}")
+                         .in_time_zone
         Localization.after(after_date).to_a
       else
         Localization.all

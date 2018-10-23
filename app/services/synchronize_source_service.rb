@@ -48,11 +48,13 @@ class SynchronizeSourceService
   end
 
   def update_timestamps
-    last_change = @source.last_change
-    last_change = Time.parse(last_change) if last_change.present?
-    @source.assign_last_updated_at(last_change)
+    @source.assign_last_updated_at(fetch_last_change)
     @source.sync_complete = true
     @source.save!
+  end
+
+  def fetch_last_change
+    interactor.send_request(Lit::Source::LAST_CHANGE_PATH)['last_change']
   end
 
   def interactor
