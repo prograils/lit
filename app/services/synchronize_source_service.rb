@@ -20,7 +20,6 @@ class SynchronizeSourceService
 
   def synchronize_localization(loc)
     inc_loc = find_incomming_localization(loc)
-    return if inc_loc.duplicated?(loc['value'])
     inc_loc.source = @source
     inc_loc.locale_str = loc['locale_str']
     inc_loc.locale = Lit::Locale.find_by(locale: loc['locale_str'])
@@ -28,6 +27,7 @@ class SynchronizeSourceService
     inc_loc.localization_key_is_deleted = localization_key_deleted?(loc)
     inc_loc.localization_key = find_localization_key(inc_loc)
     inc_loc.translated_value = loc['value']
+    return if inc_loc.duplicated?(loc['value'])
     inc_loc.save!
   end
 
