@@ -24,14 +24,40 @@ namespace :lit do
     end
   end
 
-  desc 'Reads config/locales/#{ENV["FILES"]} files and calls I18n.t() on keys forcing Lit to import given LOCALE to cache / to display them in UI. Skips nils by default (change by setting ENV["SKIP_NIL"] = false'
-  task raw_import: :environment do
-    return 'you need to define FILES env' if ENV['FILES'].blank?
-    return 'you need to define LOCALE env' if ENV['LOCALE'].blank?
+  desc "Imports locales given in ENV['LOCALES'] (optional, imports all " \
+       "locales by default, from file given in ENV['FILE']; FILE may be " \
+       "a YAML or CSV (comma- or tab-separated) file."
+  task import: :environment do
+    locale_keys = ENV.fetch('LOCALES', '').split(',')
+    raise 'you need to define FILE env' unless filename = ENV.fetch('FILE', nil)
+    format =
+      case filename
+      when /\.csv\z/, /\.tsv\z/ then :csv
+      when /\.yml\z/, /\.yaml\z/ then :yaml
+      else raise 'file must be a CSV or YAML file'
+      end
+    input = File.open(filename)
+    skip_nil = ['1', 'true'].include?(ENV['SKIP_NIL']) # defaults to false
+    Lit::Import.call(
+      input: input,
+      locale_keys: locale_keys,
+      format: format,
+      skip_nil: skip_nil,
+      raw: false
+    )
+  end
+
+  warm_up_keys_desc =
+    'Reads config/locales/#{ENV["FILES"]} files and calls I18n.t() on ' \
+    'keys forcing Lit to import given LOCALE to cache / to display them' \
+    ' in UI. Skips nils by default (change by setting ENV["SKIP_NIL"] = false'
+  desc warm_up_keys_desc
+  task warm_up_keys: :environment do
+    raise 'you need to define FILES env' if ENV['FILES'].blank?
+    raise 'you need to define LOCALE env' if ENV['LOCALE'].blank?
     files = ENV['FILES'].to_s.split(',')
     locale = ENV['LOCALE'].to_s
     skip_nil = ['1', 'true'].include?(ENV['SKIP_NIL'])
-    raw = ['0', 'false'].exclude?(ENV['RAW'])
     I18n.with_locale(locale) do
       files.each do |file|
         locale_file = File.open(Rails.root.join('config', 'locales', file))
@@ -40,11 +66,14 @@ namespace :lit do
           locale_keys: [locale],
           format: :yaml,
           skip_nil: skip_nil,
-          raw: raw
+          raw: true
         )
       end
     end
   end
+
+  desc "[DEPRECATED - use lit:warm_up_keys instead] #{warm_up_keys_desc}"
+  task raw_import: :warm_up_keys
 
   desc 'Remove all translations'
   task clear: :environment do
