@@ -48,11 +48,7 @@ module Lit
     end
 
     def destroy
-      @localization_key.update is_deleted: true
-      @localization_key.localizations.each { |loc| loc.update is_changed: true }
-      I18n.backend.available_locales.each do |l|
-        Lit.init.cache.delete_key "#{l}.#{@localization_key.localization_key}"
-      end
+      @localization_key.soft_destroy
       respond_to :js
     end
 

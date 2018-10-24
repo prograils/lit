@@ -69,6 +69,16 @@ module Lit
       end
     end
 
+    def soft_destroy
+      ActiveRecord::Base.transaction do
+        update is_deleted: true
+        change_all_completed
+        I18n.backend.available_locales.each do |l|
+          Lit.init.cache.delete_key "#{l}.#{localization_key}"
+        end
+      end
+    end
+
     private
 
     def check_completed
