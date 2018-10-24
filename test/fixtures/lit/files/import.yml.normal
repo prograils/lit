@@ -1,0 +1,8 @@
+en:
+  scopes:
+    foo: foo en
+    bar: bar en
+pl:
+  scopes:
+    foo: foo pl
+    bar: bar pl

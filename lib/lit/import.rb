@@ -11,9 +11,9 @@ module Lit
     attr_reader :input, :locale_keys, :format, :skip_nil
 
     def initialize(input:, locale_keys: [], format:, skip_nil: true, dry_run: false, raw: false)
-      raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
+      raise ArgumentError, 'format must be yaml or csv' if %i[yaml csv].exclude?(format.to_sym)
       @input = input
-      @locale_keys = locale_keys
+      @locale_keys = locale_keys.presence || I18n.available_locales
       @format = format
       @skip_nil = skip_nil
       @dry_run = dry_run
@@ -27,10 +27,10 @@ module Lit
     private
 
     def import_yaml
-      full_yml = YAML.load(input)
+      validate_yaml
       locale_keys.each do |locale|
         I18n.with_locale(locale) do
-          yml = full_yml[locale.to_s]
+          yml = parsed_yaml[locale.to_s]
           Hash[*Lit::Cache.flatten_hash(yml)].each do |key, default_translation|
             next if default_translation.nil? && skip_nil
             puts key
@@ -38,6 +38,8 @@ module Lit
           end
         end
       end
+    rescue Psych::SyntaxError => e
+      raise ArgumentError, "Invalid YAML file: #{e.message}", cause: e
     end
 
     def import_csv
@@ -56,6 +58,20 @@ module Lit
       end
     rescue CSV::MalformedCSVError => e
       raise ArgumentError, "Invalid CSV file: #{e.message}", cause: e
+    end
+
+    def validate_yaml
+      errors = []
+
+      # YAML.load can return false, hence not using #empty?
+      errors << :yaml_is_empty if parsed_yaml.blank?
+
+      if parsed_yaml.present? &&
+         (locale_keys.map(&:to_sym) - parsed_yaml.keys.map(&:to_sym)).any?
+        errors << :not_all_requested_locales_included_in_header
+      end
+
+      fail ArgumentError, errors.map { |e| e.to_s.humanize }.to_sentence if errors.any?
     end
 
     def validate_csv # rubocop:disable Metrics/AbcSize
@@ -92,6 +108,10 @@ module Lit
           # of commas. Let's try that out if needed.
           CSV.parse(input, col_sep: "\t")
         end
+    end
+
+    def parsed_yaml
+      @parsed_yaml ||= YAML.load(input)
     end
 
     def locales_in_csv

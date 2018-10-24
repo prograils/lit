@@ -1,0 +1,6 @@
+en:
+  scopes:
+    csvarray: ['val0 en', 'val1 en', null, 'val3 en']
+pl:
+  scopes:
+    csvarray: ['val0 pl', 'val1 pl', 'val2 pl', null]
