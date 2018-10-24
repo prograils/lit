@@ -10,7 +10,7 @@ module Lit
 
     attr_reader :input, :locale_keys, :format, :skip_nil
 
-    def initialize(input:, locale_keys: [], format:, skip_nil: true, dry_run: false, raw: true)
+    def initialize(input:, locale_keys: [], format:, skip_nil: true, dry_run: false, raw: false)
       raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
       @input = input
       @locale_keys = locale_keys

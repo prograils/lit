@@ -60,13 +60,14 @@ class ImportTest < ActiveSupport::TestCase
   end
 
   test 'does not override existing default or translated localization values ' \
-       'in raw (default) mode' do
+       'in raw mode' do
     input = imported_file('import.csv')
     I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
     I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
     Lit::Localization.find_by(default_value: 'baz')
                      .update(translated_value: 'bazzz')
-    Lit::Import.call(input: input, format: :csv)
+
+    Lit::Import.call(input: input, format: :csv, raw: true)
     foo_key_localizations =
       Lit::LocalizationKey.find_by(localization_key: 'scopes.foo').localizations.joins(:locale)
 

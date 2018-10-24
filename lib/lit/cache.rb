@@ -160,7 +160,7 @@ module Lit
                           where(localization_key_id: localization_key.id).first_or_initialize
         if update_value || localization.new_record?
           if value.is_a?(Array)
-            value = parse_array_value(value) unless force_array
+            value = parse_array_value(value, locale) unless force_array
           elsif !value.nil?
             value = parse_value(value, locale)
           else
@@ -241,7 +241,7 @@ module Lit
       new_value
     end
 
-    def parse_array_value(value)
+    def parse_array_value(value, locale)
       new_value = nil
       value_clone = value.dup
       while (v = value_clone.shift) && v.present?
