@@ -14,7 +14,7 @@ module Lit
       end
       db_localizations = {}
       localizations_scope.find_each do |l|
-        db_localizations[l.full_key] = l.get_value
+        db_localizations[l.full_key] = l.translation
       end
 
       case format

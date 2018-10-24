@@ -4,11 +4,12 @@ module Lit
     serialize :default_value
 
     ## SCOPES
-    scope :changed, proc { where(is_changed: true) }
+    scope :changed, -> { where is_changed: true }
+    scope :not_changed, -> { where is_changed: false }
     # @HACK: dirty, find a way to round date to full second
-    scope :after, proc { |dt|
+    scope :after, lambda { |dt|
       where('updated_at >= ?', dt + 1.second)
-        .where('is_changed = true')
+        .where(is_changed: true)
     }
 
     ## ASSOCIATIONS
@@ -18,35 +19,33 @@ module Lit
     has_many :versions, class_name: '::Lit::LocalizationVersion'
 
     ## VALIDATIONS
-    validates :locale_id,
-              presence: true
+    validates :locale, presence: true
 
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
       attr_accessible :translated_value, :locale_id
     end
 
     ## BEFORE & AFTER
     with_options if: :translated_value_changed? do |o|
-      o.before_update :update_should_mark_localization_key_completed
       o.before_update :create_version
     end
-    after_update :mark_localization_key_completed
+    after_commit :update_cache, on: :update
 
     def to_s
-      get_value
+      translation
     end
 
     def full_key
       [locale.locale, localization_key.localization_key].join('.')
     end
 
-    def get_value
+    def translation
       is_changed? && !translated_value.nil? ? translated_value : default_value
     end
 
     def value
-      get_value
+      translation
     end
 
     def localization_key_str
@@ -73,22 +72,14 @@ module Lit
 
     private
 
-    def update_should_mark_localization_key_completed
-      return if translated_value == translated_value_was
-      @should_mark_localization_key_completed = true
-    end
-
-    def mark_localization_key_completed
-      return if !instance_variable_defined?(:@should_mark_localization_key_completed) || \
-                @should_mark_localization_key_completed
-      localization_key.mark_completed!
+    def update_cache
+      Lit.init.cache.update_cache full_key, translation
     end
 
     def create_version
-      if translated_value.present?
-        l = localization_versions.new
-        l.translated_value = translated_value_was || default_value
-      end
+      return if translated_value.blank?
+      translated_value = translated_value_was || default_value
+      localization_versions.new(translated_value: translated_value)
     end
   end
 end

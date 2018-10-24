@@ -1,0 +1,2 @@
+$('tr.localization_key_row[data-id="<%= @localization_key.id %>"] a.check_icon').html("<%= ejs(draw_icon(@localization_key.is_completed? ? 'check-circle' : 'check-circle-o')) %>");
+$('tr.localization_key_row[data-id="<%= @localization_key.id %>"] input[type=checkbox]').prop("checked", <%= @localization_key.is_completed? %>);

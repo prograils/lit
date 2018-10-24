@@ -8,14 +8,13 @@ module Lit
     belongs_to :localization
     belongs_to :source
 
-    unless defined?(::ActionController::StrongParameters)
-      attr_accessible
-    end
+    ## ACCESSORS
+    attr_accessible unless defined?(::ActionController::StrongParameters)
 
     ## BEFORE & AFTER
-    before_create :set_localization_id
+    before_create :set_localization
 
-    def get_value
+    def translation
       translated_value
     end
 
@@ -25,53 +24,69 @@ module Lit
 
     def accept
       if localization.present?
-        localization.translated_value = translated_value
-        localization.is_changed = true
-        localization.save
+        update_existing_localization_data
       else
-        unless locale.present?
-          self.locale = Lit::Locale.where(locale: locale_str).first_or_create
-        end
-        unless localization_key.present?
-          self.localization_key = Lit::LocalizationKey.
-                where(localization_key: localization_key_str).
-                first_or_create
-        end
-        unless localization.present?
-          self.localization = Lit::Localization.
-                where(localization_key_id: self.localization_key.id).
-                where(locale_id: self.locale.id).
-                first_or_initialize
-          localization.translated_value = translated_value
-          localization.is_changed = true
-          localization.save!
-        end
+        assign_new_localization_data
       end
-      Lit.init.cache.update_cache localization.full_key, localization.get_value
+      update_cache
       destroy
     end
 
-    def is_duplicate?(val)
-      set_localization_id unless localization.present?
-      if localization
-        translated_value = localization.
-                read_attribute_before_type_cast('translated_value')
-        if localization.is_changed? && !translated_value.nil?
-          translated_value == val
-        else
-          localization.read_attribute_before_type_cast('default_value') == val
-        end
+    def duplicated?(val)
+      set_localization unless localization.present?
+      return false unless localization
+      translated_value =
+        localization.read_attribute_before_type_cast('translated_value')
+      if localization.is_changed? && !translated_value.nil?
+        translated_value == val
       else
-        false
+        localization.read_attribute_before_type_cast('default_value') == val
       end
     end
 
     private
 
-    def set_localization_id
-      if locale.present? && localization_key.present?
-        self.localization = localization_key.localizations.where(locale_id: locale_id).first
-      end
+    def set_localization
+      return if locale.blank? || localization_key.blank?
+      self.localization = localization_key.localizations
+                                          .find_by(locale_id: locale_id)
+    end
+
+    def update_existing_localization_data
+      localization.translated_value = translated_value
+      localization.is_changed = true
+      localization.save!
+    end
+
+    def assign_new_localization_data
+      assign_new_locale unless locale.present?
+      assign_new_localization_key unless localization_key.present?
+      assign_new_localization unless localization.present?
+    end
+
+    def assign_new_locale
+      self.locale = Lit::Locale.where(locale: locale_str).first_or_create
+    end
+
+    def assign_new_localization_key
+      self.localization_key =
+        Lit::LocalizationKey.where(localization_key: localization_key_str)
+                            .first_or_create!
+    end
+
+    def assign_new_localization
+      self.localization =
+        Lit::Localization.where(localization_key_id: localization_key.id)
+                         .where(locale_id: locale.id)
+                         .first_or_initialize
+      localization.translated_value = translated_value
+      localization.is_changed = true
+      localization.save!
+    end
+
+    def update_cache
+      Lit.init.cache.update_cache localization.full_key,
+                                  localization.translation
     end
   end
 end

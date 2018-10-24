@@ -65,7 +65,7 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     locale = Lit::Locale.find_by_locale!('pl')
     localization_key = Lit::LocalizationKey.find_by_localization_key!('scope.hello_world')
     localization = Lit::Localization.find_by_locale_id_and_localization_key_id!(locale.id, localization_key.id)
-    text = localization.get_value
+    text = localization.translation
     assert text.present?
 
     assert page.has_content?(text)

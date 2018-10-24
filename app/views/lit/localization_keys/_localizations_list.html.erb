@@ -1,0 +1,73 @@
+<table class="table">
+  <%- @localization_keys.each do |lk| %>
+    <tr class="localization_key_row" data-id="<%= lk.id %>">
+      <td>
+        <strong><%= lk.localization_key %></strong>
+        <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
+        <div class="localization_keys_options">
+          <% if Lit.store_request_info %>
+            <%= link_to '#', class: 'request_info_link title',  title: 'Show / hide request' do %>
+              <%= draw_icon 'link' %>
+            <% end %>
+          <% end %>
+          <%= link_to lit.change_completed_localization_key_path(lk), method: :put, remote: true, class: 'check_icon title', title: 'Complete / incomplete translation key' do %>
+            <%= draw_icon lk.is_starred? ? 'check-circle' : 'check-circle-o' %>
+          <% end %>
+          <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>
+            <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
+          <% end %>
+          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: I18n.t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
+            <%= draw_icon 'trash-o' %>
+          <% end %>
+        </div>
+        <div class="detail_wrapper">
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th class="col-md-8">Translation</th>
+              <th class="col-md-2 text-center">Locale</th>
+              <th class="col-md-2 text-center">Completed</th>
+            </tr>
+            <%- available_locales.each do |locale| %>
+              <%- localization = localization_for(locale, lk) %>
+              <tr>
+                <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization, format: :js) %>" data-editing=0 data-content="">
+                  <%= render partial: 'localization_row', locals: {localization: Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
+                </td>
+                <td class="locale_row text-center">
+                  <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
+                  <%= locale %>
+                  <% if localization %>
+                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization, format: :js), class: "show_prev_versions #{'hidden' unless versions?(localization)}", remote: true do %>
+                      <%= draw_icon 'random', title: I18n.t('lit.common.previous_versions', default: 'Previous versions') %>
+                    <% end %>
+                  <% end %>
+                </td>
+                <td class="text-center">
+                  <%= link_to lit.change_completed_localization_key_localization_path(lk, localization), method: :put, remote: true, class: "change_completed_#{localization.id}" do |f| %>
+                    <%= check_box_tag :is_changed, localization.is_changed, localization.is_changed %>
+                  <% end %>
+                </td>
+              </tr>
+              <tr class="hidden localization_versions_row" data-id="<%= localization.id %>">
+                <td colspan="2" class="localization_versions"></td>
+              </tr>
+            <% end %>
+            <% if Lit.store_request_info %>
+              <tr class="hidden request_info_row">
+                <td colspan="2">
+                  <strong>Translation key recently displayed on following pages:</strong>
+                  <ul>
+                    <% Lit.init.cache.get_request_info(lk.localization_key).split(' ').reverse.each do |l| %>
+                      <li><%= link_to l, l %></li>
+                   <% end %>
+                  </ul>
+                  <em>Note: you might not have access to those pages!</em>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</table>

@@ -40,7 +40,7 @@ class WelcomeControllerTest < ActionController::TestCase
     assert localization_key.present?
     locale = Lit::Locale.find_by(locale: :en)
     localization = localization_key.localizations.find_by(locale_id: locale.id)
-    assert_equal localization.get_value, 'Default content'
+    assert_equal localization.translation, 'Default content'
     assert_equal localization.to_s, 'Default content'
     assert_equal localization.default_value, 'Default content'
   end
