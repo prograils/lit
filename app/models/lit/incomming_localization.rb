@@ -34,6 +34,7 @@ module Lit
     end
 
     def duplicated?(val)
+      set_localization
       return false if localization_has_changed?
       translated_value =
         localization.read_attribute_before_type_cast('translated_value')
@@ -47,14 +48,12 @@ module Lit
     private
 
     def set_localization
-      return if localization.blank? || locale.blank? ||
-                localization_key.blank?
+      return if locale.blank? || localization_key.blank?
       self.localization = localization_key.localizations
                                           .find_by(locale_id: locale_id)
     end
 
     def localization_has_changed?
-      set_localization
       localization.blank? ||
         localization.is_deleted != localization_key_is_deleted
     end

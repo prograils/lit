@@ -22,6 +22,9 @@ module Lit
     has_many :localization_versions, dependent: :destroy
     has_many :versions, class_name: '::Lit::LocalizationVersion'
 
+    ## DELEGATIONS
+    delegate :is_deleted, to: :localization_key
+
     ## VALIDATIONS
     validates :locale, presence: true
 
