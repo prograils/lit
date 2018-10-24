@@ -16,7 +16,7 @@ Highly inspired by Copycopter by thoughtbot.
 3. Versioning translations - you can always check, how value did look like in past
 4. Possibility to synchronize translations between environments or apps
 5. Easy to install - works as an engine, comes with simple generator
-6. You can always export all translations to plain old YAML file
+6. You can always export all translations to plain old YAML file which can then be imported elsewhere. Translations can also be exported to (and then imported from) a CSV file so that e.g. a third party can easily edit translations for you using any spreadsheet editor, without access to your website's Lit panel.
 7. Has build in wysiwyg editor ([jQuery TE](http://jqueryte.com/))
 8. Translating apps directly in frontend (see bellow)
 9. (On request) stores paths where translation keys were called
@@ -50,27 +50,47 @@ gem 'lit'
 You may want to take a look at generated initializer in `config/initializers/lit.rb` and change some default configuration options.
 
 ### So... again - what is it and how to use it?
-*Lit* is Rails engine - it runs in it's own namespace, by default it's avaulable under `/lit`. It provides UI for managing translations of your app.
+*Lit* is Rails engine - it runs in it's own namespace, by default it's available under `/lit`. It provides UI for managing translations of your app.
 
-Once you call `I18n.t()` function from your views, *Lit* is asked whether it has or not proper value for it. If translation is present in database and is available for *Lit*, it's served back. If it does not exists, record is automatically created in database with initial value provided in `default` option key. If `default` key is not present, value `nil` is saved to database. When app is starting, *Lit* will preload all keys from your local `config/locale/*.yml` files - this is why app startup may take a while.
+Once you call `I18n.t()` function from your views, *Lit* is asked whether it has or not proper value for it. If translation is present in database and is available for *Lit*, it's served back. If it does not exist, record is automatically created in database with initial value provided in `default` option key. If `default` key is not present, value `nil` is saved to database. When app is starting, *Lit* will preload all keys from your local `config/locale/*.yml` files - this is why app startup may take a while.
 
 To optimize translation key lookup, *Lit* can use different cache engines. For production with many workers `redis` is suggested, for local development `hash` will be fine (`hash` is stored in memory, so if you have many workers and will update translation value in backend, only one worker will have proper translation in it's cache - db will be updated anyway).
 
 Keys ending with `_html` have auto wysiwyg support.
 
-You can also export translations using rake task
+### Import and export
 
+Translations can be exported using the `lit:export` rake task:
 ```bash
 $ rake lit:export
 ```
 
-You may also give it extra env variables to limit the export results.
-
+The task exports to YAML format by default, which can be overridden by setting the `FORMAT` environment variable to `csv`. As well as this, by default, it exports all of your application's locales; using the `LOCALES` environment variable you can limit it to specific locales. For example:
 ```bash
-$ LOCALES=en,de rake lit:export
+$ rake lit:export FORMAT=csv LOCALES=en,pl
 ```
+...will only export the `en` and `pl` locales, producing CSV output.
 
 Using the task `lit:export_splitted` does the same as `lit:export` but splits the locales by their name (`config/locales/en.yml`, etc).
+
+Translation import is handled using the `lit:import` task, where imported file name should be specified in the `FILE` envionment variable:
+```bash
+$ rake lit:import FILE=stuff.csv
+```
+
+Optionally, `LOCALES` and `SKIP_NIL` environment variables can be used to select specific locales to import from a multi-locale CSV file and to prevent nil values from being set as translated values for localizations, respectively.
+The following call:
+```bash
+$ rake lit:import FILE=stuff.csv LOCALES=en,pl SKIP_NIL=1
+```
+...will only load `en` and `pl` locales from the file, skipping nil values.
+
+Additionally, there is the `lit:warm_up_keys` task (temporarily aliased as `lit:raw_import` for compatibility) which serves a different purpose: rather than for actual import of translations, it is intended to pre-load into database translations from a specific locale's YAML file **when the application is first deployed to a server and not all translation keys are present in the database yet**. This task also takes the `SKIP_NIL` option in a similar way as the import task.
+```bash
+$ rake lit:warm_up_keys FILES=config/locales/en.yml LOCALES=en
+```
+In this case, when the `config/locales/en.yml` contains a translation for `foo` which doesn't have a key in the DB yet, it will be created, but if it already exists in the DB with a translation, it won't be overridden.
+
 
 ### 0.2 -> 0.3 upgrade guide
 
