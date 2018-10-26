@@ -4,9 +4,7 @@ module Lit
   class Export
     def self.call(locale_keys:, format:)
       raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
-      Lit.loader.cache.reset
-      # TODO: Consider using #load_all_translations instead of #reset.
-      # With redis storage, #reset can potentially clear redis
+      Lit.loader.cache.load_all_translations
       localizations_scope = Lit::Localization
       if locale_keys.present?
         locale_ids = Lit::Locale.where(locale: locale_keys).pluck(:id)
