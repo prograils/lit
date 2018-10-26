@@ -54,17 +54,12 @@ class ImportTest < ActiveSupport::TestCase
 
     test 'sets translated values over existing default and translated ' \
          "localization values in non-raw mode (#{format})" do
-      # binding.pry
       ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.normal")
-      # binding.pry
       I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
-      # binding.pry
       I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
-      # binding.pry
       Lit::Localization.find_by(default_value: 'baz')
                        .update(translated_value: 'bazzz')
-      # binding.pry
       Lit::Import.call(input: input, format: format, raw: false)
       foo_key_localizations =
         Lit::LocalizationKey.find_by(localization_key: 'scopes.foo')
@@ -72,7 +67,6 @@ class ImportTest < ActiveSupport::TestCase
 
       pl_localization = foo_key_localizations.find_by("locale = 'pl'")
       en_localization = foo_key_localizations.find_by("locale = 'en'")
-      # binding.pry
       assert(pl_localization.translated_value == 'foo pl')
       assert(pl_localization.is_changed?)
       assert(en_localization.translated_value == 'foo en')
