@@ -3,24 +3,26 @@ namespace :lit do
   task export: :environment do
     locale_keys = ENV['LOCALES'].to_s.split(',') || []
     export_format = ENV['FORMAT'].presence&.downcase&.to_sym || :yaml
+    path = ENV['OUTPUT'].presence || Rails.root.join('config', 'locales', "lit.#{file_extension(export_format)}")
 
-    if yml = Lit::Export.call(locale_keys: locale_keys, format: export_format)
-      path = Rails.root.join('config', 'locales', "lit.#{file_extension(export_format)}")
-      File.new(path, 'w').write(yml)
+    if exported = Lit::Export.call(locale_keys: locale_keys, format: export_format)
+      File.new(path, 'w').write(exported)
       puts "Successfully exported #{path}."
     end
   end
 
   desc 'Exports translated strings from lit to config/locales/%{locale}.yml file.'
   task export_splitted: :environment do
-    locale_keys = ENV['LOCALES'].to_s.split(',') || []
+    locale_keys = ENV['LOCALES'].to_s.split(',').presence || I18n.available_locales
     export_format = ENV['FORMAT'].presence&.downcase&.to_sym || :yaml
 
-    hash = YAML.load(Lit::Export.call(locale_keys: locale_keys, format: export_format))
-    hash.keys.each do |locale|
-      path = Rails.root.join('config', 'locales', format("%s.#{file_extension(export_format)}", locale))
-      File.write(path, hash.slice(locale).to_yaml)
-      puts format('Successfully exported %s.', path)
+    locale_keys.each do |loc|
+      path = Rails.root.join('config', 'locales',
+                             "#{loc}.#{file_extension(export_format)}")
+      if exported = Lit::Export.call(locale_keys: locale_keys, format: export_format)
+        File.write(path, exported)
+        puts "Successfully exported #{path}."
+      end
     end
   end
 

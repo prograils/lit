@@ -65,11 +65,15 @@ Translations can be exported using the `lit:export` rake task:
 $ rake lit:export
 ```
 
-The task exports to YAML format by default, which can be overridden by setting the `FORMAT` environment variable to `csv`. As well as this, by default, it exports all of your application's locales; using the `LOCALES` environment variable you can limit it to specific locales. For example:
+The task exports to YAML format by default, which can be overridden by setting the `FORMAT` environment variable to `csv`.
+As well as this, by default, it exports all of your application's locales; using the `LOCALES` environment variable you can limit it to specific locales.
+Using `OUTPUT` environment variable you can specify the output file (defaults to `config/locales/lit.yml` or `.csv`).
+
+ For example:
 ```bash
-$ rake lit:export FORMAT=csv LOCALES=en,pl
+$ rake lit:export FORMAT=csv LOCALES=en,pl OUTPUT=export.csv
 ```
-...will only export the `en` and `pl` locales, producing CSV output.
+...will only export the `en` and `pl` locales, producing CSV output to `export.csv` in the current folder.
 
 Using the task `lit:export_splitted` does the same as `lit:export` but splits the locales by their name (`config/locales/en.yml`, etc).
 
