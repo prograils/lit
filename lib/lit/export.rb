@@ -51,9 +51,7 @@ module Lit
       end
     end
 
-    private_class_method
-
-    def self.nested_string_keys_to_hash(db_localizations)
+    private_class_method def self.nested_string_keys_to_hash(db_localizations)
       # http://subtech.g.hatena.ne.jp/cho45/20061122
       deep_proc = proc do |_k, s, o|
         if s.is_a?(Hash) && o.is_a?(Hash)
@@ -70,10 +68,8 @@ module Lit
       nested_keys
     end
 
-    private_class_method
-
     # This is like Array#transpose but ignores size differences between inner arrays.
-    def self.transpose(matrix)
+    private_class_method def self.transpose(matrix)
       maxlen = matrix.max { |x| x.length }.length
       matrix.each do |array|
         array[maxlen - 1] = nil if array.length < maxlen
