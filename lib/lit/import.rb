@@ -137,13 +137,14 @@ module Lit
         # don't specify fallback keys and only specify the final fallback, which
         # is the array
         val = value.is_a?(Array) ? [value] : value
-        if I18n.t(key, default: val) != value && !@raw
+        I18n.t(key, default: val)
+        unless @raw
           # this indicates that this translation already exists
           existing_translation =
             Lit::Localization.joins(:locale, :localization_key)
                              .find_by('localization_key = ? and locale = ?',
                                       key, locale)
-          existing_translation.update(translated_value: value, is_changed: true)
+          existing_translation&.update(translated_value: value, is_changed: true)
         end
       end
     end

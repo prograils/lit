@@ -61,6 +61,7 @@ class ImportTest < ActiveSupport::TestCase
       Lit::Localization.find_by(default_value: 'baz')
                        .update(translated_value: 'bazzz')
       Lit::Import.call(input: input, format: format, raw: false)
+
       foo_key_localizations =
         Lit::LocalizationKey.find_by(localization_key: 'scopes.foo')
                             .localizations.joins(:locale)
@@ -71,6 +72,17 @@ class ImportTest < ActiveSupport::TestCase
       assert(pl_localization.is_changed?)
       assert(en_localization.translated_value == 'foo en')
       assert(en_localization.is_changed?)
+
+      bar_key_localizations =
+        Lit::LocalizationKey.find_by(localization_key: 'scopes.bar').localizations.joins(:locale)
+      pl_localization = bar_key_localizations.find_by("locale = 'pl'")
+      en_localization = bar_key_localizations.find_by("locale = 'en'")
+      assert(pl_localization.default_value == 'bar pl')
+      assert(pl_localization.translated_value == 'bar pl')
+      assert(pl_localization.is_changed?)
+      assert(en_localization.default_value == 'bar en')
+      assert(en_localization.translated_value == 'bar en')
+      assert(pl_localization.is_changed?)
     end
 
     test "imports specified languages (#{format})" do
