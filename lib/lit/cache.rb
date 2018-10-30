@@ -311,10 +311,8 @@ module Lit
       localization_key = Lit::LocalizationKey.find_or_initialize_by(
         localization_key: key_without_locale
       )
-      if localization_key.is_deleted?
-        localization_key.is_visited_again = true
-        localization_key.save! if localization_key.changed?
-      end
+      localization_key.is_visited_again = true if localization_key.is_deleted?
+      localization_key.save! if localization_key.changed?
       localization_keys[key_without_locale] = localization_key.id
       localization_key
     end
