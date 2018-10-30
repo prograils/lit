@@ -80,6 +80,18 @@ module Lit
       assert @localization_key.reload.is_completed
     end
 
+    # PUT /localization_keys/:id/restore_deleted
+    test 'should restore localization key' do
+      @localization_key.update is_deleted: true
+      if new_controller_test_format?
+        put :restore_deleted, params: { id: @localization_key.id }, format: :js
+      else
+        put :restore_deleted, id: @localization_key.id, format: :js
+      end
+      assert_response :success
+      assert_not @localization_key.reload.is_deleted
+    end
+
     private
 
     def with_fresh_cache

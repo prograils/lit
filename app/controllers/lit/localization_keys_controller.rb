@@ -3,7 +3,7 @@ module Lit
     before_action :find_localization_scope,
                   except: %i[destroy find_localization]
     before_action :find_localization_key,
-                  only: %i[star destroy change_completed]
+                  only: %i[star destroy change_completed restore_deleted]
 
     def index
       get_localization_keys
@@ -11,6 +11,11 @@ module Lit
 
     def not_translated
       @scope = @scope.not_completed
+      get_localization_keys
+    end
+
+    def visited_again
+      @scope = @scope.unscope(where: :is_deleted).not_active.visited_again
       get_localization_keys
     end
 
@@ -44,6 +49,11 @@ module Lit
 
     def change_completed
       @localization_key.change_all_completed
+      respond_to :js
+    end
+
+    def restore_deleted
+      @localization_key.restore
       respond_to :js
     end
 
