@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018075955) do
+ActiveRecord::Schema.define(version: 20181030111522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20181018075955) do
     t.boolean  "is_completed",                 default: false
     t.boolean  "is_starred",                   default: false
     t.boolean  "is_deleted",                   default: false, null: false
+    t.boolean  "is_visited_again",             default: false, null: false
   end
 
   add_index "lit_localization_keys", ["localization_key"], name: "index_lit_localization_keys_on_localization_key", unique: true, using: :btree
