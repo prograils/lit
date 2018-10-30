@@ -10,14 +10,21 @@
               <%= draw_icon 'link' %>
             <% end %>
           <% end %>
-          <%= link_to lit.change_completed_localization_key_path(lk), method: :put, remote: true, class: 'check_icon title', title: 'Complete / incomplete translation key' do %>
-            <%= draw_icon lk.is_starred? ? 'check-circle' : 'check-circle-o' %>
+          <% if lk.is_deleted? %>
+            <%= link_to lit.restore_deleted_localization_key_path(lk), method: :put, remote: true, class: 'rotate_left_icon title', title: 'Restore translation key' do %>
+              <%= draw_icon 'rotate-left' %>
+            <% end %>
           <% end %>
-          <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>
-            <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
-          <% end %>
-          <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: I18n.t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
-            <%= draw_icon 'trash-o' %>
+          <% unless lk.is_deleted? %>
+            <%= link_to lit.change_completed_localization_key_path(lk), method: :put, remote: true, class: 'check_icon title', title: 'Complete / incomplete translation key' do %>
+              <%= draw_icon lk.is_starred? ? 'check-circle' : 'check-circle-o' %>
+            <% end %>
+            <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>
+              <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
+            <% end %>
+            <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: I18n.t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
+              <%= draw_icon 'trash-o' %>
+            <% end %>
           <% end %>
         </div>
         <div class="detail_wrapper">
@@ -25,7 +32,9 @@
             <tr>
               <th class="col-md-8">Translation</th>
               <th class="col-md-2 text-center">Locale</th>
-              <th class="col-md-2 text-center">Completed</th>
+              <% unless lk.is_deleted? %>
+                <th class="col-md-2 text-center">Completed</th>
+              <% end %>
             </tr>
             <%- available_locales.each do |locale| %>
               <%- localization = localization_for(locale, lk) %>
@@ -42,11 +51,13 @@
                     <% end %>
                   <% end %>
                 </td>
-                <td class="text-center">
-                  <%= link_to lit.change_completed_localization_key_localization_path(lk, localization), method: :put, remote: true, class: "change_completed_#{localization.id}" do |f| %>
-                    <%= check_box_tag :is_changed, localization.is_changed, localization.is_changed %>
-                  <% end %>
-                </td>
+                <% unless lk.is_deleted? %>
+                  <td class="text-center">
+                    <%= link_to lit.change_completed_localization_key_localization_path(lk, localization), method: :put, remote: true, class: "change_completed_#{localization.id}" do |f| %>
+                      <%= check_box_tag :is_changed, localization.is_changed, localization.is_changed %>
+                    <% end %>
+                  </td>
+                <% end %>
               </tr>
               <tr class="hidden localization_versions_row" data-id="<%= localization.id %>">
                 <td colspan="2" class="localization_versions"></td>

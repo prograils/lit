@@ -1,0 +1,9 @@
+<h3><%= I18n.t('lit.visited_again_header', default: 'Deleted and visited again localization keys') %></h3>
+
+<%= render 'localizations_list', available_locales: I18n.backend.available_locales %>
+
+<% if defined?(Kaminari)  %>
+  <%= paginate @localization_keys, :theme=>"lit" %>
+<% end %>
+
+<%= render 'sidebar' %>
