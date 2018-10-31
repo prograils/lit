@@ -16,7 +16,9 @@ module Lit
     end
 
     def accept_all
-      @incomming_localizations.each(&:accept)
+      ActiveRecord::Base.transaction do
+        @incomming_localizations.each(&:accept)
+      end
       finish_request
     end
 
