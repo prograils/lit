@@ -144,7 +144,11 @@ module Lit
             Lit::Localization.joins(:locale, :localization_key)
                              .find_by('localization_key = ? and locale = ?',
                                       key, locale)
-          existing_translation&.update(translated_value: value, is_changed: true)
+          if existing_translation
+            existing_translation.update(translated_value: value, is_changed: true)
+            lkey = existing_translation.localization_key
+            lkey.update(is_deleted: false) if lkey.is_deleted
+          end
         end
       end
     end

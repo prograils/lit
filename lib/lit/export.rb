@@ -5,7 +5,7 @@ module Lit
     def self.call(locale_keys:, format:)
       raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
       Lit.loader.cache.load_all_translations
-      localizations_scope = Lit::Localization
+      localizations_scope = Lit::Localization.active
       if locale_keys.present?
         locale_ids = Lit::Locale.where(locale: locale_keys).pluck(:id)
         localizations_scope = localizations_scope.where(locale_id: locale_ids) unless locale_ids.empty?

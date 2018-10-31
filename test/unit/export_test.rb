@@ -54,4 +54,11 @@ class ExportTest < ActiveSupport::TestCase
     assert(parsed_csv.select { |row| row.first == 'scopes.array' }.
            map(&:second) == I18n.t('scopes.array'))
   end
+
+  test 'skips keys marked as deleted' do
+    Lit::LocalizationKey.find_by(localization_key: 'scopes.string').update!(is_deleted: true)
+    csv = Lit::Export.call(locale_keys: [], format: :csv)
+    parsed_csv = CSV.parse(csv)
+    assert parsed_csv.map(&:first).exclude?('scopes.string')
+  end
 end

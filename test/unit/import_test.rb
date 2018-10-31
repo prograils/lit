@@ -23,6 +23,8 @@ class ImportTest < ActiveSupport::TestCase
   end
 
   %i[csv yaml].each do |format|
+    ext = format == :yaml ? 'yml' : format.to_s
+
     test "raises ArgumentError when file is empty (#{format})" do
       input = ''
       assert_raise ArgumentError do
@@ -32,7 +34,6 @@ class ImportTest < ActiveSupport::TestCase
 
     test 'does not override existing default or translated localization ' \
          "values in raw mode (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.normal")
       I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
       I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
@@ -54,7 +55,6 @@ class ImportTest < ActiveSupport::TestCase
 
     test 'sets translated values over existing default and translated ' \
          "localization values in non-raw mode (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.normal")
       I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
       I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
@@ -86,7 +86,6 @@ class ImportTest < ActiveSupport::TestCase
     end
 
     test "imports specified languages (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.normal")
       Lit::Import.call(input: input, format: format, locale_keys: %i[en])
       verify_foo_key(languages: %w[en])
@@ -94,7 +93,6 @@ class ImportTest < ActiveSupport::TestCase
 
     test 'raises ArgumentError when file does not contain one of ' \
          "requested locales (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.missing-locale")
       assert_raise ArgumentError do
         Lit::Import.call(input: input, locale_keys: %i[en es], format: format)
@@ -102,7 +100,6 @@ class ImportTest < ActiveSupport::TestCase
     end
 
     test "raises ArgumentError when file is malformed (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.malformed")
       assert_raise ArgumentError do
         Lit::Import.call(input: input, format: format.to_s)
@@ -110,14 +107,12 @@ class ImportTest < ActiveSupport::TestCase
     end
 
     test "imports arrays (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.array")
       Lit::Import.call(input: input, format: format.to_s)
       verify_array
     end
 
     test "imports nil values when SKIP_NIL option is not set (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.nil")
       I18n.with_locale(:en) { I18n.t('scopes.to_be_nil', default: 'bar') }
       Lit::Import.call(input: input, format: format.to_s,
@@ -135,7 +130,6 @@ class ImportTest < ActiveSupport::TestCase
     end
 
     test "does not import nil values when SKIP_NIL option is set (#{format})" do
-      ext = format == :yaml ? 'yml' : format.to_s
       input = imported_file("import.#{ext}.nil")
       I18n.with_locale(:en) { I18n.t('scopes.to_be_nil', default: 'bar') }
       Lit::Import.call(input: input, format: format.to_s,
@@ -148,6 +142,15 @@ class ImportTest < ActiveSupport::TestCase
         localizations.where("localization_key = 'scopes.to_be_nil'")
       # expect that the empty localization is not imported at all
       assert(nil_key_localizations.map(&:locale).map(&:locale) == %w[en])
+    end
+
+    test "resets is_deleted flag for existing deleted localization keys (#{format})" do
+      input = imported_file("import.#{ext}.normal")
+      I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
+      foo_key = Lit::LocalizationKey.find_by(localization_key: 'scopes.foo')
+      foo_key.update!(is_deleted: true)
+      Lit::Import.call(input: input, format: format, raw: false)
+      assert !foo_key.reload.is_deleted
     end
   end
 

@@ -60,6 +60,8 @@ Keys ending with `_html` have auto wysiwyg support.
 
 ### Import and export
 
+#### Export
+
 Translations can be exported using the `lit:export` rake task:
 ```bash
 $ rake lit:export
@@ -76,6 +78,8 @@ $ rake lit:export FORMAT=csv LOCALES=en,pl OUTPUT=export.csv
 ...will only export the `en` and `pl` locales, producing CSV output to `export.csv` in the current folder.
 
 Using the task `lit:export_splitted` does the same as `lit:export` but splits the locales by their name (`config/locales/en.yml`, etc).
+
+#### Import
 
 Translation import is handled using the `lit:import` task, where imported file name should be specified in the `FILE` envionment variable:
 ```bash
@@ -95,6 +99,11 @@ $ rake lit:warm_up_keys FILES=config/locales/en.yml LOCALES=en
 ```
 In this case, when the `config/locales/en.yml` contains a translation for `foo` which doesn't have a key in the DB yet, it will be created, but if it already exists in the DB with a translation, it won't be overridden.
 
+#### Deleted keys
+
+Keys marked as deleted (i.e. still existing but deleted from the Lit UI) are *not* exported. In order to make these keys exported again, you need to restore them from the "Deleted and visited again" view.
+
+Deleted keys whose translations are encountered during import are restored automatically.
 
 ### 0.2 -> 0.3 upgrade guide
 
