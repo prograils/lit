@@ -30,6 +30,12 @@
           starred
         <% end %>
       </li>
+      <li class="<%= "active" if params[:action]=='visited_again' %>">
+        <%= link_to lit.visited_again_localization_keys_path do -%>
+          <%= draw_icon 'undo' %>
+          deleted and visited again
+        <% end %>
+      </li>
       <li class="nav-header"><%= I18n.t(".order_by", :default => "Order by") %>:</li>
       <% Lit::LocalizationKey.order_options.each do |order| %>
         <li class="<%= "active" if order == @search_options[:order]  %>">

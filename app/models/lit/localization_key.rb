@@ -7,6 +7,9 @@ module Lit
     scope :not_completed, -> { where(is_completed: false) }
     scope :starred, -> { where(is_starred: true) }
     scope :ordered, -> { order(localization_key: :asc) }
+    scope :active, -> { where(is_deleted: false) }
+    scope :not_active, -> { where(is_deleted: true) }
+    scope :visited_again, -> { where(is_visited_again: true) }
     scope :after, lambda { |dt|
       joins(:localizations)
         .where('lit_localization_keys.updated_at >= ?', dt)
@@ -65,6 +68,23 @@ module Lit
       self.class.transaction do
         toggle(:is_completed).save!
         localizations.update_all is_changed: is_completed
+      end
+    end
+
+    def soft_destroy
+      ActiveRecord::Base.transaction do
+        update is_deleted: true
+        change_all_completed
+        I18n.backend.available_locales.each do |l|
+          Lit.init.cache.delete_key "#{l}.#{localization_key}"
+        end
+      end
+    end
+
+    def restore
+      ActiveRecord::Base.transaction do
+        update is_deleted: false, is_completed: false, is_visited_again: false
+        localizations.update_all is_changed: false
       end
     end
 

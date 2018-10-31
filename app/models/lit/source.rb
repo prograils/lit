@@ -30,11 +30,11 @@ module Lit
     end
 
     def touch_last_updated_at!
-      touch_last_updated_at
+      assign_last_updated_at
       save
     end
 
-    def touch_last_updated_at(time = nil)
+    def assign_last_updated_at(time = nil)
       self.last_updated_at = time || Time.now
     end
 
@@ -48,7 +48,7 @@ module Lit
 
     def set_last_updated_at_upon_creation
       return if last_updated_at.blank? && !Lit.set_last_updated_at_upon_creation
-      touch_last_updated_at
+      assign_last_updated_at
     end
   end
 end

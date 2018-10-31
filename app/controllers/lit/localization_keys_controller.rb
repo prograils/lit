@@ -3,7 +3,7 @@ module Lit
     before_action :find_localization_scope,
                   except: %i[destroy find_localization]
     before_action :find_localization_key,
-                  only: %i[star destroy change_completed]
+                  only: %i[star destroy change_completed restore_deleted]
 
     def index
       get_localization_keys
@@ -11,6 +11,11 @@ module Lit
 
     def not_translated
       @scope = @scope.not_completed
+      get_localization_keys
+    end
+
+    def visited_again
+      @scope = @scope.unscope(where: :is_deleted).not_active.visited_again
       get_localization_keys
     end
 
@@ -47,11 +52,13 @@ module Lit
       respond_to :js
     end
 
+    def restore_deleted
+      @localization_key.restore
+      respond_to :js
+    end
+
     def destroy
-      @localization_key.destroy
-      I18n.backend.available_locales.each do |l|
-        Lit.init.cache.delete_key "#{l}.#{@localization_key.localization_key}"
-      end
+      @localization_key.soft_destroy
       respond_to :js
     end
 
@@ -67,7 +74,7 @@ module Lit
                         else
                           params.slice(*valid_keys)
                         end
-      @scope = LocalizationKey.distinct
+      @scope = LocalizationKey.distinct.active
                               .preload(localizations: :locale)
                               .search(@search_options)
     end
@@ -125,7 +132,7 @@ module Lit
     def versions?(localization)
       @_versions ||= begin
         ids = grouped_localizations.values.map(&:values).flatten.map(&:id)
-        Lit::Localization.where(id: ids).joins(:versions).group(
+        Lit::Localization.active.where(id: ids).joins(:versions).group(
           "#{Lit::Localization.quoted_table_name}.id"
         ).count
       end

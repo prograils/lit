@@ -27,7 +27,7 @@ module Lit
 
     def touch
       @source.touch_last_updated_at!
-      redirect_to request.env['HTTP_REFERER'].present? ? :back : @source
+      redirect_to_back_or_default fallback_location: source_path(@source)
     end
 
     def create
