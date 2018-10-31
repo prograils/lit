@@ -11,12 +11,19 @@ module Lit
       where('updated_at >= ?', dt + 1.second)
         .where(is_changed: true)
     }
+    scope :active, lambda {
+      joins(:localization_key)
+        .where(Lit::LocalizationKey.table_name => { is_deleted: false })
+    }
 
     ## ASSOCIATIONS
     belongs_to :locale
     belongs_to :localization_key, touch: true
     has_many :localization_versions, dependent: :destroy
     has_many :versions, class_name: '::Lit::LocalizationVersion'
+
+    ## DELEGATIONS
+    delegate :is_deleted, to: :localization_key
 
     ## VALIDATIONS
     validates :locale, presence: true
@@ -50,6 +57,10 @@ module Lit
 
     def localization_key_str
       localization_key.localization_key
+    end
+
+    def localization_key_is_deleted
+      localization_key.is_deleted
     end
 
     def locale_str

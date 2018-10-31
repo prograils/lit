@@ -82,11 +82,11 @@ module Lit
     end
 
     def load_all_translations
-      first = Localization.order(id: :asc).first
-      last = Localization.order(id: :desc).first
+      first = Localization.active.order(id: :asc).first
+      last = Localization.active.order(id: :desc).first
       if !first || (!localizations.has_key?(first.full_key) ||
         !localizations.has_key?(last.full_key))
-        Localization.includes([:locale, :localization_key]).find_each do |l|
+        Localization.includes(%i[locale localization_key]).active.find_each do |l|
           localizations[l.full_key] = l.translation
         end
       end
@@ -156,8 +156,11 @@ module Lit
       return nil if value.is_a?(Hash)
       ActiveRecord::Base.transaction do
         localization_key = find_localization_key(key_without_locale)
-        localization = Lit::Localization.where(locale_id: locale.id). \
-                          where(localization_key_id: localization_key.id).first_or_initialize
+        localization =
+          Lit::Localization.active
+                           .where(locale_id: locale.id)
+                           .where(localization_key_id: localization_key.id)
+                           .first_or_initialize
         if update_value || localization.new_record?
           if value.is_a?(Array)
             value = parse_array_value(value, locale) unless force_array
@@ -202,8 +205,8 @@ module Lit
     def find_localization_for_delete(locale, key_without_locale)
       localization_key = find_localization_key_for_delete(key_without_locale)
       return nil unless localization_key
-      Lit::Localization.find_by(locale_id: locale.id,
-                                localization_key_id: localization_key.id)
+      Lit::Localization.active.find_by(locale_id: locale.id,
+                                       localization_key_id: localization_key.id)
     end
 
     def delete_localization(locale, key_without_locale)
@@ -225,7 +228,7 @@ module Lit
         when Symbol then
           lk = Lit::LocalizationKey.where(localization_key: v.to_s).first
           if lk
-            loca = Lit::Localization.where(locale_id: locale.id).
+            loca = Lit::Localization.active.where(locale_id: locale.id).
                         where(localization_key_id: lk.id).first
             new_value = loca.translation if loca && loca.translation.present?
           end
@@ -252,10 +255,12 @@ module Lit
     end
 
     def find_localization_key(key_without_locale)
-      unless localization_keys.key?(key_without_locale)
-        find_or_create_localization_key(key_without_locale)
+      if localization_keys.key?(key_without_locale)
+        Lit::LocalizationKey.find_by(
+          id: localization_keys[key_without_locale]
+        ) || find_or_create_localization_key(key_without_locale)
       else
-        Lit::LocalizationKey.find_by(id: localization_keys[key_without_locale]) || find_or_create_localization_key(key_without_locale)
+        find_or_create_localization_key(key_without_locale)
       end
     end
 
@@ -269,7 +274,11 @@ module Lit
     end
 
     def find_or_create_localization_key(key_without_locale)
-      localization_key = Lit::LocalizationKey.where(localization_key: key_without_locale).first_or_create!
+      localization_key = Lit::LocalizationKey.find_or_initialize_by(
+        localization_key: key_without_locale
+      )
+      localization_key.is_visited_again = true if localization_key.is_deleted?
+      localization_key.save! if localization_key.changed?
       localization_keys[key_without_locale] = localization_key.id
       localization_key
     end

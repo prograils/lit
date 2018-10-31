@@ -4,8 +4,9 @@ module Lit
   class Api::V1::LocalizationKeysController < Api::V1::BaseController
     def index
       @localization_keys = fetch_localization_keys
-      render json: @localization_keys.as_json(root: false,
-                                              only: %i[id localization_key])
+      render json: @localization_keys.as_json(
+        root: false, only: %i[id localization_key is_deleted]
+      )
     end
 
     private

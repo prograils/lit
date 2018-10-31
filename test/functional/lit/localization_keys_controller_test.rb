@@ -29,7 +29,7 @@ module Lit
     # Lit.loader.cache is a fresh object.
 
     # DELETE /localization_keys/:id
-    test 'should destroy localization key when Lit.loader.cache is fresh object' do
+    test 'should set is_deleted flag of localization key when Lit.loader.cache is fresh object' do
       with_fresh_cache do
         if new_controller_test_format?
           delete :destroy, params: { id: @localization_key.id, format: :js }
@@ -38,8 +38,8 @@ module Lit
         end
 
         assert_response :success
-        assert assigns(:localization_key).destroyed?
-        assert Lit::LocalizationKey.where(id: @localization_key.id).first.nil?
+        assert assigns(:localization_key).is_deleted
+        assert Lit::LocalizationKey.active.find_by(id: @localization_key.id).blank?
         assert !Lit.init.cache.has_key?("#{I18n.locale}.#{@localization_key.localization_key}")
       end
     end
@@ -78,6 +78,18 @@ module Lit
       end
       assert_response :success
       assert @localization_key.reload.is_completed
+    end
+
+    # PUT /localization_keys/:id/restore_deleted
+    test 'should restore localization key' do
+      @localization_key.update is_deleted: true
+      if new_controller_test_format?
+        put :restore_deleted, params: { id: @localization_key.id }, format: :js
+      else
+        put :restore_deleted, id: @localization_key.id, format: :js
+      end
+      assert_response :success
+      assert_not @localization_key.reload.is_deleted
     end
 
     private

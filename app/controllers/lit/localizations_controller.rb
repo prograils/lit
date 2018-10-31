@@ -38,7 +38,7 @@ module Lit
 
     def find_localization_key
       @localization_key =
-        Lit::LocalizationKey.find(params[:localization_key_id])
+        Lit::LocalizationKey.active.find(params[:localization_key_id])
     end
 
     def find_localization
