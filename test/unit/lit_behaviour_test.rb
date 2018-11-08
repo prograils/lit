@@ -207,6 +207,14 @@ class LitBehaviourTest < ActiveSupport::TestCase
     Lit.loader = old_loader
   end
 
+  test 'it replaces nil ("translation missing") values with new defaults' do
+    assert_nil find_localization_for('foo', :en)
+    I18n.t('foo')
+    assert_not_nil find_localization_for('foo', :en)
+    I18n.t('foo', default: 'bar')
+    assert_equal 'bar', I18n.t('foo')
+  end
+
   if Lit.key_value_engine == 'redis'
     test 'it does not overwrite values in DB with nil if default option is removed from I18n.t call after value is deleted from redis' do
       I18n.t('foo', default: 'bar')

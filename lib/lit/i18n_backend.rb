@@ -73,7 +73,7 @@ module Lit
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
 
-      if content.nil? && should_cache?(key_with_locale)
+      if content.nil? && should_cache?(key_with_locale, options)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
         # so there is no content in cache - it might not be if ie. we're doing
@@ -180,8 +180,10 @@ module Lit
       Lit.ignored_keys.any?{ |k| key_without_locale.start_with?(k) }
     end
 
-    def should_cache?(key_with_locale)
-      return false if @cache.has_key?(key_with_locale)
+    def should_cache?(key_with_locale, options)
+      if @cache.has_key?(key_with_locale)
+        return false unless options[:default]
+      end
 
       _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
       return false if is_ignored_key(key_without_locale)
