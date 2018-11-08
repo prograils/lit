@@ -207,7 +207,10 @@ module Lit
               value = fallback_to_default(localization_key, localization)
             end
           end
-          localization.update_default_value(value)
+          # Prevent overwriting existing default value with nil.
+          # However, if the localization record is #new_record?, we still need
+          # to insert it with an empty default value.
+          localization.update_default_value(value) if localization.new_record? || value
         end
         return localization
       end
