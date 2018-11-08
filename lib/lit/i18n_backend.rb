@@ -59,7 +59,8 @@ module Lit
       return true if options[:default].is_a?(String)
       return true if options[:default].is_a?(Array) && \
                      (options[:default].first.is_a?(String) || \
-                      options[:default].first.is_a?(Symbol))
+                      options[:default].first.is_a?(Symbol) || \
+                      options[:default].first.is_a?(Array))
       false
     end
 

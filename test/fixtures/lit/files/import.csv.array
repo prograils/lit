@@ -1,0 +1,5 @@
+key,en,pl
+scopes.csvarray,val0 en,"val0 pl"
+scopes.csvarray,val1 en,"val1 pl"
+scopes.csvarray,,"val2 pl"
+scopes.csvarray,val3 en,

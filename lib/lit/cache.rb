@@ -126,40 +126,6 @@ module Lit
       @locale_cache[locale_key]
     end
 
-    # this comes directly from copycopter.
-    def export
-      reset
-      localizations_scope = Lit::Localization
-      unless ENV['LOCALES'].blank?
-        locale_keys = ENV['LOCALES'].to_s.split(',') || []
-        locale_ids = Lit::Locale.where(locale: locale_keys).pluck(:id)
-        localizations_scope = localizations_scope.where(locale_id: locale_ids) unless locale_ids.empty?
-      end
-      db_localizations = {}
-      localizations_scope.find_each do |l|
-        db_localizations[l.full_key] = l.translation
-      end
-      exported_keys = nested_string_keys_to_hash(db_localizations)
-      exported_keys.to_yaml
-    end
-
-    def nested_string_keys_to_hash(db_localizations)
-      # http://subtech.g.hatena.ne.jp/cho45/20061122
-      deep_proc = proc do |_k, s, o|
-        if s.is_a?(Hash) && o.is_a?(Hash)
-          next s.merge(o, &deep_proc)
-        end
-        next o
-      end
-      nested_keys = {}
-      db_localizations.sort.each do |k, v|
-        key_parts = k.to_s.split('.')
-        converted = key_parts.reverse.reduce(v) { |a, n| { n => a } }
-        nested_keys.merge!(converted, &deep_proc)
-      end
-      nested_keys
-    end
-
     def get_global_hits_counter(key)
       @hits_counter['global_hits_counter.' + key]
     end
@@ -197,7 +163,7 @@ module Lit
                            .first_or_initialize
         if update_value || localization.new_record?
           if value.is_a?(Array)
-            value = parse_array_value(value) unless force_array
+            value = parse_array_value(value, locale) unless force_array
           elsif !value.nil?
             value = parse_value(value, locale)
           else
@@ -281,7 +247,7 @@ module Lit
       new_value
     end
 
-    def parse_array_value(value)
+    def parse_array_value(value, locale)
       new_value = nil
       value_clone = value.dup
       while (v = value_clone.shift) && v.present?

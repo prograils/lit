@@ -1,0 +1,7 @@
+# Let's ensure that having good, thorough tests is no longer considered an offence.
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
