@@ -12,7 +12,7 @@
   <tr>
     <td><%= link_to source.identifier, lit.source_path(source) %></td>
     <td><%= source.last_updated_at.to_s(:db) unless source.last_updated_at.nil? %></td>
-    <td><%= source.get_last_change %></td>
+    <td><%= source.last_change %></td>
     <td>
       <%= link_to lit.source_incomming_localizations_path(source), :title=>t('lit.common.browse_incomming', :default=>"Browse incomming localizations") do %>
         <%= draw_icon 'search' %>

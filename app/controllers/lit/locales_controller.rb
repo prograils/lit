@@ -13,7 +13,7 @@ module Lit
 
     def hide
       @locale = Locale.find(params[:id])
-      @locale.is_hidden = !@locale.is_hidden?
+      @locale.toggle :is_hidden
       @locale.save
       respond_to :js
     end

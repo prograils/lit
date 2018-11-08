@@ -13,6 +13,7 @@ appraise 'rails-4.2' do
   gem 'jquery-rails'
   gem 'coffee-rails'
   gem 'pry-rails'
+  gem 'test_after_commit'
 end
 
 appraise 'rails-5' do

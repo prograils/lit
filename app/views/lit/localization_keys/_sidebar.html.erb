@@ -1,0 +1,66 @@
+<% content_for(:sidebar) do %>
+  <div class="well">
+    <%= form_tag '', :class=>"form-search", :method=>:get do |f| %>
+      <% if @search_options.has_key?(:key_prefix) %>
+        <%= hidden_field_tag :key_prefix, @search_options[:key_prefix] %>
+      <% end %>
+      <div class="input-group">
+        <%= text_field_tag :key, @search_options[:key], :class=>"form-control search-query" %>
+        <div class="input-group-btn">
+          <button type="submit" class="btn btn-default"><%= draw_icon 'search' %></button>
+        </div>
+      </div>
+    <% end %>
+    <ul class="nav nav-pills nav-stacked">
+      <li class="<%= "active" if params[:action]=='not_translated' %>">
+        <%= link_to lit.not_translated_localization_keys_path do -%>
+          <%= draw_icon 'pencil' %>
+          not translated
+        <% end %>
+      </li>
+      <li class="<%= "active" if params[:action]=='index' %>">
+        <%= link_to lit.localization_keys_path do -%>
+          <%= draw_icon 'list' %>
+          all
+        <% end %>
+      </li>
+      <li class="<%= "active" if params[:action]=='starred' %>">
+        <%= link_to lit.starred_localization_keys_path do -%>
+          <%= draw_icon 'star' %>
+          starred
+        <% end %>
+      </li>
+      <li class="<%= "active" if params[:action]=='visited_again' %>">
+        <%= link_to lit.visited_again_localization_keys_path do -%>
+          <%= draw_icon 'undo' %>
+          deleted and visited again
+        <% end %>
+      </li>
+      <li class="nav-header"><%= I18n.t(".order_by", :default => "Order by") %>:</li>
+      <% Lit::LocalizationKey.order_options.each do |order| %>
+        <li class="<%= "active" if order == @search_options[:order]  %>">
+          <%= link_to url_for(@search_options.merge(:order => order)) do %>
+            <%= I18n.t("lit.order_options.#{order.gsub(" ", "_")}", :default => order.humanize) %>
+          <% end %>
+        </li>
+      <% end %>
+      <li class="nav-header">Narrow with prefix</li>
+      <% if @search_options[:key_prefix].present? %>
+        <li>
+          <%= link_to url_for(@search_options.merge(:key_prefix=>@parent_prefix.present? ? @parent_prefix : nil)), :title=>(@parent_prefix.present? ? @parent_prefix : 'show all') do %>
+            <%= draw_icon('chevron-left') %>
+            <%= @parent_prefix.present? ? @parent_prefix.split('.').last : 'show all' %>
+          <% end %>
+        </li>
+      <% end %>
+      <% @prefixes.each do |p| %>
+        <li class="key_prefix">
+        <%= link_to url_for(@search_options.merge(:key_prefix=>p)) do %>
+          <%= draw_icon('chevron-right') %>
+          <%=  p.split('.').last %>
+        <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

@@ -1,8 +1,8 @@
 module Lit
   class ApplicationController < ActionController::Base
     unless respond_to?(:before_action)
-      alias_method :before_action, :before_filter
-      alias_method :after_action, :after_filter
+      alias before_action before_filter
+      alias after_action after_filter
     end
     before_action :authenticate
     before_action :stop_hits_counter
@@ -24,16 +24,19 @@ module Lit
       Lit.init.cache.restore_hits_counter
     end
 
-    def redirect_to_back_or_default(fallback_location: lit.localization_keys_path)
+    def redirect_to_back_or_default(fallback_location: nil)
+      fallback_location ||= lit.localization_keys_path
       if respond_to?(:redirect_back)
         redirect_back fallback_location: fallback_location
+      elsif referer.present? && referer != request.env['REQUEST_URI']
+        redirect_to :back
       else
-        if request.env["HTTP_REFERER"].present? and request.env["HTTP_REFERER"] != request.env["REQUEST_URI"]
-          redirect_to :back
-        else
-          redirect_to fallback_location
-        end
+        redirect_to fallback_location
       end
+    end
+
+    def referer
+      request.referer
     end
   end
 end

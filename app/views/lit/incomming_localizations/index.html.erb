@@ -19,6 +19,7 @@
   <tr>
     <th>Current value</th>
     <th>Imported value</th>
+    <th>Is deleted</th>
     <th width="200px"></th>
   </tr>
   <% @incomming_localizations.each do |il| %>
@@ -31,11 +32,14 @@
     <tr data-id="<%= il.id %>">
       <td>
         <% if il.localization %>
-          <%= render partial: '/lit/localization_keys/localization_row', locals: {localization: il.localization.get_value} %>
+          <%= render partial: '/lit/localization_keys/localization_row', locals: {localization: il.localization.translation} %>
         <% end %>
       </td>
-      <Td>
-        <%= render partial: '/lit/localization_keys/localization_row', locals: {localization: il.get_value} %>
+      <td>
+        <%= render partial: '/lit/localization_keys/localization_row', locals: {localization: il.translation} %>
+      </td>
+      <td>
+        <%= il.localization_key_is_deleted %>
       </td>
       <td>
         <%= link_to accept_source_incomming_localization_path(@source, il, format: :js), class: 'btn btn-success btn-sm', remote: true do %>

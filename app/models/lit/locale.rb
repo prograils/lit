@@ -1,23 +1,21 @@
 module Lit
   class Locale < ActiveRecord::Base
     ## SCOPES
-    scope :ordered, proc { order('locale ASC') }
-    scope :visible, proc { where(is_hidden: false) }
+    scope :ordered, -> { order(locale: :asc) }
+    scope :visible, -> { where(is_hidden: false) }
 
     ## ASSOCIATIONS
     has_many :localizations, dependent: :destroy
 
     ## VALIDATIONS
-    validates :locale,
-              presence: true,
-              uniqueness: true
+    validates :locale, presence: true, uniqueness: true
 
     ## BEFORE & AFTER
     after_save :reset_available_locales_cache
     after_destroy :reset_available_locales_cache
 
+    ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
-      ## ACCESSIBLE
       attr_accessible :locale
     end
 
@@ -25,17 +23,17 @@ module Lit
       locale
     end
 
-    def get_translated_percentage
-      total = get_all_localizations_count
-      total > 0 ? (get_changed_localizations_count * 100 / total) : 0
+    def translated_percentage
+      total = all_localizations_count
+      total > 0 ? (changed_localizations_count * 100 / total) : 0
     end
 
-    def get_changed_localizations_count
-      localizations.changed.count(:id)
+    def changed_localizations_count
+      localizations.active.changed.count(:id)
     end
 
-    def get_all_localizations_count
-      localizations.count(:id)
+    def all_localizations_count
+      localizations.active.count(:id)
     end
 
     private
