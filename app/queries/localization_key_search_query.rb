@@ -29,14 +29,14 @@ class LocalizationKeySearchQuery
 
   def search_key_prefix
     return if @params[:key_prefix].blank?
-    q = "#{@params[:key_prefix]}%"
+    q = Arel::Nodes.build_quoted("#{@params[:key_prefix]}%")
     @scope = @scope.where(localization_key_col.matches(q))
   end
 
   def search_key
     return if @params[:key].blank?
-    q = "%#{@params[:key]}%"
-    q_underscore = "%#{@params[:key].parameterize.underscore}%"
+    q = Arel::Nodes.build_quoted("%#{@params[:key]}%")
+    q_underscore = Arel::Nodes.build_quoted("%#{@params[:key].parameterize.underscore}%")
     cond = search_key_conditions(q, q_underscore)
     @scope = @scope.joins([:localizations]).where(cond)
   end
