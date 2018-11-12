@@ -108,7 +108,7 @@ module Lit
           # it anyway if we return nil, but then it will wrap it also in
           # translation_missing span.
           # Humanizing key should be last resort
-          if content.nil? && Lit.humanize_key && !key.match?(Lit.humanize_key_ignored)
+          if content.nil? && Lit.humanize_key && key.match(Lit.humanize_key_ignored).nil?
             content = key.to_s.split('.').last.humanize
             if content.present?
               @cache[key_with_locale] = content
