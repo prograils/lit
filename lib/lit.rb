@@ -8,6 +8,8 @@ module Lit
   mattr_accessor :redis_url
   mattr_accessor :storage_options
   mattr_accessor :humanize_key
+  mattr_accessor :humanize_key_ignored_keys
+  mattr_accessor :humanize_key_ignored
   mattr_accessor :ignored_keys
   mattr_accessor :ignore_yaml_on_startup
   mattr_accessor :api_enabled
@@ -25,6 +27,10 @@ module Lit
     if loader.nil? && @@table_exists
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
+      Lit.humanize_key_ignored_keys = [] if Lit.humanize_key_ignored_keys.nil?
+      Lit.humanize_key_ignored = %w[i18n date datetime number time support ]
+      Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
+      Lit.humanize_key_ignored = %r{(#{Lit.humanize_key_ignored.join('|')}).*}
       if Lit.ignored_keys.is_a?(String)
         keys = Lit.ignored_keys.split(',').map(&:strip)
         Lit.ignored_keys = keys
