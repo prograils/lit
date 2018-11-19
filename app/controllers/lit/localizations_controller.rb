@@ -15,7 +15,13 @@ module Lit
     end
 
     def update
-      after_update_operations if @localization.update_attributes(clear_params)
+      # Wrapping it in a transaction leverages the fact that @localization's
+      # :after_commit callback is then executed AFTER whatever's done in
+      # #after_update_operations. So it'll first set :is_changed to true
+      # and then it will be properly read in the cache setting routine.
+      @localization.transaction do
+        after_update_operations if @localization.update_attributes(clear_params)
+      end
       respond_to do |f|
         f.js
         f.json do
