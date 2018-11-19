@@ -141,6 +141,12 @@ module Lit
       assert_response :success
       @localization.reload
       assert_equal true, @localization.is_changed?
+      # test that the new value has also been cached
+      assert(
+        Lit.init.cache[
+          'en.' + @localization.localization_key.localization_key
+        ] == 'new-value'
+      )
     end
 
     # PUT /localization_keys/:localization_key_id/localizations/:id/change_completed
