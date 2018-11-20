@@ -1,5 +1,5 @@
 module Lit
-  class Localization < ActiveRecord::Base
+  class Localization < Lit::Base
     serialize :translated_value
     serialize :default_value
 
@@ -74,7 +74,7 @@ module Lit
     def update_default_value(value)
       return true if persisted? && default_value == value
       if persisted?
-        update_column(:default_value, value)
+        update(default_value: value)
       else
         self.default_value = value
         save!
@@ -92,5 +92,6 @@ module Lit
       translated_value = translated_value_was || default_value
       localization_versions.new(translated_value: translated_value)
     end
+
   end
 end
