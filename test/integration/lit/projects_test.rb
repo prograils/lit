@@ -20,7 +20,11 @@ class ProjectsTest < ActionDispatch::IntegrationTest
   end
 
   test 'should have error messages' do
-    post '/en/projects', params: { project: { name: '' } }
+    if ::Rails::VERSION::MAJOR < 5
+      post '/en/projects', project: { name: '' }
+    else
+      post '/en/projects', params: { project: { name: '' } }
+    end
     locale = Lit::Locale.where('locale=?', 'en').first
     localization_key = Lit::LocalizationKey.find_by_localization_key! 'activerecord.errors.models.project.attributes.name.blank'
     localization = localization_key.localizations.where(locale_id: locale.id).first
@@ -30,7 +34,11 @@ class ProjectsTest < ActionDispatch::IntegrationTest
 
   test 'should have error message humanized' do
     Lit.humanize_key = true
-    post '/en/projects', params: { project: { name: '' } }
+    if ::Rails::VERSION::MAJOR < 5
+      post '/en/projects', project: { name: '' }
+    else
+      post '/en/projects', params: { project: { name: '' } }
+    end
     locale = Lit::Locale.where('locale=?', 'en').first
     localization_key = Lit::LocalizationKey.find_by_localization_key! 'activerecord.errors.models.project.attributes.name.blank'
     localization = localization_key.localizations.where(locale_id: locale.id).first

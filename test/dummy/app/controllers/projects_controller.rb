@@ -84,10 +84,6 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    if defined?(::ActionController::StrongParameters)
-      params.require(:project).permit(:name)
-    else
-      params
-    end
+    params.require(:project).permit(:name)
   end
 end
