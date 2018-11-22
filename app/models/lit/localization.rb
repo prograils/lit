@@ -29,6 +29,8 @@ module Lit
     validates :locale, :localization_key, presence: true
 
     ## ACCESSORS
+    attr_accessor :full_key_str
+
     unless defined?(::ActionController::StrongParameters)
       attr_accessible :translated_value, :locale_id
     end
@@ -44,11 +46,12 @@ module Lit
     end
 
     def full_key
-      [locale.locale, localization_key.localization_key].join('.')
+      full_key_str || [locale.locale, localization_key.localization_key].join('.')
     end
 
     def translation
-      is_changed? && !translated_value.nil? ? translated_value : default_value
+      #is_changed? && !translated_value.nil? ? translated_value : default_value
+      translated_value.nil? ? default_value : translated_value
     end
 
     def value
@@ -73,6 +76,7 @@ module Lit
 
     def update_default_value(value)
       return true if persisted? && default_value == value
+
       if persisted?
         update(default_value: value)
       else

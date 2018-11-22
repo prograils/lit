@@ -123,8 +123,8 @@ module Lit
       key = ([locale] + scope).join('.')
       if data.respond_to?(:to_hash)
         # ActiveRecord::Base.transaction do
-          data.to_hash.each do |key, value|
-            store_item(locale, value, scope + [key], startup_process)
+          data.to_hash.each do |k, value|
+            store_item(locale, value, scope + [k], startup_process)
           end
         # end
       elsif data.respond_to?(:to_str) || data.is_a?(Array)

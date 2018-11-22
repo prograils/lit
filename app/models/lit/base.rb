@@ -4,6 +4,8 @@ class Lit::Base < ActiveRecord::Base
   before_save :mark_for_retry_on_create, on: :create
   before_save :mark_for_retry_on_update, on: :update
 
+  attr_accessor :retried_created, :retried_updated
+
   def mark_for_retry_on_create
     @will_retry_create = true
   end
@@ -12,30 +14,25 @@ class Lit::Base < ActiveRecord::Base
     @will_retry_update = true
   end
 
-
   after_rollback :retry_lit_model_save
 
   private
 
   def retry_lit_model_save
-    retry_on_create if @will_retry_create
-    retry_on_update if @will_retry_update
+    retry_on_create if instance_variable_defined?(:@will_retry_create) && @will_retry_create
+    retry_on_update if instance_variable_defined?(:@will_retry_update) && @will_retry_update
   end
 
   def retry_on_create
-    return if @retry_created
-    @retry_created = true
-    self.class.create attributes
+    return if self.retried_created
+    self.retried_created = true
+    self.class.create! attributes.merge(retried_created: true)
   end
 
   def retry_on_update
-    return if @retry_updated
-    @retry_updated = true
-    update attributes
-  end
-
-  def lit_attribute_will_change
-    raise NotImplementedErrror
+    return if self.retried_updated
+    self.retried_updated = true
+    update attributes.merge(retried_updated: true)
   end
 
 end

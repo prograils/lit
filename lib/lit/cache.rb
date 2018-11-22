@@ -187,6 +187,9 @@ module Lit
           # Prevent overwriting existing default value with nil.
           # However, if the localization record is #new_record?, we still need
           # to insert it with an empty default value.
+          localization.locale = locale
+          localization.localization_key = localization_key
+          localization.full_key_str = full_key
           localization.update_default_value(value) if localization.new_record? || value
           @localization_object_cache[full_key] = localization
         end
