@@ -81,6 +81,8 @@ module Lit
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
       delete_localization(locale, key_without_locale)
+      @localization_key_object_cache = {}
+      @localization_object_cache = {}
     end
 
     def load_all_translations
@@ -98,6 +100,7 @@ module Lit
       key = key.to_s
       locale_key, key_without_locale = split_key(key)
       locale = find_locale(locale_key)
+      @localization_object_cache.delete(key)
       localization = find_localization(locale, key_without_locale, default_fallback: true)
       localizations[key] = localization.translation if localization
     end
@@ -107,11 +110,15 @@ module Lit
       localizations.delete(key)
       key_without_locale = split_key(key).last
       localization_keys.delete(key_without_locale)
+      @localization_object_cache.delete(key)
+      @localization_key_object_cache.delete(key)
       I18n.backend.reload!
     end
 
     def reset
       @locale_cache = {}
+      @localization_key_object_cache = {}
+      @localization_object_cache = {}
       localizations.clear
       localization_keys.clear
       load_all_translations

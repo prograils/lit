@@ -26,7 +26,7 @@ module Lit
     delegate :is_deleted, to: :localization_key
 
     ## VALIDATIONS
-    validates :locale, presence: true
+    validates :locale, :localization_key, presence: true
 
     ## ACCESSORS
     unless defined?(::ActionController::StrongParameters)
