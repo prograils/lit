@@ -50,8 +50,7 @@ module Lit
     end
 
     def translation
-      #is_changed? && !translated_value.nil? ? translated_value : default_value
-      translated_value.nil? ? default_value : translated_value
+      is_changed? && !translated_value.nil? ? translated_value : default_value
     end
 
     def value
@@ -76,7 +75,6 @@ module Lit
 
     def update_default_value(value)
       return true if persisted? && default_value == value
-
       if persisted?
         update(default_value: value)
       else
