@@ -32,7 +32,7 @@ class Lit::Base < ActiveRecord::Base
   def retry_on_update
     return if self.retried_updated
     self.retried_updated = true
-    update attributes.merge(retried_updated: true)
+    update! attributes.merge(retried_updated: true)
   end
 
 end
