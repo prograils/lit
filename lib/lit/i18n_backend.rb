@@ -69,11 +69,9 @@ module Lit
 
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
-
       # check in cache or in simple backend
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
-
       if content.nil? && should_cache?(key_with_locale, options)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
@@ -125,8 +123,8 @@ module Lit
       key = ([locale] + scope).join('.')
       if data.respond_to?(:to_hash)
         # ActiveRecord::Base.transaction do
-          data.to_hash.each do |key, value|
-            store_item(locale, value, scope + [key], startup_process)
+          data.to_hash.each do |k, value|
+            store_item(locale, value, scope + [k], startup_process)
           end
         # end
       elsif data.respond_to?(:to_str) || data.is_a?(Array)

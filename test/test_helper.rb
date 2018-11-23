@@ -35,7 +35,7 @@ I18n.config.enforce_available_locales = false
 # Transactional fixtures do not work with Selenium tests, because Capybara
 # uses a separate server thread, which the transactions would be hidden
 # from. We hence use DatabaseCleaner to truncate our test database.
-DatabaseCleaner.strategy = :transaction
+DatabaseCleaner.strategy = :truncation
 
 DatabaseCleaner.clean_with :truncation
 
@@ -43,7 +43,7 @@ class ActiveSupport::TestCase
   include WebMock::API
 
   if respond_to?(:use_transactional_tests=)
-    self.use_transactional_tests = true
+    self.use_transactional_tests = false
   else
     self.use_transactional_fixtures = true
   end
@@ -79,7 +79,7 @@ class ActionDispatch::IntegrationTest
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset_sessions!    # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
-    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.strategy = :truncation
   end
 end
 

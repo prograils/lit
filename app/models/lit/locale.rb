@@ -1,5 +1,5 @@
 module Lit
-  class Locale < ActiveRecord::Base
+  class Locale < Base
     ## SCOPES
     scope :ordered, -> { order(locale: :asc) }
     scope :visible, -> { where(is_hidden: false) }

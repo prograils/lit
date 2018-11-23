@@ -1,5 +1,5 @@
 module Lit
-  class LocalizationKey < ActiveRecord::Base
+  class LocalizationKey < Lit::Base
     attr_accessor :interpolated_key
 
     ## SCOPES
@@ -31,6 +31,7 @@ module Lit
 
     ## BEFORE AND AFTER
     after_commit :check_completed, on: :update
+    after_commit :remove_from_cache, on: :destroy
 
     def to_s
       localization_key
@@ -75,9 +76,13 @@ module Lit
       ActiveRecord::Base.transaction do
         update is_deleted: true
         change_all_completed
-        I18n.backend.available_locales.each do |l|
-          Lit.init.cache.delete_key "#{l}.#{localization_key}"
-        end
+        remove_from_cache
+      end
+    end
+
+    def remove_from_cache
+      Lit::Locale.pluck(:locale).each do |l|
+        Lit.init.cache.delete_key "#{l}.#{localization_key}"
       end
     end
 
@@ -93,6 +98,10 @@ module Lit
     def check_completed
       self.is_completed = localizations.changed.count == localizations.count
       save! if is_completed_changed?
+    end
+
+    def lit_attribute_will_change
+      localization_key_will_change!
     end
   end
 end

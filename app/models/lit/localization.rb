@@ -1,5 +1,5 @@
 module Lit
-  class Localization < ActiveRecord::Base
+  class Localization < Lit::Base
     serialize :translated_value
     serialize :default_value
 
@@ -26,9 +26,11 @@ module Lit
     delegate :is_deleted, to: :localization_key
 
     ## VALIDATIONS
-    validates :locale, presence: true
+    validates :locale, :localization_key, presence: true
 
     ## ACCESSORS
+    attr_accessor :full_key_str
+
     unless defined?(::ActionController::StrongParameters)
       attr_accessible :translated_value, :locale_id
     end
@@ -44,7 +46,7 @@ module Lit
     end
 
     def full_key
-      [locale.locale, localization_key.localization_key].join('.')
+      full_key_str || [locale.locale, localization_key.localization_key].join('.')
     end
 
     def translation
@@ -74,7 +76,7 @@ module Lit
     def update_default_value(value)
       return true if persisted? && default_value == value
       if persisted?
-        update_column(:default_value, value)
+        update(default_value: value)
       else
         self.default_value = value
         save!
@@ -92,5 +94,6 @@ module Lit
       translated_value = translated_value_was || default_value
       localization_versions.new(translated_value: translated_value)
     end
+
   end
 end
