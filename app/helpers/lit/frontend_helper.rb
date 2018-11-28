@@ -50,8 +50,8 @@ module Lit
       return if Thread.current[:lit_request_keys].nil?
       return unless lit_authorized?
       content_tag :div, class: 'lit-translations-info collapsed' do
-        concat content_tag :span, 'Show translations', class: 'lit-open-button'
-        concat content_tag :span, 'X', class: 'lit-close-button'
+        concat content_tag(:span, 'Show translations', class: 'lit-open-button')
+        concat content_tag(:span, 'X', class: 'lit-close-button')
         concat translations_list_content_tag
       end
     end
@@ -59,10 +59,10 @@ module Lit
     def translations_list_content_tag
       content_tag :ul, class: 'lit-translations-list' do
         Lit.init.cache.request_keys.each do |k, v|
-          concat content_tag(:li) do
-            concat content_tag :code, "#{k}:"
+          concat(content_tag(:li) do
+            concat content_tag(:code, "#{k}:")
             concat get_translateable_span(k, v, alternative_text: '[empty]')
-          end
+          end)
         end
       end
     end
