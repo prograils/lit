@@ -16,7 +16,7 @@ appraise 'rails-4.2' do
   gem 'test_after_commit'
 end
 
-appraise 'rails-5' do
+appraise 'rails-5.0' do
   source 'https://rubygems.org'
   gem 'rails', '5.0.6'
   gem 'devise'
