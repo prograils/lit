@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_30_111522) do
+ActiveRecord::Schema.define(version: 2018_11_29_103819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 2018_10_30_111522) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["locale_id"], name: "index_lit_localizations_on_locale_id"
+    t.index ["localization_key_id", "locale_id"], name: "index_lit_localizations_on_localization_key_id_and_locale_id", unique: true
     t.index ["localization_key_id"], name: "index_lit_localizations_on_localization_key_id"
   end
 
