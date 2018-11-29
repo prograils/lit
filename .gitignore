@@ -10,6 +10,5 @@ test/dummy/.sass-cache
 **.DS_Store
 Gemfile.lock
 vendor/bundle
-gemfiles/*.lock
 /tags
 .ruby-version
