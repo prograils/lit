@@ -196,9 +196,9 @@ DEPENDENCIES
   capybara
   coffee-rails
   database_cleaner
-  devise (~> 4.5.0)
+  devise
   jquery-rails
-  minitest (~> 5.11.3)
+  minitest
   mocha
   pg (~> 1.1.3)
   pry-rails

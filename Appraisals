@@ -38,7 +38,7 @@ end
 appraise 'rails-5.1' do
   source 'https://rubygems.org'
   gem 'rails', '~> 5.1.0'
-  gem 'devise', '~> 4.4.3'
+  gem 'devise'
   gem 'pg', '~> 0.21.0'
   gem 'redis'
   gem 'capybara'
@@ -51,13 +51,13 @@ appraise 'rails-5.1' do
   gem 'coffee-rails'
   gem 'pry-rails'
   gem 'rails-controller-testing'
-  gem 'minitest', '~> 5.10'
+  gem 'minitest'
 end
 
 appraise 'rails-5.2' do
   source 'https://rubygems.org'
   gem 'rails', '~> 5.2.0'
-  gem 'devise', '~> 4.5.0'
+  gem 'devise'
   gem 'pg', '~> 1.1.3'
   gem 'redis'
   gem 'capybara'
@@ -70,6 +70,6 @@ appraise 'rails-5.2' do
   gem 'coffee-rails'
   gem 'pry-rails'
   gem 'rails-controller-testing'
-  gem 'minitest', '~> 5.11.3'
+  gem 'minitest'
 end
 
