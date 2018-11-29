@@ -1,6 +1,6 @@
 appraise 'rails-4.2' do
   source 'https://rubygems.org'
-  gem 'rails', '4.2.10'
+  gem 'rails', '~> 4.2.0'
   gem 'devise'
   gem 'pg', '~> 0.18.4'
   gem 'redis'
@@ -18,7 +18,7 @@ end
 
 appraise 'rails-5.0' do
   source 'https://rubygems.org'
-  gem 'rails', '5.0.6'
+  gem 'rails', '~> 5.0.0'
   gem 'devise'
   gem 'pg', '~> 0.21.0'
   gem 'redis'
@@ -37,7 +37,7 @@ end
 
 appraise 'rails-5.1' do
   source 'https://rubygems.org'
-  gem 'rails', '5.1.5'
+  gem 'rails', '~> 5.1.0'
   gem 'devise', '~> 4.4.3'
   gem 'pg', '~> 0.21.0'
   gem 'redis'
@@ -56,7 +56,7 @@ end
 
 appraise 'rails-5.2' do
   source 'https://rubygems.org'
-  gem 'rails', '5.2.1'
+  gem 'rails', '~> 5.2.0'
   gem 'devise', '~> 4.5.0'
   gem 'pg', '~> 1.1.3'
   gem 'redis'
@@ -72,3 +72,4 @@ appraise 'rails-5.2' do
   gem 'rails-controller-testing'
   gem 'minitest', '~> 5.11.3'
 end
+
