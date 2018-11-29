@@ -33,7 +33,6 @@ module Lit
           yml = parsed_yaml[locale.to_s]
           Hash[*Lit::Cache.flatten_hash(yml)].each do |key, default_translation|
             next if default_translation.nil? && skip_nil
-            puts key
             upsert(locale, key, default_translation)
           end
         end
@@ -52,7 +51,6 @@ module Lit
         row_translations.each do |locale, value|
           next unless locale_keys.blank? || locale_keys.map(&:to_sym).include?(locale.to_sym)
           next if value.nil? && skip_nil
-          puts key
           upsert(locale, key, value)
         end
       end
