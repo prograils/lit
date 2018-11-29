@@ -197,7 +197,7 @@ DEPENDENCIES
   rails (~> 5.1.0)
   rails-controller-testing
   redis
-  sass-rails (~> 5.0)
+  sass-rails
   test_declarative
   webmock
 
