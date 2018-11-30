@@ -10,4 +10,3 @@ test/dummy/.sass-cache
 **.DS_Store
 vendor/bundle
 /tags
-.ruby-version
