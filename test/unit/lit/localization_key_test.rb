@@ -45,6 +45,14 @@ module Lit
       assert @lk.localizations.all?(&:is_changed)
     end
 
+    test '#soft_destroy should delete translation key from memoized objects' do
+      lk_obj_cache = Lit.init.cache.instance_variable_get(:@localization_key_object_cache)
+      Lit.init.cache.refresh_key("en.#{@lk.localization_key}")
+      assert lk_obj_cache[@lk.localization_key] == @lk
+      @lk.soft_destroy
+      refute lk_obj_cache.key?(@lk.localization_key)
+    end
+
     test '#restore should restore translation key' do
       @lk.change_all_completed
       @lk.update is_deleted: true, is_visited_again: true
