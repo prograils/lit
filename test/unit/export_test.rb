@@ -7,6 +7,8 @@ class ExportTest < ActiveSupport::TestCase
 
   def setup
     I18n.backend.reset_available_locales_cache
+    Lit.init.cache.instance_variable_get(:@hits_counter).clear
+    Lit.init.cache.instance_variable_get(:@hits_counter).clear
   end
 
   test 'exports all locales to yaml when locale keys not specified' do
@@ -52,5 +54,15 @@ class ExportTest < ActiveSupport::TestCase
     csv = Lit::Export.call(locale_keys: [], format: :csv)
     parsed_csv = CSV.parse(csv)
     assert parsed_csv.map(&:first).exclude?('scopes.string')
+  end
+
+  test 'includes hits count if specified' do
+    seen_lk = Lit::LocalizationKey.first
+    unseen_lk = Lit::LocalizationKey.second
+    10.times { I18n.t(seen_lk.localization_key) }
+    csv = Lit::Export.call(locale_keys: [], format: :csv, include_hits_count: true)
+    parsed_csv = CSV.parse(csv)
+    assert parsed_csv.find { |row| row.first == seen_lk.localization_key }.last.to_i == 10
+    assert parsed_csv.find { |row| row.first == unseen_lk.localization_key }.last.to_i == 0
   end
 end

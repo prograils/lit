@@ -2,7 +2,7 @@ require 'csv'
 
 module Lit
   class Export
-    def self.call(locale_keys:, format:)
+    def self.call(locale_keys:, format:, include_hits_count: false)
       raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
       Lit.loader.cache.load_all_translations
       localizations_scope = Lit::Localization.active
@@ -22,7 +22,7 @@ module Lit
       when :csv
         relevant_locales = locale_keys.presence || I18n.available_locales.map(&:to_s)
         CSV.generate do |csv|
-          csv << ['key', *relevant_locales]
+          csv << ['key', *relevant_locales, ('hits' if include_hits_count)].compact
           keys_without_locales = db_localizations.keys.map { |k| k.gsub(/(#{relevant_locales.join('|')})\./, '') }.uniq
           keys_without_locales.each do |key_without_locale|
             # Here, we need to determine if we're dealing with an array or a scalar.
@@ -44,7 +44,11 @@ module Lit
             key_localizations_per_locale =
               relevant_locales.map { |l| Array.wrap(db_localizations["#{l}.#{key_without_locale}"]) }
             transpose(key_localizations_per_locale).each do |translation_series|
-              csv << [key_without_locale, *translation_series]
+              csv_row = [key_without_locale, *translation_series]
+              if include_hits_count
+                csv_row << (Lit.init.cache.get_global_hits_counter(key_without_locale) || 0)
+              end
+              csv << csv_row
             end
           end
         end
