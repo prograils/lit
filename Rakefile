@@ -1,5 +1,4 @@
-#!/usr/bin/env rake
-require 'rubygems'
+require "bundler/gem_tasks"
 
 begin
   require 'rdoc/task'
@@ -17,13 +16,14 @@ RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-require 'rake/testtask'
-
+require "rake/testtask"
 Rake::TestTask.new(:test) do |t|
   puts "Storage: #{ENV['LIT_STORAGE'] || 'redis'}"
-  t.libs << 'lib'
   t.libs << 'test'
+  t.libs << 'lib'
   t.pattern = 'test/**/*_test.rb'
   t.verbose = false
 end
+
+task :default => :test
 

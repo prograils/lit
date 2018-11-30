@@ -39,7 +39,7 @@ gem 'lit'
 
 3. run installation generator `bundle exec rails g lit:install`
   (for production/staging environment `redis` is suggested as key value engine. `hash` will not work in multi process environment)
-  
+
 4. Add `config.i18n.available_locales = [...]` to `application.rb` - it's required to precompile appropriate language flags in lit backend.
 
 5. After doing above and restarting app, point your browser to `http://app/lit`
@@ -197,10 +197,12 @@ Lit.store_request_info = true
 
 ### Testing
 
-For local testing [Appraisal](https://github.com/thoughtbot/appraisal) gem comes into play, run tests via: `bundle exec appraisal rails-4.2 rake test`.
-
-Please remember to edit `test/dummy/config/database.yml` file
+1. gem install bundler appraisal # Install some gems
+2. appraisal update              # install gems from appraisal's gemfiles
+3. appraisal rake db:setup       # setup lit DB (see test/config/database.yml)
+4. appraisal rake
 
 ### License
 
 Lit is free software, and may be redistributed under the terms specified in the MIT-LICENSE file.
+
