@@ -3,9 +3,10 @@ namespace :lit do
   task export: :environment do
     locale_keys = ENV['LOCALES'].to_s.split(',') || []
     export_format = ENV['FORMAT'].presence&.downcase&.to_sym || :yaml
+    include_hits_count = ENV['INCLUDE_HITS_COUNT'].present?
     path = ENV['OUTPUT'].presence || Rails.root.join('config', 'locales', "lit.#{file_extension(export_format)}")
-
-    if exported = Lit::Export.call(locale_keys: locale_keys, format: export_format)
+    if exported = Lit::Export.call(locale_keys: locale_keys, format: export_format,
+                                   include_hits_count: include_hits_count)
       File.new(path, 'w').write(exported)
       puts "Successfully exported #{path}."
     end

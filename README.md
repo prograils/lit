@@ -79,6 +79,8 @@ $ rake lit:export FORMAT=csv LOCALES=en,pl OUTPUT=export.csv
 
 Using the task `lit:export_splitted` does the same as `lit:export` but splits the locales by their name (`config/locales/en.yml`, etc).
 
+Optionally, the `INCLUDE_HITS_COUNT` option (only applicable for CSV export) can be used to include current hits count for each localization key. Note that it only makes sense to use this option when Redis is Lit's key-value engine because these counters are stored in cache and not in the database.
+
 #### Import
 
 Translation import is handled using the `lit:import` task, where imported file name should be specified in the `FILE` envionment variable:
