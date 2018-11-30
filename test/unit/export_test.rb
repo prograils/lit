@@ -7,6 +7,8 @@ class ExportTest < ActiveSupport::TestCase
 
   def setup
     I18n.backend.reset_available_locales_cache
+    Lit.init.cache.instance_variable_get(:@hits_counter).clear
+    Lit.init.cache.instance_variable_get(:@hits_counter).clear
   end
 
   test 'exports all locales to yaml when locale keys not specified' do
