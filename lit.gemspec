@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails', '>= 4.2.0'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'coffee-rails'
-
-  s.add_development_dependency 'appraisal'
+  s.add_dependency 'sass-rails'
 end
 
