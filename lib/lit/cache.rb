@@ -111,7 +111,7 @@ module Lit
       key_without_locale = split_key(key).last
       localization_keys.delete(key_without_locale)
       @localization_object_cache.delete(key)
-      @localization_key_object_cache.delete(key)
+      @localization_key_object_cache.delete(key_without_locale)
       I18n.backend.reload!
     end
 
