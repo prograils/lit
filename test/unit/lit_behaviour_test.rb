@@ -225,6 +225,15 @@ class LitBehaviourTest < ActiveSupport::TestCase
     end
   end
 
+  test 'it does not create duplicate db records when a previously deleted key appears again' do
+    loc_count = Lit::Localization.count
+    I18n.t('foo', default: 'bar')
+    assert Lit::Localization.count == loc_count + 1
+    Lit::LocalizationKey.find_by(localization_key: 'foo').soft_destroy
+    I18n.t('foo', default: 'baz')
+    assert Lit::Localization.count == loc_count + 1
+  end
+
   private
 
   def find_localization_for(key, locale)
