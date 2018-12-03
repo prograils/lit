@@ -10,3 +10,4 @@ test/dummy/.sass-cache
 **.DS_Store
 vendor/bundle
 /tags
+test/dummy/config/database.yml
