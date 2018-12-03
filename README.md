@@ -198,7 +198,7 @@ Lit.store_request_info = true
 ### Testing
 
 1. gem install bundler appraisal # Install some gems
-2. appraisal update              # install gems from appraisal's gemfiles
+2. appraisal install              # install gems from appraisal's gemfiles
 3. cp test/dummy/config/database.yml.sample test/dummy/config/database.yml # move a database.yml in place
 4. RAILS_ENV=test appraisal rails-4.2 rake db:setup # setup lit DB (see test/config/database.yml)
 5. appraisal rake # run the tests!
