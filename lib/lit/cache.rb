@@ -111,7 +111,7 @@ module Lit
       key_without_locale = split_key(key).last
       localization_keys.delete(key_without_locale)
       @localization_object_cache.delete(key)
-      @localization_key_object_cache.delete(key)
+      @localization_key_object_cache.delete(key_without_locale)
       I18n.backend.reload!
     end
 
@@ -168,8 +168,7 @@ module Lit
         localization_key = find_localization_key(key_without_locale)
         localization = @localization_object_cache[full_key]
         localization ||=
-          Lit::Localization.active
-                           .where(locale_id: locale.id)
+          Lit::Localization.where(locale_id: locale.id)
                            .where(localization_key_id: localization_key.id)
                            .first_or_initialize
         if update_value || localization.new_record?
