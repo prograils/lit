@@ -7,7 +7,7 @@ translating app by non-technicals.
 
 Highly inspired by Copycopter by thoughtbot.
 
-![travis status](https://travis-ci.org/prograils/lit.svg)
+[![travis status](https://travis-ci.org/prograils/lit.svg)](https://travis-ci.org/prograils/lit)
 
 ### Features
 
