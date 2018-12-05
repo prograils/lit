@@ -1,6 +1,12 @@
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
 
+# We get a whole bunch of method redefinition warnings, mostly coming
+# from Devise - e.g. when routes are reloaded in controller tests.
+# That's not ideal but we don't need those. (Funny enough, default `$VERBOSE`
+# when using `rails test` instead of `rake` is `false`)
+$VERBOSE = false # equivalent to `ruby -W1`
+
 require File.expand_path('../dummy/config/environment.rb',  __FILE__)
 require 'rails/test_help'
 require 'capybara/rails'
