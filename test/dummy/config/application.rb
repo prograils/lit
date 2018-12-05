@@ -1,8 +1,7 @@
-require File.expand_path('../boot', __FILE__)
-require 'devise'
-require 'rails/all'
+require_relative 'boot'
 
-Bundler.require
+require 'rails/all'
+Bundler.require(*Rails.groups)
 require 'lit'
 
 module Dummy
@@ -44,8 +43,8 @@ module Dummy
     # like if you have constraints or database-specific column types
     # config.active_record.schema_format = :sql
 
-    if ::Rails::VERSION::MAJOR < 4
-      config.active_record.whitelist_attributes = true
+    if ::Rails::VERSION::MAJOR == 4
+      config.active_record.raise_in_transactional_callbacks = true
     end
 
     # Enable the asset pipeline
@@ -55,3 +54,4 @@ module Dummy
     config.assets.version = '1.0'
   end
 end
+

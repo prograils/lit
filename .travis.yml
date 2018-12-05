@@ -1,12 +1,11 @@
 language: ruby
-sudo: false
 rvm:
-  - 2.3.4
-  - 2.4.2
-  - 2.5.0
+  - 2.3.8
+  - 2.4.5
+  - 2.5.3
 gemfile:
   - gemfiles/rails_4.2.gemfile
-  - gemfiles/rails_5.gemfile
+  - gemfiles/rails_5.0.gemfile
   - gemfiles/rails_5.1.gemfile
   - gemfiles/rails_5.2.gemfile
 services:
@@ -19,3 +18,4 @@ before_script:
   - psql -c 'create database lit_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate
 script: "bundle exec rake test"
+
