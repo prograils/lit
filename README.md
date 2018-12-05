@@ -7,7 +7,7 @@ translating app by non-technicals.
 
 Highly inspired by Copycopter by thoughtbot.
 
-![travis status](https://travis-ci.org/prograils/lit.svg)
+[![travis status](https://travis-ci.org/prograils/lit.svg)](https://travis-ci.org/prograils/lit)
 
 ### Features
 
@@ -197,11 +197,11 @@ Lit.store_request_info = true
 
 ### Testing
 
-1. gem install bundler appraisal # Install some gems
-2. appraisal install              # install gems from appraisal's gemfiles
-3. cp test/dummy/config/database.yml.sample test/dummy/config/database.yml # move a database.yml in place
-4. RAILS_ENV=test appraisal rails-4.2 rake db:setup # setup lit DB (see test/config/database.yml)
-5. appraisal rake # run the tests!
+1. `gem install bundler && bundle install` - ensure Bundler and all required gems are installed
+2. `bundle exec appraisal install` - install gems from appraisal's gemfiles
+3. `cp test/dummy/config/database.yml.sample test/dummy/config/database.yml` - move a database.yml in place (remember to fill your DB credentials in it)
+4. `RAILS_ENV=test appraisal rails-5.2 rake db:setup` - setup lit DB (see test/config/database.yml); do it only once, it does not matter which Rails version you use for `appraisal`
+5. `bundle exec appraisal rake` - run the tests!
 
 ### License
 

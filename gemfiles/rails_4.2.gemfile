@@ -16,3 +16,5 @@ gem "jquery-rails"
 gem "coffee-rails"
 gem "pry-rails"
 gem "test_after_commit"
+
+gemspec path: "../"
