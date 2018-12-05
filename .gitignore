@@ -8,6 +8,7 @@ test/dummy/.sass-cache
 .sass-cache/
 /lit-*.gem
 **.DS_Store
+Gemfile.lock
 vendor/bundle
 /tags
 test/dummy/config/database.yml

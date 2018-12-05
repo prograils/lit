@@ -17,3 +17,5 @@ gem "coffee-rails"
 gem "pry-rails"
 gem "rails-controller-testing"
 gem "minitest"
+
+gemspec path: "../"
