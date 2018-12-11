@@ -14,6 +14,9 @@ require 'database_cleaner'
 require 'test_declarative'
 require 'mocha/setup'
 require 'webmock'
+require 'vcr'
+require 'minitest-vcr'
+require 'pry-byebug'
 
 begin
   require 'rails-controller-testing'
@@ -107,3 +110,10 @@ end
 def new_controller_test_format?
   Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
 end
+
+VCR.configure do |config|
+  config.cassette_library_dir = 'test/cassettes'
+  config.hook_into :webmock
+end
+
+MinitestVcr::Spec.configure!

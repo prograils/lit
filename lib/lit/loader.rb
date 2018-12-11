@@ -3,6 +3,7 @@ require 'lit/i18n_backend'
 require 'lit/cache'
 require 'lit/export'
 require 'lit/import'
+require 'lit/cloud'
 
 module Lit
   class Loader

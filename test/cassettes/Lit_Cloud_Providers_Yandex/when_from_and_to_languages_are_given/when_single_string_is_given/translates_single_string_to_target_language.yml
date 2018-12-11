@@ -1,0 +1,45 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20181127T145246Z.3e17e5c99c1ad299.38126a1782dbe6e5fa5a3d91c9789cfb178a0d78&lang=en-pl&text=The%20quick%20brown%20fox%20jumps%20over%20the%20lazy%20dog.
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - translate.yandex.net
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.2
+      Date:
+      - Tue, 11 Dec 2018 16:32:58 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '84'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=120
+      Cache-Control:
+      - no-store
+      X-Content-Type-Options:
+      - nosniff
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJjb2RlIjoyMDAsImxhbmciOiJlbi1wbCIsInRleHQiOlsiU3p5YmtpIGJyxIV6b3d5IGxpcyBza2FjemUgcHJ6ZXogbGVuaXfEhSBwc2EuIl19
+    http_version: 
+  recorded_at: Tue, 11 Dec 2018 16:32:58 GMT
+recorded_with: VCR 4.0.0
