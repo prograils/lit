@@ -43,6 +43,8 @@ module Lit::Cloud::Providers
       def config
         @config ||= OpenStruct.new
       end
+
+      def require_config!; end
     end
   end
 end

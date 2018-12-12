@@ -48,7 +48,8 @@ module Lit
     end
 
     def find_localization
-      @localization = @localization_key.localizations.find(params[:id])
+      @localization =
+        @localization_key.localizations.includes(:locale).find(params[:id])
     end
 
     def after_update_operations

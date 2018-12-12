@@ -50,5 +50,7 @@ Lit::Engine.routes.draw do
     end
   end
 
+  resource :cloud_translation, only: :show
+
   root to: 'dashboard#index'
 end

@@ -5,6 +5,13 @@ require 'net/http'
 
 module Lit::Cloud::Providers
   class Yandex < Base
+    class << self
+      def require_config!
+        return if ENV['YANDEX_TRANSLATE_API_KEY'].present?
+        raise 'YANDEX_TRANSLATE_API_KEY env not given'
+      end
+    end
+
     def translate(text:, from: nil, to:, opts: {}) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
       # puts "api key is: #{config.api_key}"
       # puts "translating #{text} from #{from} to #{to}"
