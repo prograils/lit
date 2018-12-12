@@ -11,7 +11,7 @@ module Lit
     end
 
     module_function def translate(*args)
-      @provider.translate(*args)
+      provider.translate(*args)
     end
   end
 end

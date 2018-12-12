@@ -105,6 +105,17 @@ class ActionController::TestCase
   def non_kwarg_request_warning
     nil
   end
+
+  # Using the new request format, convert to old request format if needed
+  # @example
+  #   call_action :get, :show, params: { ... }
+  def call_action(verb, action, params: {})
+    if new_controller_test_format?
+      send verb, action, params: params
+    else
+      send verb, action, params
+    end
+  end
 end
 
 def new_controller_test_format?
