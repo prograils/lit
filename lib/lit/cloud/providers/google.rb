@@ -18,7 +18,7 @@ module Lit::Cloud::Providers
                                        credentials: config.keyfile_hash)
       result = @client.translate(text, from: from, to: to, **opts)
       case result
-      when String then result.text
+      when ::Google::Cloud::Translate::Translation then result.text
       when Array then result.map(&:text)
       end
     end
