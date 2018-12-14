@@ -42,7 +42,7 @@ module Lit::Cloud::Providers
     private
 
     def default_config
-      return { keyfile_hash: nil } if ENV['GOOGLE_TRANSLATE_API_KEY'].blank?
+      return { keyfile_hash: nil } if ENV['GOOGLE_TRANSLATE_API_KEYFILE'].blank?
       { keyfile_hash: JSON.parse(File.read(ENV['GOOGLE_TRANSLATE_API_KEYFILE'])) }
     rescue JSON::ParserError
       raise
