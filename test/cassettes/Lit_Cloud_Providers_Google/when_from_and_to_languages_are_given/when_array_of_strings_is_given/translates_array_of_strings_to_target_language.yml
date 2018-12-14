@@ -16,7 +16,7 @@ http_interactions:
       X-Goog-Api-Client:
       - gl-ruby/2.5.1 gccl/1.2.4
       Authorization:
-      - Bearer ya29.c.ElpyBrgBHnuUALGkKDoclP3a3U_qO2DO6U0NLPGFZCnNHAi4Z-xiKW2xgXwHrH3uYyq2C0xSPKKE0d6_Xz6mExDG4fLzJTtBzUC3xXXU7Ts5DwZVj2OrOpz5im4
+      - Bearer REDACTED
       Cache-Control:
       - no-store
       Accept-Encoding:
@@ -35,7 +35,7 @@ http_interactions:
       - Referer
       - X-Origin
       Date:
-      - Fri, 14 Dec 2018 10:04:17 GMT
+      - Fri, 14 Dec 2018 11:07:07 GMT
       Server:
       - ESF
       Cache-Control:
@@ -65,6 +65,6 @@ http_interactions:
             ]
           }
         }
-    http_version: 
-  recorded_at: Fri, 14 Dec 2018 10:04:17 GMT
+    http_version:
+  recorded_at: Fri, 14 Dec 2018 11:07:07 GMT
 recorded_with: VCR 4.0.0

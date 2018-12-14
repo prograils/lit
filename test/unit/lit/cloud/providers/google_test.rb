@@ -22,6 +22,7 @@ describe Lit::Cloud::Providers::Google, vcr: { record: :none } do
         "auth_provider_x509_cert_url"=>"https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url"=>"https://www.googleapis.com/robot/v1/metadata/x509/redacted@redacted.iam.gserviceaccount.com"}
     )
+    Google::Cloud::Translate::Credentials.stubs(:new).returns(OpenStruct.new)
   end
 
   describe 'when only :to language is given' do
