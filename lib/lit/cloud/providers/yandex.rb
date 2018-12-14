@@ -4,14 +4,22 @@ require_relative 'base'
 require 'net/http'
 
 module Lit::Cloud::Providers
+  # Yandex Translate API provider for Lit translation suggestions.
+  #
+  # Configuration:
+  #
+  #   require 'lit/cloud/providers/yandex'
+  #
+  #   Lit::Cloud.provider = Lit::Cloud::Providers::Yandeex
+  #
+  #   # API key can be given via ENV['YANDEX_TRANSLATE_API_KEY'].
+  #   #
+  #   # Alternatively, it can be set programmatically after setting provider:
+  #
+  #   Lit::Cloud.configure do |config|
+  #     config.api_key = 'the_api_key'
+  #   end
   class Yandex < Base
-    class << self
-      def require_config!
-        return if ENV['YANDEX_TRANSLATE_API_KEY'].present?
-        raise 'YANDEX_TRANSLATE_API_KEY env not given'
-      end
-    end
-
     def translate(text:, from: nil, to:, opts: {}) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
       # puts "api key is: #{config.api_key}"
       # puts "translating #{text} from #{from} to #{to}"
@@ -40,6 +48,11 @@ module Lit::Cloud::Providers
 
     def default_config
       { api_key: ENV['YANDEX_TRANSLATE_API_KEY'] }
+    end
+
+    def require_config!
+      return if config.api_key.present?
+      raise 'YANDEX_TRANSLATE_API_KEY env or `config.api_key` not given'
     end
   end
 end
