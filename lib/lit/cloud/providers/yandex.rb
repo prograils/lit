@@ -20,13 +20,13 @@ module Lit::Cloud::Providers
   #     config.api_key = 'the_api_key'
   #   end
   class Yandex < Base
-    def translate(text:, from: nil, to:, opts: {}) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
+    def translate(text:, from: nil, to:, **opts) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
       # puts "api key is: #{config.api_key}"
       # puts "translating #{text} from #{from} to #{to}"
       uri = URI('https://translate.yandex.net/api/v1.5/tr.json/translate')
       params = {
         key: config.api_key,
-        text: text,
+        text: sanitize_text(text),
         lang: [from, to].compact.join('-'),
         format: opts[:format],
         options: opts[:options]
@@ -34,14 +34,16 @@ module Lit::Cloud::Providers
       uri.query = URI.encode_www_form(params)
       res = Net::HTTP.get_response(uri)
 
-      case res
-      when Net::HTTPOK
-        translations = JSON.parse(res.body)['text']
-        translations.size == 1 ? translations.first : translations
-      else
-        raise TranslationError,
-              (JSON.parse(res.body) rescue "Unknown error: #{res.body}") # rubocop:disable Style/RescueModifier, Metrics/LineLength
-      end
+      unsanitize_text(
+        case res
+        when Net::HTTPOK
+          translations = JSON.parse(res.body)['text']
+          translations.size == 1 ? translations.first : translations
+        else
+          raise TranslationError,
+                (JSON.parse(res.body) rescue "Unknown error: #{res.body}") # rubocop:disable Style/RescueModifier, Metrics/LineLength
+        end
+      )
     end
 
     private
@@ -53,6 +55,28 @@ module Lit::Cloud::Providers
     def require_config!
       return if config.api_key.present?
       raise 'YANDEX_TRANSLATE_API_KEY env or `config.api_key` not given'
+    end
+
+    def sanitize_text(text_or_array)
+      case text_or_array
+      when String
+        text_or_array.gsub(/%{(.+?)}/, '%{_LIT_\1_LIT_}')
+      when Array
+        text_or_array.map { |s| sanitize_text(s) }
+      else
+        raise TypeError
+      end
+    end
+
+    def unsanitize_text(text_or_array)
+      case text_or_array
+      when String
+        text_or_array.gsub(/%{_LIT_(.+?)_LIT_}/, '%{\1}')
+      when Array
+        text_or_array.map { |s| unsanitize_text(s) }
+      else
+        raise TypeError
+      end
     end
   end
 end

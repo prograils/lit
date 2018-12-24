@@ -8,6 +8,8 @@ require_relative 'examples'
 
 describe Lit::Cloud::Providers::Google, vcr: { record: :none } do
   before do
+    # comment this stubbing block out, provide a .json keyfile and point to its location
+    # via GOOGLE_TRANSLATE_API_KEYFILE env to write tests (also set record: :all)
     Lit::Cloud::Providers::Google.any_instance.stubs(:default_config).returns(
       # rubocop:disable Metrics/LineLength
       keyfile_hash: { 'type' => 'service_account',

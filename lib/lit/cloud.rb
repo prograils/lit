@@ -22,8 +22,8 @@ module Lit
     #   auto-detection will be attempted.
     # @param [Symbol, String] to The language to translate to.
     # @param [Hash] opts Additional, provider-specific optional parameters.
-    module_function def translate(text:, from: nil, to:, opts: {})
-      provider.translate(text: text, from: from, to: to, opts: opts)
+    module_function def translate(text:, from: nil, to:, **opts)
+      provider.translate(text: text, from: from, to: to, **opts)
     end
 
     # Optional if provider-speciffic environment variables are set correctly.

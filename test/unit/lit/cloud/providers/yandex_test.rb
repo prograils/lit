@@ -9,11 +9,8 @@ require_relative 'examples'
 describe Lit::Cloud::Providers::Yandex,
          vcr: {
            match_requests_on: [:method,
-                               VCR.request_matchers.uri_without_param(:key)]
+                               VCR.request_matchers.uri_without_param(:key)],
+           record: :none # set :all and provide YANDEX_TRANSLATE_API_KEY to write tests
          } do
-  before do
-    ENV.stubs(:[]).with('YANDEX_TRANSLATE_API_KEY').returns('fakekey')
-  end
-
   cloud_provider_examples(Lit::Cloud::Providers::Yandex)
 end

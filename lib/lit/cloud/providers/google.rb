@@ -28,15 +28,17 @@ module Lit::Cloud::Providers
   #     }
   #   end
   class Google < Base
-    def translate(text:, from: nil, to:, opts: {})
+    def translate(text:, from: nil, to:, **opts)
       @client ||=
         ::Google::Cloud::Translate.new(project_id: config.keyfile_hash['project_id'],
                                        credentials: config.keyfile_hash)
-      result = @client.translate(text, from: from, to: to, **opts)
-      case result
-      when ::Google::Cloud::Translate::Translation then result.text
-      when Array then result.map(&:text)
-      end
+      result = @client.translate(sanitize_text(text), from: from, to: to, **opts)
+      unsanitize_text(
+        case result
+        when ::Google::Cloud::Translate::Translation then result.text
+        when Array then result.map(&:text)
+        end
+      )
     end
 
     private
@@ -53,6 +55,28 @@ module Lit::Cloud::Providers
     def require_config!
       return if config.keyfile_hash.present?
       raise 'GOOGLE_TRANSLATE_API_KEYFILE env or `config.keyfile_hash` not given'
+    end
+
+    def sanitize_text(text_or_array)
+      case text_or_array
+      when String
+        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>')
+      when Array
+        text_or_array.map { |s| sanitize_text(s) }
+      else
+        raise TypeError
+      end
+    end
+
+    def unsanitize_text(text_or_array)
+      case text_or_array
+      when String
+        text_or_array.gsub(/<code>__LIT__(.+?)__LIT__<\/code>/, '%{\1}')
+      when Array
+        text_or_array.map { |s| unsanitize_text(s) }
+      else
+        raise TypeError
+      end
     end
   end
 end

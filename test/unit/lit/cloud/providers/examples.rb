@@ -14,6 +14,15 @@ def cloud_provider_examples(described_klass)
       it 'translates single string to target language' do
         subject.must_match(/\blis\b/)
       end
+
+      describe 'when string contains interpolation' do
+        let(:text) { 'here is your %{meal}, enjoy' }
+
+        it 'does not translate stuff enclosed in %{}' do
+          subject.must_match(/%{meal}/)
+        end
+      end
+
     end
 
     describe 'when array of strings is given' do

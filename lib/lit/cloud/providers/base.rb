@@ -20,7 +20,7 @@ module Lit::Cloud::Providers
     #   auto-detection will be attempted.
     # @param [Symbol, String] to The language to translate to.
     # @param [Hash] opts Additional, provider-specific optional parameters.
-    def translate(text:, from: nil, to:, opts: {}) # rubocop:disable Lint/UnusedMethodArgument, Metrics/LineLength
+    def translate(text:, from: nil, to:, **opts) # rubocop:disable Lint/UnusedMethodArgument, Metrics/LineLength
       raise NotImplementedError
     end
 
@@ -45,9 +45,9 @@ module Lit::Cloud::Providers
       # @param [Symbol, String] from The language to translate from. If not given,
       #   auto-detection will be attempted.
       # @param [Symbol, String] to The language to translate to.
-      # @param [Hash] opts Additional, provider-specific optional parameters.      def translate(text:, from: nil, to:, opts: {})
-      def translate(text:, from: nil, to:, opts: {})
-        instance.translate(text: text, from: from, to: to, opts: opts)
+      # @param [Hash] opts Additional, provider-specific optional parameters.
+      def translate(text:, from: nil, to:, **opts)
+        instance.translate(text: text, from: from, to: to, **opts)
       end
 
       def configure

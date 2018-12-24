@@ -12,7 +12,7 @@ module Lit
       Lit.stubs(:authentication_function).returns(nil)
       Lit::Cloud.stubs(:provider).returns(
         Class.new do
-          def self.translate(text:, from: nil, to:, opts: {})
+          def self.translate(text:, from: nil, to:, **opts)
             "[#{from}->#{to}] #{text.reverse}"
           end
         end
