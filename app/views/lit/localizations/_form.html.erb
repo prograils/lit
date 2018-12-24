@@ -28,6 +28,10 @@
         <span class="sr-only">Source languages</span>
       </button>
       <ul class="dropdown-menu">
+        <li>
+          <a>Translate from:</a>
+        </li>
+        <li role="separator" class="divider"></li>
         <% ([I18n.default_locale] + (I18n.available_locales - [I18n.default_locale]) + [:auto]).each_with_index do |source_locale, i| %>
           <li>
             <%= link_to cloud_translation_path(from: source_locale, localization_id: @localization.id), remote: true do %>
