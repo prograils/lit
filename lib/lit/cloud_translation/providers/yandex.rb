@@ -3,20 +3,20 @@
 require_relative 'base'
 require 'net/http'
 
-module Lit::Cloud::Providers
+module Lit::CloudTranslation::Providers
   # Yandex Translate API provider for Lit translation suggestions.
   #
   # Configuration:
   #
-  #   require 'lit/cloud/providers/yandex'
+  #   require 'lit/cloud_translation/providers/yandex'
   #
-  #   Lit::Cloud.provider = Lit::Cloud::Providers::Yandeex
+  #   Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Yandeex
   #
   #   # API key can be given via ENV['YANDEX_TRANSLATE_API_KEY'].
   #   #
   #   # Alternatively, it can be set programmatically after setting provider:
   #
-  #   Lit::Cloud.configure do |config|
+  #   Lit::CloudTranslation.configure do |config|
   #     config.api_key = 'the_api_key'
   #   end
   class Yandex < Base

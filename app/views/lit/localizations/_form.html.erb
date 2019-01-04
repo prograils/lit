@@ -20,9 +20,9 @@
   <button class="btn btn-primary btn-sm" type="submit"><%= I18n.t('lit.common.update', default: "Update") %></button>
   <button class="btn btn-default btn-sm cancel" type="reset"><%= I18n.t('lit.common.cancel', default: 'Cancel') %></button>
 
-  <% if Lit::Cloud.provider %>
+  <% if Lit::CloudTranslation.provider %>
     <div class="btn-group pull-right">
-      <%= link_to "Translate using #{Lit::Cloud.provider.name.demodulize}", cloud_translation_path(from: I18n.default_locale, localization_id: @localization.id), remote: true, class: 'btn btn-sm btn-default' %>
+      <%= link_to "Translate using #{Lit::CloudTranslation.provider.name.demodulize}", cloud_translation_path(from: I18n.default_locale, localization_id: @localization.id), remote: true, class: 'btn btn-sm btn-default' %>
       <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
         <span class="sr-only">Source languages</span>

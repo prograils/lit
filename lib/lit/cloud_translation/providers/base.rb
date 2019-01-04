@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Lit::Cloud::Providers
+module Lit::CloudTranslation::Providers
   # Abstract base class for cloud translation providers, providing a skeleton
   # for the provider's functionality (mainly the #translate method) as well as
   # a configuration management mechanism.
@@ -29,7 +29,7 @@ module Lit::Cloud::Providers
     # Loads specific information from environment variables or other sources
     # as the default configuartion for the translation provider.
     #
-    # This can be overridden using `Lit::Cloud.configure`.
+    # This can be overridden using `Lit::CloudTranslation.configure`.
     def default_config
       {}
     end

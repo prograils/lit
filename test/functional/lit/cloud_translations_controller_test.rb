@@ -10,7 +10,7 @@ module Lit
     setup do
       @routes = Lit::Engine.routes
       Lit.stubs(:authentication_function).returns(nil)
-      Lit::Cloud.stubs(:provider).returns(
+      Lit::CloudTranslation.stubs(:provider).returns(
         Class.new do
           def self.translate(text:, from: nil, to:, **opts)
             "[#{from}->#{to}] #{text.reverse}"

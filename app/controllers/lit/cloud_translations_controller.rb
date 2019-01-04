@@ -13,7 +13,7 @@ module Lit
           from: params[:from],
           to: @target_localization.locale.locale
         }.compact
-      @translated_text = Lit::Cloud.translate(opts)
+      @translated_text = Lit::CloudTranslation.translate(opts)
     end
   end
 end

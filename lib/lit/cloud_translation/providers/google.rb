@@ -3,14 +3,14 @@
 require_relative 'base'
 require 'google/cloud/translate'
 
-module Lit::Cloud::Providers
+module Lit::CloudTranslation::Providers
   # Google Cloud Translation API provider for Lit translation suggestions.
   #
   # Configuration:
   #
-  #   require 'lit/cloud/providers/google'
+  #   require 'lit/cloud_translation/providers/google'
   #
-  #   Lit::Cloud.provider = Lit::Cloud::Providers::Google
+  #   Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Google
   #
   #   # Service account configuration can be given via a file pointed to by
   #   # ENV['GOOGLE_TRANSLATE_API_KEYFILE'] (see here:
@@ -19,7 +19,7 @@ module Lit::Cloud::Providers
   #   # Alternatively, the contents of that file can be given as a Ruby hash
   #   # and passed like the following:
   #
-  #   Lit::Cloud.configure do |config|
+  #   Lit::CloudTranslation.configure do |config|
   #     config.keyfile_hash = {
   #       'type' => 'service_account',
   #       'project_id' => 'foo',

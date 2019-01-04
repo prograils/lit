@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'lit/cloud/providers/google'
+require 'lit/cloud_translation/providers/google'
 require 'minitest/mock'
 
 require_relative 'examples'
 
-describe Lit::Cloud::Providers::Google, vcr: { record: :none } do
+describe Lit::CloudTranslation::Providers::Google, vcr: { record: :none } do
   before do
     # comment this stubbing block out, provide a .json keyfile and point to its location
     # via GOOGLE_TRANSLATE_API_KEYFILE env to write tests (also set record: :all)
-    Lit::Cloud::Providers::Google.any_instance.stubs(:default_config).returns(
+    Lit::CloudTranslation::Providers::Google.any_instance.stubs(:default_config).returns(
       # rubocop:disable Metrics/LineLength
       keyfile_hash: { 'type' => 'service_account',
                       'project_id' => 'redacted',
@@ -27,5 +27,5 @@ describe Lit::Cloud::Providers::Google, vcr: { record: :none } do
     Google::Cloud::Translate::Credentials.stubs(:new).returns(OpenStruct.new)
   end
 
-  cloud_provider_examples(Lit::Cloud::Providers::Google)
+  cloud_provider_examples(Lit::CloudTranslation::Providers::Google)
 end
