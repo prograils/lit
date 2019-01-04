@@ -2,16 +2,18 @@
 
 module Lit
   module Cloud
+    module_function
+
     # Sets the provider for cloud translations.
     # @param [Class] provider Selected translation provider,
     #   descending from Lit::Cloud::Providers::Base
-    module_function def provider=(provider)
+    def provider=(provider)
       @provider = provider
     end
 
     # Returns the currently active cloud translation provider,
     # descending from Lit::Cloud::Providers::Base.
-    module_function def provider
+    def provider
       @provider
     end
 
@@ -22,7 +24,7 @@ module Lit
     #   auto-detection will be attempted.
     # @param [Symbol, String] to The language to translate to.
     # @param [Hash] opts Additional, provider-specific optional parameters.
-    module_function def translate(text:, from: nil, to:, **opts)
+    def translate(text:, from: nil, to:, **opts)
       provider.translate(text: text, from: from, to: to, **opts)
     end
 
@@ -35,7 +37,7 @@ module Lit
     #     # For Yandex, this overrides the YANDEX_TRANSLATE_API_KEY env
     #     config.api_key = 'my_awesome_api_key'
     #   end
-    module_function def configure(&block)
+    def configure(&block)
       unless provider
         raise 'Translation provider not selected yet. Use `Lit::Cloud' \
               '.provider = PROVIDER_KLASS` before calling #configure.'
