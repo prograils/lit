@@ -3,13 +3,18 @@
 module Lit
   class CloudTranslationsController < ::Lit::ApplicationController
     def show
+      params.delete(:from) if params[:from] == 'auto'
       @target_localization = Localization.find(params[:localization_id])
       @localization_key = @target_localization.localization_key
-      @localization = @localization_key.localizations.joins(:locale)
-                                       .find_by!(lit_locales: { locale: params[:from] })
+      if params[:from]
+        @localization = @localization_key.localizations.joins(:locale)
+                                         .find_by!(lit_locales: { locale: params[:from] })
+      end
       opts =
         {
-          text: @localization.value,
+          # if :from was auto, translate from the target localization's
+          # current text itself
+          text: (@localization || @target_localization).value,
           from: params[:from],
           to: @target_localization.locale.locale
         }.compact

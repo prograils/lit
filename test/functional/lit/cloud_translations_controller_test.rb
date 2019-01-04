@@ -41,7 +41,7 @@ module Lit
     test 'translating an array localization from known language' do
       call_action :get, :show,
                   params: { localization_id: @array_localization.id, from: 'en', format: 'js' }
-      assert assigns[:localization] = @en_array_localization
+      assert assigns[:localization] == @en_array_localization
       assert assigns[:target_localization] == @array_localization
       assert assigns[:translated_text] == "[en->pl] #{@en_array_localization.translated_value.reverse}"
     end
@@ -49,9 +49,16 @@ module Lit
     test 'translating a string localization from known language' do
       call_action :get, :show,
                   params: { localization_id: @string_localization.id, from: 'en', format: 'js' }
-      assert assigns[:localization] = @en_string_localization
+      assert assigns[:localization] == @en_string_localization
       assert assigns[:target_localization] == @string_localization
       assert assigns[:translated_text] == "[en->pl] #{@en_string_localization.translated_value.reverse}"
+    end
+
+    test 'translating a string localization from itself as auto' do
+      call_action :get, :show,
+                  params: { localization_id: @string_localization.id, from: 'auto', format: 'js' }
+      assert assigns[:target_localization] == @string_localization
+      assert assigns[:translated_text] == "[->pl] #{@string_localization.translated_value.reverse}"
     end
   end
 end
