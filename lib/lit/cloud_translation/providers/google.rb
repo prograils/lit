@@ -16,8 +16,20 @@ module Lit::CloudTranslation::Providers
   #   # ENV['GOOGLE_TRANSLATE_API_KEYFILE'] (see here:
   #   # https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
   #   #
+  #   # Instead of providing the keyfile, credentials can be given using
+  #   # GOOGLE_TRANSLATE_API_<element> environment variables, where e.g.
+  #   # the GOOGLE_TRANSLATE_API_PROJECT_ID variable corresponds to the
+  #   # `project_id` element of your credentials. Typically, only the following
+  #   # variables are mandatory:
+  #   # * GOOGLE_TRANSLATE_API_PROJECT_ID
+  #   # * GOOGLE_TRANSLATE_API_PRIVATE_KEY_ID
+  #   # * GOOGLE_TRANSLATE_API_PRIVATE_KEY (be sure that it contains correct line breaks)
+  #   # * GOOGLE_TRANSLATE_API_CLIENT_EMAIL
+  #   # * GOOGLE_TRANSLATE_API_CLIENT_ID
+  #   #
   #   # Alternatively, the contents of that file can be given as a Ruby hash
-  #   # and passed like the following:
+  #   # and passed like the following (be careful to use secrets or something
+  #   # that prevents exposing private credentials):
   #
   #   Lit::CloudTranslation.configure do |config|
   #     config.keyfile_hash = {
@@ -44,7 +56,16 @@ module Lit::CloudTranslation::Providers
     private
 
     def default_config
-      return { keyfile_hash: nil } if ENV['GOOGLE_TRANSLATE_API_KEYFILE'].blank?
+      if ENV['GOOGLE_TRANSLATE_API_KEYFILE'].blank?
+        env_keys = ENV.keys.grep(/\AGOOGLE_TRANSLATE_API_/)
+        keyfile_keys = env_keys.map(&:downcase).map { |k| k.gsub('google_translate_api_', '') }
+        keyfile_key_to_env_key_mapping = keyfile_keys.zip(env_keys).to_h
+        return {
+          keyfile_hash: keyfile_key_to_env_key_mapping.transform_values do |env_key|
+            ENV[env_key]
+          end
+        }
+      end
       { keyfile_hash: JSON.parse(File.read(ENV['GOOGLE_TRANSLATE_API_KEYFILE'])) }
     rescue JSON::ParserError
       raise
