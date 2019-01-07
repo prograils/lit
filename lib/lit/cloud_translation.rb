@@ -2,6 +2,8 @@
 
 module Lit
   module CloudTranslation
+    class TranslationError < StandardError; end
+
     module_function
 
     # Sets the provider for cloud translations.

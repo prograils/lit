@@ -60,5 +60,25 @@ module Lit
       assert assigns[:target_localization] == @string_localization
       assert assigns[:translated_text] == "[->pl] #{@string_localization.translated_value.reverse}"
     end
+
+    test 'translation error is gracefully intercepted' do
+      Lit::CloudTranslation
+        .provider
+        .stubs(:translate)
+        .raises(Lit::CloudTranslation::TranslationError, 'Something went wrong')
+
+      call_action :get, :show,
+                  params: { localization_id: @string_localization.id, from: 'auto', format: 'js' }
+
+      assert assigns[:error_message].match(/Something went wrong/)
+      pseudo_browser = ExecJS.compile(
+        <<-JS
+        var alert =
+          function(text) { return "Displaying alert: " + "#{assigns[:error_message]}" }
+        JS
+      )
+      assert pseudo_browser.eval(response.body) == 'Displaying alert: ' \
+                                                   "#{assigns[:error_message]}"
+    end
   end
 end

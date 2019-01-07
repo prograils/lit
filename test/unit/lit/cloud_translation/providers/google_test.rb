@@ -28,4 +28,36 @@ describe Lit::CloudTranslation::Providers::Google, vcr: { record: :none } do
   end
 
   cloud_provider_examples(Lit::CloudTranslation::Providers::Google)
+
+  describe 'errors' do
+    describe 'when credentials error occurs' do
+      before do
+        ::Google::Cloud::Translate::Api
+          .any_instance
+          .stubs(:translate)
+          .raises(Signet::AuthorizationError, 'Credentials error')
+      end
+
+      it 'raises Lit::CloudTranslation::TranslationError' do
+        assert_raises Lit::CloudTranslation::TranslationError do
+          Lit::CloudTranslation::Providers::Google.translate(text: text, to: to)
+        end
+      end
+    end
+
+    describe 'when translation error occurs' do
+      before do
+        ::Google::Cloud::Translate::Api
+          .any_instance
+          .stubs(:translate)
+          .raises(::Google::Cloud::InternalError, 'Google failure')
+      end
+
+      it 'raises Lit::CloudTranslation::TranslationError' do
+        assert_raises Lit::CloudTranslation::TranslationError do
+          Lit::CloudTranslation::Providers::Google.translate(text: text, to: to)
+        end
+      end
+    end
+  end
 end

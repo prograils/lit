@@ -19,6 +19,8 @@ module Lit
           to: @target_localization.locale.locale
         }.compact
       @translated_text = Lit::CloudTranslation.translate(opts)
+    rescue Lit::CloudTranslation::TranslationError => e
+      @error_message = "Translation failed. #{e.message}"
     end
   end
 end

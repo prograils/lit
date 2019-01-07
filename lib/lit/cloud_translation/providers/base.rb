@@ -36,8 +36,6 @@ module Lit::CloudTranslation::Providers
 
     private_class_method :new
 
-    class TranslationError < StandardError; end
-
     class << self
       # Using the provider object's singleton instance, translates a given text from
       # a given language to a different one.

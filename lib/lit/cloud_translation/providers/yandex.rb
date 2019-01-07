@@ -40,8 +40,8 @@ module Lit::CloudTranslation::Providers
           translations = JSON.parse(res.body)['text']
           translations.size == 1 ? translations.first : translations
         else
-          raise TranslationError,
-                (JSON.parse(res.body) rescue "Unknown error: #{res.body}") # rubocop:disable Style/RescueModifier, Metrics/LineLength
+          raise ::Lit::CloudTranslation::TranslationError,
+                (JSON.parse(res.body)['message'] rescue "Unknown error: #{res.body}") # rubocop:disable Style/RescueModifier, Metrics/LineLength
         end
       )
     end

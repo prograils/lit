@@ -51,6 +51,14 @@ module Lit::CloudTranslation::Providers
         when Array then result.map(&:text)
         end
       )
+    rescue Signet::AuthorizationError => e
+      error_description =
+        'Google credentials error: ' + # rubocop:disable Style/RescueModifier
+        JSON.parse(e.response.body)['error_description'] rescue 'Unknown error'
+      raise ::Lit::CloudTranslation::TranslationError, error_description,
+            cause: e
+    rescue ::Google::Cloud::Error => e
+      raise ::Lit::CloudTranslation::TranslationError, e.message, cause: e
     end
 
     private
