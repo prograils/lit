@@ -148,10 +148,8 @@ These credentials can be given in three ways:
   ```
 * directly via `GOOGLE_TRANSLATE_API_<element>` environment variables, where e.g. the `GOOGLE_TRANSLATE_API_PROJECT_ID` variable corresponds to the `project_id` element of a JSON keyfile. Typically, only the following variables are mandatory:
   * `GOOGLE_TRANSLATE_API_PROJECT_ID`
-  * `GOOGLE_TRANSLATE_API_PRIVATE_KEY_ID`
   * `GOOGLE_TRANSLATE_API_PRIVATE_KEY` (make sure that it contains correct line breaks and markers of the private key's begin and end)
   * `GOOGLE_TRANSLATE_API_CLIENT_EMAIL`
-  * `GOOGLE_TRANSLATE_API_CLIENT_ID`
 
 #### Yandex.Translate API
 
