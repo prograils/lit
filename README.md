@@ -169,6 +169,17 @@ Lit::CloudTranslation.configure do |config|
 end
 ```
 
+### 0.3 -> 1.0 upgrade guide
+
+Also applies to upgrading from `0.4.pre.alpha` versions.
+
+1. Specify `gem 'lit', '~> 1.0'` in your Gemfile and run `bundle update lit`.
+2. Run Lit migrations - `rails db:migrate`.
+   * __Caution:__ One of the new migrations adds a unique index in `lit_localizations` on `(localization_key_id, locale_id)`, which may cause constraint violations in some cases. If you encounter such errors during running this migration - in this case you'll need to enter Rails console and remove duplicates manually. The following query might be helpful to determine duplicate locale/localization key ID pairs:
+   ```
+   Lit::Localization.group(:locale_id, :localization_key_id).having('count(*) > 1').count
+   ```
+
 ### 0.2 -> 0.3 upgrade guide
 
 1. Specify exact lit version in your Gemfile: `gem 'lit', '~> 0.3.0'`
