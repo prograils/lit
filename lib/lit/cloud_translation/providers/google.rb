@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'base'
-require 'google/cloud/translate'
+begin
+  require 'google/cloud/translate'
+rescue LoadError
+  raise StandardError, 'You need to add "gem \'google-cloud-translate\'" to your Gemfile to support Google Cloud Translation'
+end
 
 module Lit::CloudTranslation::Providers
   # Google Cloud Translation API provider for Lit translation suggestions.
