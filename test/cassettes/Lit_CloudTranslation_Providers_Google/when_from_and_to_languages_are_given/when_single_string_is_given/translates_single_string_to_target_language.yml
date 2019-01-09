@@ -1,0 +1,111 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["The quick brown fox jumps over the lazy dog."],"target":"pl","source":"en"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.1 gccl/1.2.4
+      Authorization:
+      - Bearer REDACTED
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Fri, 14 Dec 2018 11:07:06 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJTenlia2kgYnLEhXpvd3kgbGlzIHNrYWN6ZSBuYWQgbGVuaXd5bSBwc2VtLiIKICAgICAgfQogICAgXQogIH0KfQo=
+    http_version:
+  recorded_at: Fri, 14 Dec 2018 11:07:06 GMT
+- request:
+    method: post
+    uri: https://oauth2.googleapis.com/token
+    body:
+      encoding: ASCII-8BIT
+      string: REDACTED
+    headers:
+      User-Agent:
+      - Faraday v0.15.4
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Fri, 14 Dec 2018 11:26:37 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "access_token": "REDACTED",
+          "expires_in": 3600,
+          "token_type": "Bearer"
+        }
+    http_version:
+  recorded_at: Fri, 14 Dec 2018 11:26:37 GMT
+recorded_with: VCR 4.0.0

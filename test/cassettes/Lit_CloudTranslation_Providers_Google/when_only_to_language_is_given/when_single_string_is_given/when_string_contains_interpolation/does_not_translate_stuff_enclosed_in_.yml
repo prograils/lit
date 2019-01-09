@@ -1,0 +1,288 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["here is your \u003ccode\u003e__LIT__meal__LIT__\u003c/code\u003e,
+        enjoy"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.0 gccl/1.2.4
+      Authorization:
+      - Bearer ya29.c.Elp8BjKPGFGx3jmKbT4HXocM0LnToKXnSh9my-S6P4q0k1HurXMIoVFIo0WzXNCyiCiIONvj6pGLHc3WbokEKYG9fXTDb36AFd0qVilnpaZ5HcO59Q9uIqqLMPw
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Mon, 24 Dec 2018 12:09:10 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJ0dXRhaiBqZXN0IHR3w7NqIFx1MDAzY2NvZGVcdTAwM2VfX0xJVF9fbWVhbF9fTElUX19cdTAwM2MvY29kZVx1MDAzZSAsIGNpZXN6IHNpxJkiLAogICAgICAgICJkZXRlY3RlZFNvdXJjZUxhbmd1YWdlIjogImVuIgogICAgICB9CiAgICBdCiAgfQp9Cg==
+    http_version: 
+  recorded_at: Mon, 24 Dec 2018 12:08:02 GMT
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["here is your \u003ccode\u003e__LIT__meal__LIT__\u003c/code\u003e,
+        enjoy"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.0 gccl/1.2.4
+      Authorization:
+      - Bearer ya29.c.Elp8BjKPGFGx3jmKbT4HXocM0LnToKXnSh9my-S6P4q0k1HurXMIoVFIo0WzXNCyiCiIONvj6pGLHc3WbokEKYG9fXTDb36AFd0qVilnpaZ5HcO59Q9uIqqLMPw
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Mon, 24 Dec 2018 12:09:12 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJ0dXRhaiBqZXN0IHR3w7NqIFx1MDAzY2NvZGVcdTAwM2VfX0xJVF9fbWVhbF9fTElUX19cdTAwM2MvY29kZVx1MDAzZSAsIGNpZXN6IHNpxJkiLAogICAgICAgICJkZXRlY3RlZFNvdXJjZUxhbmd1YWdlIjogImVuIgogICAgICB9CiAgICBdCiAgfQp9Cg==
+    http_version: 
+  recorded_at: Mon, 24 Dec 2018 12:08:04 GMT
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["here is your \u003ccode\u003e__LIT__meal__LIT__\u003c/code\u003e,
+        enjoy"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.0 gccl/1.2.4
+      Authorization:
+      - Bearer ya29.c.Elp8BjKPGFGx3jmKbT4HXocM0LnToKXnSh9my-S6P4q0k1HurXMIoVFIo0WzXNCyiCiIONvj6pGLHc3WbokEKYG9fXTDb36AFd0qVilnpaZ5HcO59Q9uIqqLMPw
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Mon, 24 Dec 2018 12:09:14 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJ0dXRhaiBqZXN0IHR3w7NqIFx1MDAzY2NvZGVcdTAwM2VfX0xJVF9fbWVhbF9fTElUX19cdTAwM2MvY29kZVx1MDAzZSAsIGNpZXN6IHNpxJkiLAogICAgICAgICJkZXRlY3RlZFNvdXJjZUxhbmd1YWdlIjogImVuIgogICAgICB9CiAgICBdCiAgfQp9Cg==
+    http_version: 
+  recorded_at: Mon, 24 Dec 2018 12:08:06 GMT
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["here is your \u003ccode\u003e__LIT__meal__LIT__\u003c/code\u003e,
+        enjoy"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.0 gccl/1.2.4
+      Authorization:
+      - Bearer ya29.c.Elp8BjKPGFGx3jmKbT4HXocM0LnToKXnSh9my-S6P4q0k1HurXMIoVFIo0WzXNCyiCiIONvj6pGLHc3WbokEKYG9fXTDb36AFd0qVilnpaZ5HcO59Q9uIqqLMPw
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Mon, 24 Dec 2018 12:09:16 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJ0dXRhaiBqZXN0IHR3w7NqIFx1MDAzY2NvZGVcdTAwM2VfX0xJVF9fbWVhbF9fTElUX19cdTAwM2MvY29kZVx1MDAzZSAsIGNpZXN6IHNpxJkiLAogICAgICAgICJkZXRlY3RlZFNvdXJjZUxhbmd1YWdlIjogImVuIgogICAgICB9CiAgICBdCiAgfQp9Cg==
+    http_version: 
+  recorded_at: Mon, 24 Dec 2018 12:08:08 GMT
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["here is your \u003ccode\u003e__LIT__meal__LIT__\u003c/code\u003e,
+        enjoy"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.0 gccl/1.2.4
+      Authorization:
+      - Bearer ya29.c.Elp8BjKPGFGx3jmKbT4HXocM0LnToKXnSh9my-S6P4q0k1HurXMIoVFIo0WzXNCyiCiIONvj6pGLHc3WbokEKYG9fXTDb36AFd0qVilnpaZ5HcO59Q9uIqqLMPw
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Mon, 24 Dec 2018 12:09:17 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJ0dXRhaiBqZXN0IHR3w7NqIFx1MDAzY2NvZGVcdTAwM2VfX0xJVF9fbWVhbF9fTElUX19cdTAwM2MvY29kZVx1MDAzZSAsIGNpZXN6IHNpxJkiLAogICAgICAgICJkZXRlY3RlZFNvdXJjZUxhbmd1YWdlIjogImVuIgogICAgICB9CiAgICBdCiAgfQp9Cg==
+    http_version: 
+  recorded_at: Mon, 24 Dec 2018 12:08:09 GMT
+recorded_with: VCR 4.0.0

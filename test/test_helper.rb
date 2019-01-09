@@ -14,6 +14,9 @@ require 'database_cleaner'
 require 'test_declarative'
 require 'mocha/setup'
 require 'webmock'
+require 'vcr'
+require 'minitest-vcr'
+require 'pry-byebug'
 
 begin
   require 'rails-controller-testing'
@@ -102,8 +105,26 @@ class ActionController::TestCase
   def non_kwarg_request_warning
     nil
   end
+
+  # Using the new request format, convert to old request format if needed
+  # @example
+  #   call_action :get, :show, params: { ... }
+  def call_action(verb, action, params: {})
+    if new_controller_test_format?
+      send verb, action, params: params
+    else
+      send verb, action, params
+    end
+  end
 end
 
 def new_controller_test_format?
   Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
 end
+
+VCR.configure do |config|
+  config.cassette_library_dir = 'test/cassettes'
+  config.hook_into :webmock
+end
+
+MinitestVcr::Spec.configure!

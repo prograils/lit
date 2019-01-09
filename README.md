@@ -107,6 +107,79 @@ Keys marked as deleted (i.e. still existing but deleted from the Lit UI) are *no
 
 Deleted keys whose translations are encountered during import are restored automatically.
 
+### Cloud translation services
+
+Lit can use external translation services such as [Google Cloud Translation API](https://cloud.google.com/translate/) and [Yandex.Translate API](https://translate.yandex.com/developers) to tentatively translate localizations to a given language.
+Currently, Google and Yandex translation providers are supported, but extending it to any other translation provider of your choice is as easy as subclassing `Lit::CloudTranslation::Providers::Base`; see classes in `lib/lit/cloud_translation/providers` for reference.
+
+#### Usage
+
+Configure your translation provider using one of routines described below. When a translation provider is configured, each localization in Lit web UI will have a "Translate using _Provider Name_" button next to it, which by default translates to the localization's language from the localization currently saved for the app's `I18n.default_locale`.
+Next to the button, there is a dropdown that allows translating from the key's localization in a language different than the default one.
+
+#### Google Cloud Translation API
+
+Insert this into your Lit initializer:
+```
+require 'lit/cloud_translation/providers/google'
+
+Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Google
+```
+
+...and make sure you have this in your Gemfile:
+```
+gem 'google-cloud-translate'
+```
+
+To use translation via Google, you need to obtain a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) containing all the credentials required by the API.
+
+These credentials can be given in three ways:
+* via a `.json` keyfile, the path to which should be stored in the `GOOGLE_TRANSLATE_API_KEYFILE` environment variable,
+* programmatically, in the initializer - be sure to use secrets in all the sensitive fields so you don't expose private credentials in the code:
+  ```
+  Lit::CloudTranslation.configure do |config|
+    config.keyfile_hash = {
+      'type' => 'service_account',
+      'project_id' => 'foo',
+      'private_key_id' => 'keyid',
+      ... # see Google docs link above for reference
+    }
+  end
+  ```
+* directly via `GOOGLE_TRANSLATE_API_<element>` environment variables, where e.g. the `GOOGLE_TRANSLATE_API_PROJECT_ID` variable corresponds to the `project_id` element of a JSON keyfile. Typically, only the following variables are mandatory:
+  * `GOOGLE_TRANSLATE_API_PROJECT_ID`
+  * `GOOGLE_TRANSLATE_API_PRIVATE_KEY` (make sure that it contains correct line breaks and markers of the private key's begin and end)
+  * `GOOGLE_TRANSLATE_API_CLIENT_EMAIL`
+
+#### Yandex.Translate API
+
+Insert this into your Lit initializer:
+```
+require 'lit/cloud_translation/providers/yandex'
+
+Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Yandex
+```
+
+To use Yandex translation, an [API key must be obtained](https://translate.yandex.com/developers/keys). Then, you can pass it to your application via the `YANDEX_TRANSLATE_API_KEY` environment variable.
+
+The API key can also be set programmatically in your Lit initializer (again, be sure to use secrets if you choose to do so):
+```
+Lit::CloudTranslation.configure do |config|
+  config.api_key = 'the_api_key'
+end
+```
+
+### 0.3 -> 1.0 upgrade guide
+
+Also applies to upgrading from `0.4.pre.alpha` versions.
+
+1. Specify `gem 'lit', '~> 1.0'` in your Gemfile and run `bundle update lit`.
+2. Run Lit migrations - `rails db:migrate`.
+   * __Caution:__ One of the new migrations adds a unique index in `lit_localizations` on `(localization_key_id, locale_id)`, which may cause constraint violations in some cases. If you encounter such errors during running this migration - in this case you'll need to enter Rails console and remove duplicates manually. The following query might be helpful to determine duplicate locale/localization key ID pairs:
+   ```
+   Lit::Localization.group(:locale_id, :localization_key_id).having('count(*) > 1').count
+   ```
+
 ### 0.2 -> 0.3 upgrade guide
 
 1. Specify exact lit version in your Gemfile: `gem 'lit', '~> 0.3.0'`

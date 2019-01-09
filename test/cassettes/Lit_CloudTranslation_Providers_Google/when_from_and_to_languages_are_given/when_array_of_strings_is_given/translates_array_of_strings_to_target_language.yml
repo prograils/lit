@@ -1,0 +1,70 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["awesome","stuff"],"target":"pl","source":"en"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.1 gccl/1.2.4
+      Authorization:
+      - Bearer REDACTED
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Fri, 14 Dec 2018 11:07:07 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+          "data": {
+            "translations": [
+              {
+                "translatedText": "niesamowite"
+              },
+              {
+                "translatedText": "rzeczy"
+              }
+            ]
+          }
+        }
+    http_version:
+  recorded_at: Fri, 14 Dec 2018 11:07:07 GMT
+recorded_with: VCR 4.0.0

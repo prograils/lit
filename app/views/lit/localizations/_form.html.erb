@@ -19,5 +19,32 @@
 
   <button class="btn btn-primary btn-sm" type="submit"><%= I18n.t('lit.common.update', default: "Update") %></button>
   <button class="btn btn-default btn-sm cancel" type="reset"><%= I18n.t('lit.common.cancel', default: 'Cancel') %></button>
+
+  <% if Lit::CloudTranslation.provider %>
+    <div class="btn-group pull-right">
+      <%= link_to "Translate using #{Lit::CloudTranslation.provider.name.demodulize}", cloud_translation_path(from: I18n.default_locale, localization_id: @localization.id), remote: true, class: 'btn btn-sm btn-default' %>
+      <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Source languages</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a>Translate from:</a>
+        </li>
+        <li role="separator" class="divider"></li>
+        <% (available_locales_with_default_first + [:auto]).each_with_index do |source_locale, i| %>
+          <li>
+            <%= link_to cloud_translation_path(from: source_locale, localization_id: @localization.id), remote: true do %>
+              <% if i == 0 %>
+                <strong><%= source_locale.to_s %></strong>
+              <% else %>
+                <%= source_locale.to_s %>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 <% end %>
 

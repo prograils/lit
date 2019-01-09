@@ -1,0 +1,14 @@
+<% if @translated_text.is_a?(String) %>
+  $('.localization_row[data-id="<%= @target_localization.id %>"] textarea').val("<%= j @translated_text %>");
+<% elsif @translated_text.is_a?(Array) %>
+  $inputs = $('.localization_row[data-id="<%= @target_localization.id %>"] input[type=text]');
+  var translated_elements = JSON.parse("<%= j @translated_text.to_json.html_safe %>");
+  for (i in $inputs.toArray()) {
+    $input = $($inputs[i]);
+    $input.val(translated_elements[i]);
+  }
+<% elsif @error_message.present? %>
+  alert("<%= j @error_message %>")
+<% else %>
+  alert("An unknown error has occurred while translating.")
+<% end %>
