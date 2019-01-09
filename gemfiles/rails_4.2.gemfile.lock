@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    lit (0.4.0.pre.alpha.5)
+    lit (1.0)
       coffee-rails
       jquery-rails
       rails (>= 4.2.0)
