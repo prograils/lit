@@ -154,6 +154,28 @@ class ImportTest < ActiveSupport::TestCase
     end
   end
 
+  test "imports from csv preserving nil values in arrays" do
+    input = imported_file('import.csv.array_with_nil')
+    Lit::Import.call(input: input, format: 'csv')
+    new_localization_key =
+      Lit::LocalizationKey.find_by(localization_key: 'scopes.csvarray')
+      localization = lambda do |locale|
+        new_localization_key
+          .localizations
+          .joins(:locale)
+          .find_by(lit_locales: { locale: locale })
+      end
+      assert_equal(
+        localization.call('en').translated_value,
+        [nil, 'val0 en', 'val1 en', nil, 'val3 en']
+      )
+      assert_equal(
+        localization.call('pl').translated_value,
+        [nil, 'val0 pl', 'val1 pl', 'val2 pl', nil]
+      )
+
+  end
+
   def imported_file(name)
     File.read(Lit::Engine.root.join('test', 'fixtures', 'lit', 'files', name))
   end

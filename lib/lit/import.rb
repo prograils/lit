@@ -158,7 +158,7 @@ module Lit
             accu[-1] = [
               row.first,
               *accu[-1].drop(1)
-                       .map { |x| Array.wrap(x) }
+                       .map { |x| Array.wrap(x).presence || [x] }
                        .zip(row.drop(1)).map(&:flatten)
             ]
           end
