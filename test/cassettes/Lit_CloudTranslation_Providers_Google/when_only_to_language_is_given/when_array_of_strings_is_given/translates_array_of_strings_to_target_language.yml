@@ -67,6 +67,58 @@ http_interactions:
             ]
           }
         }
-    http_version:
+    http_version: 
   recorded_at: Fri, 14 Dec 2018 11:07:06 GMT
+- request:
+    method: post
+    uri: https://oauth2.googleapis.com/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzdGFydGluZy1hY2NvdW50LXViczN0amkwdW81YUBsaXRib3gtMTU0MzMyNjYxODU5My5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imh0dHBzOi8vb2F1dGgyLmdvb2dsZWFwaXMuY29tL3Rva2VuIiwiZXhwIjoxNTQ3MTI4MDk1LCJpYXQiOjE1NDcxMjc5NzUsInNjb3BlIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vYXV0aC9jbG91ZC1wbGF0Zm9ybSJ9.lnCmsIS61sxoZjFbVsYSwNic-6y3dCAwVv6UnXfvQAujmwcRL-UTC56dDa8zwVYd-RaCfLKhRWg337e0xoM6HT79RjBOPpj8kdBajRLgcruj0w9XNcvQ3dFyJifps4hMxCe9cTpjulexQDVJD_p2bhQO5mU9r4-FSxL36oz5rcc0aJGT8Dr4PP7mk9cJ2PI1zzHEc36QjhwkycrEuJOtJgAY-USSUEYjFDwK6zJzxPiPHOhRkGuDHBSPFcDyOB6rIZ5mLol96-QxjB__oWatRGnmQOxOHtX-P2x__svrYUYHJ-Ms6CaUv9yK9LAiaWB7ppMTCr4JlZPYARfeY5hV5g
+    headers:
+      User-Agent:
+      - Faraday v0.15.4
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Thu, 10 Jan 2019 13:47:15 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "access_token": "ya29.c.ElqNBtONxO3sNT5T1-qtaQE-6ImjJjwhffIA7KXaSjBMnSdZ_neeFTtirJwglYCuOmADQ42p8aA6cdR6r42wJT1B6ODQCQxKBRGEv86NdU58YY0egDnyUxc8i1w",
+          "expires_in": 3600,
+          "token_type": "Bearer"
+        }
+    http_version: 
+  recorded_at: Thu, 10 Jan 2019 13:47:15 GMT
 recorded_with: VCR 4.0.0

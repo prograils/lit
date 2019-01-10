@@ -32,6 +32,18 @@ def cloud_provider_examples(described_klass)
         subject.length.must_equal 2
       end
     end
+
+    describe 'when array containing nil values is given' do
+      let(:text) { [nil, 'awesome', nil, 'stuff'] }
+
+      it 'translates array to target language, converting nil to ""' do
+        subject.first.must_equal ''
+        subject.second.must_be :present?
+        subject.third.must_equal ''
+        subject.fourth.must_be :present?
+        subject.length.must_equal 4
+      end
+    end
   end
 
   describe 'when :from and :to languages are given' do

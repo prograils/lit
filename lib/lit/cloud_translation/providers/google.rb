@@ -96,6 +96,8 @@ module Lit::CloudTranslation::Providers
         text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>')
       when Array
         text_or_array.map { |s| sanitize_text(s) }
+      when nil
+        ''
       else
         raise TypeError
       end
