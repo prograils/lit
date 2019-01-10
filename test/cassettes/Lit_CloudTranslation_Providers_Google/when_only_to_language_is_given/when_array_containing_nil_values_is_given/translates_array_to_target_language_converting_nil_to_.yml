@@ -1,0 +1,80 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["","awesome","","stuff"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/1.2.4
+      Google-Cloud-Resource-Prefix:
+      - projects/litbox-1543326618593
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.5.0 gccl/1.2.4
+      Authorization:
+      - Bearer ya29.c.ElqNBtONxO3sNT5T1-qtaQE-6ImjJjwhffIA7KXaSjBMnSdZ_neeFTtirJwglYCuOmADQ42p8aA6cdR6r42wJT1B6ODQCQxKBRGEv86NdU58YY0egDnyUxc8i1w
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Thu, 10 Jan 2019 13:47:15 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="44,43,39,35"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+          "data": {
+            "translations": [
+              {
+                "translatedText": "",
+                "detectedSourceLanguage": "en"
+              },
+              {
+                "translatedText": "niesamowite",
+                "detectedSourceLanguage": "en"
+              },
+              {
+                "translatedText": "",
+                "detectedSourceLanguage": "en"
+              },
+              {
+                "translatedText": "rzeczy",
+                "detectedSourceLanguage": "en"
+              }
+            ]
+          }
+        }
+    http_version: 
+  recorded_at: Thu, 10 Jan 2019 13:47:15 GMT
+recorded_with: VCR 4.0.0
