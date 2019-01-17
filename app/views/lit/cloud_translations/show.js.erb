@@ -1,5 +1,7 @@
 <% if @translated_text.is_a?(String) %>
-  $('.localization_row[data-id="<%= @target_localization.id %>"] textarea').val("<%= j @translated_text %>");
+  $textarea = $('.localization_row[data-id="<%= @target_localization.id %>"] textarea');
+  valFun = $textarea.is(':visible') ? 'val' : 'jqteVal';
+  $textarea[valFun]("<%= j @translated_text.html_safe %>");
 <% elsif @translated_text.is_a?(Array) %>
   $inputs = $('.localization_row[data-id="<%= @target_localization.id %>"] input[type=text]');
   var translated_elements = JSON.parse("<%= j @translated_text.to_json.html_safe %>");
