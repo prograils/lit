@@ -115,10 +115,14 @@ module Lit
       I18n.backend.reload!
     end
 
-    def reset
+    def reset_local_cache
       @locale_cache = {}
       @localization_key_object_cache = {}
       @localization_object_cache = {}
+    end
+
+    def reset
+      reset_local_cache
       localizations.clear
       localization_keys.clear
       load_all_translations

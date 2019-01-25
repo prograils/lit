@@ -17,6 +17,12 @@ module Lit
       end
     end
 
+    initializer 'lit.reloader' do |app|
+      config.to_prepare do
+        Lit.loader.cache.reset_local_cache if Lit.loader
+      end
+    end
+
     initializer 'lit.migrations.append' do |app|
       unless app.root.to_s.include?(root.to_s)
         config.paths['db/migrate'].expanded.each do |expanded_path|
