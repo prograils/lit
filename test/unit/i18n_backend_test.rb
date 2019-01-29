@@ -62,10 +62,10 @@ class I18nBackendTest < ActiveSupport::TestCase
     fallback_key = :'test.fallback'
 
     # first, when these keys don't exist in the DB yet, they should be created:
-    assert_changes(-> { Lit::LocalizationKey.where(localization_key: [test_key, fallback_key]).count },
-                   from: 0, to: 2) do
-      assert_equal 'foobar', I18n.t(test_key, default: [fallback_key, 'foobar'])
-    end
+    loc_key_count = -> { Lit::LocalizationKey.where(localization_key: [test_key, fallback_key]).count }
+    assert_equal 0, loc_key_count.call
+    assert_equal 'foobar', I18n.t(test_key, default: [fallback_key, 'foobar'])
+    assert_equal 2, loc_key_count.call
 
     # on subsequent translation calls, they should not be fetched from DB
     assert_no_database_queries do
