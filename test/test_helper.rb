@@ -128,3 +128,10 @@ VCR.configure do |config|
 end
 
 MinitestVcr::Spec.configure!
+
+def assert_no_database_queries
+  ActiveRecord::Base.connection.stubs(:execute).
+    raises(Minitest::Assertion, 'The block should not make any database calls')
+  yield
+  ActiveRecord::Base.connection.unstub(:execute)
+end

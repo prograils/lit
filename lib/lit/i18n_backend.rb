@@ -72,6 +72,13 @@ module Lit
       # check in cache or in simple backend
       content = @cache[key_with_locale] || super
       return content if parts.size <= 1
+
+      # if options[:default].is_a?(Array)
+      #   final_fallback_string = options[:default].last if options[:default].last.is_a?(String)
+      #   keys_to_check = [key, *options[:default][0..-2]]
+      #   keys_already_cached = keys_to_check.select { |k| @cache.has_key?("#{locale}.#{k}") }
+      # end
+
       if content.nil? && should_cache?(key_with_locale, options)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
@@ -181,7 +188,7 @@ module Lit
 
     def should_cache?(key_with_locale, options)
       if @cache.has_key?(key_with_locale)
-        return false unless options[:default]
+        return false unless options[:default] && !options[:default].is_a?(Array)
       end
 
       _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
