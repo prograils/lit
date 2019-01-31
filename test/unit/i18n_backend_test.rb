@@ -53,4 +53,23 @@ class I18nBackendTest < ActiveSupport::TestCase
     l = lk.localizations.where(locale: locale).first
     assert_nil l.default_value
   end
+
+  test 'will not call additional queries when nil values in a fallback key chain have been cached' do
+    Lit.humanize_key = false
+    I18n.locale = :en
+
+    test_key = :'test.key'
+    fallback_key = :'test.fallback'
+
+    # first, when these keys don't exist in the DB yet, they should be created:
+    loc_key_count = -> { Lit::LocalizationKey.where(localization_key: [test_key, fallback_key]).count }
+    assert_equal 0, loc_key_count.call
+    assert_equal 'foobar', I18n.t(test_key, default: [fallback_key, 'foobar'])
+    assert_equal 2, loc_key_count.call
+
+    # on subsequent translation calls, they should not be fetched from DB
+    assert_no_database_queries do
+      assert_equal 'foobar', I18n.t(test_key, default: [fallback_key, 'foobar'])
+    end
+  end
 end
