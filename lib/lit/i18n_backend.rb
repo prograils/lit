@@ -71,6 +71,10 @@ module Lit
       key_with_locale = parts.join('.')
       # check in cache or in simple backend
       content = @cache[key_with_locale] || super
+
+      # return if content is in cache - it CAN be `nil`
+      return content if @cache.has_key?(key_with_locale)
+
       return content if parts.size <= 1
 
       if content.nil? && should_cache?(key_with_locale, options)
@@ -107,7 +111,7 @@ module Lit
           # it anyway if we return nil, but then it will wrap it also in
           # translation_missing span.
           # Humanizing key should be last resort
-          if content.nil? && Lit.humanize_key && key.match(Lit.humanize_key_ignored).nil?
+          if content.nil? && Lit.humanize_key && Lit.humanize_key_ignored.match(key).nil?
             content = key.to_s.split('.').last.humanize
             if content.present?
               @cache[key_with_locale] = content

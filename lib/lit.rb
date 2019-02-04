@@ -17,6 +17,8 @@ module Lit
   mattr_accessor :all_translations_are_html_safe
   mattr_accessor :set_last_updated_at_upon_creation
   mattr_accessor :store_request_info
+  mattr_accessor :store_request_keys
+  mattr_accessor :hits_counter_enabled
 
   class << self
     attr_accessor :loader
@@ -30,13 +32,18 @@ module Lit
       Lit.humanize_key_ignored_keys = [] if Lit.humanize_key_ignored_keys.nil?
       Lit.humanize_key_ignored = %w[i18n date datetime number time support ]
       Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
-      Lit.humanize_key_ignored = %r{(#{Lit.humanize_key_ignored.join('|')}).*}
+      Lit.humanize_key_ignored = Regexp.new("(#{Lit.humanize_key_ignored.join('|')}).*")
       if Lit.ignored_keys.is_a?(String)
         keys = Lit.ignored_keys.split(',').map(&:strip)
         Lit.ignored_keys = keys
       end
       Lit.ignore_yaml_on_startup = true if Lit.ignore_yaml_on_startup.nil?
       Lit.ignored_keys = [] unless Lit.ignored_keys.is_a?(Array)
+      Lit.ignored_keys = Lit.ignored_keys.map(&:freeze).freeze
+
+      Lit.hits_counter_enabled = false if Lit.hits_counter_enabled.nil?
+      Lit.store_request_info = false if Lit.store_request_info.nil?
+      Lit.store_request_keys = false if Lit.store_request_keys.nil?
       # if loading all translations on start, migrations have to be already
       # performed, fails on first deploy
       # self.loader.cache.load_all_translations
