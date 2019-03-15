@@ -73,3 +73,21 @@ appraise 'rails-5.2' do
   gem 'minitest'
 end
 
+appraise 'rails-6.0' do
+  source 'https://rubygems.org'
+  gem 'rails', '~> 6.0.0.beta3'
+  gem 'devise'
+  gem 'pg', '~> 1.1.4'
+  gem 'redis'
+  gem 'capybara'
+  gem 'database_cleaner'
+  gem 'test_declarative'
+  gem 'mocha'
+  gem 'webmock'
+  gem 'sass-rails'
+  gem 'jquery-rails'
+  gem 'coffee-rails'
+  gem 'pry-rails'
+  gem 'rails-controller-testing'
+  gem 'minitest'
+end
