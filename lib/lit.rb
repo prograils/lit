@@ -54,7 +54,6 @@ module Lit
       "Error: #{e.message}\n\n" \
       "Backtrace:\n" \
       "#{e.backtrace.join("\n")}"
-    binding.pry
     Logger.new(STDOUT).error(log_txt) if Rails.env.test? # ensure this is logged to stdout in test
     ::Rails.logger.error(log_txt)
     false
