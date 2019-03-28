@@ -41,6 +41,9 @@ class Lit::Base < ActiveRecord::Base
         self.class.create! attributes.merge(retried_created: true)
       end
     elsif !retried_updated
+      # Why elsif and not just if? Because if a record object was first saved
+      # with INSERT and then with UPDATE (still being the same Ruby object),
+      # it makes no sense to retry both create and upadte. Let's only retry create.
       self.retried_updated = true
       if rolledback_after_update?
         update_columns(attributes)
