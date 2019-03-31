@@ -77,7 +77,25 @@ document.addEventListener('DOMContentLoaded', function () {
         $.fn.jqte(textarea);
       }
 
-      if (e.target.matches('.request_info_link')) {}
+      if (e.target.matches('.request_info_link')) {
+        var _refElem = e.target;
+
+        while (!_refElem.matches('tr.localization_key_row')) {
+          _refElem = _refElem.parentNode;
+
+          if (!_refElem) {
+            return;
+          }
+        }
+
+        requestInfoRow = _refElem.querySelector('.request_info_row');
+
+        if (requestInfoRow.classList.contains('hidden')) {
+          requestInfoRow.classList.remove('hidden');
+        } else {
+          requestInfoRow.classList.add('hidden');
+        }
+      }
     });
   });
 });

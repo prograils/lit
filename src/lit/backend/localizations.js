@@ -66,7 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (e.target.matches('.request_info_link')) {
-
+        let refElem = e.target;
+        while (!refElem.matches('tr.localization_key_row')) {
+          refElem = refElem.parentNode;
+          if (!refElem) { return; }
+        }
+        requestInfoRow = refElem.querySelector('.request_info_row');
+        if (requestInfoRow.classList.contains('hidden')) {
+          requestInfoRow.classList.remove('hidden');
+        } else {
+          requestInfoRow.classList.add('hidden');
+        }
       }
     });
   });
