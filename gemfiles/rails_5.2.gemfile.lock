@@ -5,6 +5,7 @@ PATH
       coffee-rails
       jquery-rails
       rails (>= 4.2.0)
+      rails-ujs
       sass-rails
 
 GEM
@@ -182,6 +183,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-ujs (0.1.0)
+      railties (>= 3.1)
     railties (5.2.1.1)
       actionpack (= 5.2.1.1)
       activesupport (= 5.2.1.1)
@@ -267,4 +270,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.1
+   1.17.2

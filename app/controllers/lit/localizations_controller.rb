@@ -10,7 +10,12 @@ module Lit
     def edit
       @localization.translated_value = @localization.translation
       respond_to do |format|
-        format.js
+        format.json do
+          render json: {
+            html: render_to_string(partial: 'form', formats: ['html']),
+            isHtmlKey: @localization.full_key.ends_with?('_html')
+          }
+        end
       end
     end
 
@@ -23,9 +28,12 @@ module Lit
         after_update_operations if @localization.update_attributes(clear_params)
       end
       respond_to do |f|
-        f.js
         f.json do
-          render json: { value: @localization.reload.translation }
+          render json: {
+            localizationId: @localization.id,
+            html: render_to_string(partial: '/lit/localization_keys/localization_row', formats: ['html'], locals: { localization: @localization.translated_value }),
+            value: @localization.reload.translation
+          }
         end
       end
     end

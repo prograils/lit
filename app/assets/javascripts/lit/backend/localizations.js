@@ -7,10 +7,50 @@ document.addEventListener('DOMContentLoaded', function () {
     row.addEventListener('click', function (e) {
       if (parseInt(e.target.dataset.editing) === 0) {
         edited_rows[e.target.dataset.id] = e.target.innerHTML;
+        var rowElem = document.querySelector("td.localization_row[data-id=\"".concat(e.target.dataset.id, "\"]"));
 
         if (!parseInt(e.target.dataset.editing)) {
           e.target.dataset.editing = '1';
-          fetch(e.target.dataset.edit);
+          fetch(e.target.dataset.edit).then(function (resp) {
+            return resp.json();
+          }).then(function (_ref) {
+            var html = _ref.html,
+                isHtmlKey = _ref.isHtmlKey;
+            rowElem.dataset.editing = 1;
+            rowElem.innerHTML = html;
+            rowElem.querySelector('textarea').focus();
+
+            if (isHtmlKey) {
+              rowElem.querySelector('.wysiwyg_switch').click();
+            }
+
+            rowElem.querySelector('form').addEventListener('submit', function (e) {
+              var url = e.target.action;
+              fetch(url, {
+                method: 'PATCH',
+                headers: {
+                  'X-CSRF-Token': Rails.csrfToken(),
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  localization: {
+                    translated_value: rowElem.querySelector('textarea').value
+                  }
+                })
+              }).then(function (resp) {
+                return resp.json();
+              }).then(function (_ref2) {
+                var localizationId = _ref2.localizationId,
+                    html = _ref2.html;
+                delete rowElem.dataset.editing;
+                rowElem.innerHTML = html;
+                rowElem.parentElement.querySelector('.show_prev_versions').classList.remove('hidden');
+                debugger;
+                document.querySelector("a.change_completed_".concat(localizationId, " input[type=\"checkbox\"]")).checked = true;
+              });
+              e.preventDefault();
+            });
+          });
         }
       }
     });

@@ -1,4 +1,4 @@
-<%= form_for @localization, url: lit.localization_key_localization_path(@localization_key, @localization, format: :js), html: {remote: true} do |f| %>
+<%= form_for @localization, url: lit.localization_key_localization_path(@localization_key, @localization, format: :json) do |f| %>
   <%- f.label :translated_value %>
   <% if @localization.translated_value.is_a?(Array) %>
     <ul style="list-style: none;">

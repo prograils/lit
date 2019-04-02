@@ -19,17 +19,20 @@ module Lit
             params: {
               localization_key_id: @localization.localization_key.id,
               id: @localization.id,
-              format: :js
+              format: :json
             }
       else
         get :edit,
             localization_key_id: @localization.localization_key.id,
             id: @localization.id,
-            format: :js
+            format: :json
       end
 
       assert_response :success
       assert_not_nil assigns(:localization)
+      parsed = JSON.parse(response.body)
+      assert_equal false, parsed['isHtmlKey']
+      assert parsed['html']
     end
 
     # GET /localization_keys/:localization_key_id/localizations/:id/previous_versions
@@ -65,7 +68,7 @@ module Lit
                 translated_value: 'new-value',
                 locale_id: @localization.locale_id
               },
-              format: :js
+              format: :json
             }
       else
         put :update,
@@ -75,12 +78,15 @@ module Lit
                 translated_value: 'new-value',
                 locale_id: @localization.locale_id
             },
-            format: :js
+            format: :json
       end
       assert_response :success
       @localization.reload
       assert_equal 'new-value', @localization.translated_value
       assert_equal true, @localization.is_changed?
+      parsed = JSON.parse(response.body)
+      assert parsed['html']
+      assert_equal @localization.id, parsed['localizationId']
     end
 
     # PUT /localization_keys/:localization_key_id/localizations/:id

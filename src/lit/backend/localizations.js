@@ -7,9 +7,43 @@ document.addEventListener('DOMContentLoaded', () => {
     row.addEventListener('click', e => {
       if (parseInt(e.target.dataset.editing) === 0) {
         edited_rows[e.target.dataset.id] = e.target.innerHTML;
+        const rowElem = document.querySelector(`td.localization_row[data-id="${e.target.dataset.id}"]`);
         if (!parseInt(e.target.dataset.editing)) {
           e.target.dataset.editing = '1';
-          fetch(e.target.dataset.edit);
+          fetch(e.target.dataset.edit)
+          .then(resp => resp.json())
+          .then(({html, isHtmlKey}) => {
+            rowElem.dataset.editing = 1;
+            rowElem.innerHTML = html;
+            rowElem.querySelector('textarea').focus();
+            if (isHtmlKey) {
+              rowElem.querySelector('.wysiwyg_switch').click()
+            }
+            rowElem.querySelector('form').addEventListener('submit', e => {
+              const url = e.target.action;
+              fetch(url, {
+                method: 'PATCH',
+                headers: {
+                  'X-CSRF-Token': Rails.csrfToken(),
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  localization: {
+                    translated_value: rowElem.querySelector('textarea').value
+                  }
+                })
+              })
+              .then(resp => resp.json())
+              .then(({localizationId, html}) => {
+                delete rowElem.dataset.editing;
+                rowElem.innerHTML = html;
+                rowElem.parentElement.querySelector('.show_prev_versions').classList.remove('hidden');
+                debugger;
+                document.querySelector(`a.change_completed_${localizationId} input[type="checkbox"]`).checked = true;
+              })
+              e.preventDefault();
+            })
+          });
         }
       }
     })

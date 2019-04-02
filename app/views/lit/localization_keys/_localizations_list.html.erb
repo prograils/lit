@@ -39,7 +39,7 @@
             <%- available_locales.each do |locale| %>
               <%- localization = localization_for(locale, lk) %>
               <tr>
-                <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization, format: :js) %>" data-editing=0 data-content="">
+                <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization, format: :json) %>" data-editing=0 data-content="">
                   <%= render partial: 'localization_row', locals: {localization: Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
                 </td>
                 <td class="locale_row text-center">
