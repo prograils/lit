@@ -88,6 +88,7 @@ GEM
       railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
+    emoji_flag (0.1.1)
     erubi (1.7.1)
     execjs (2.7.0)
     faraday (0.15.4)
@@ -249,6 +250,7 @@ DEPENDENCIES
   coffee-rails
   database_cleaner
   devise
+  emoji_flag
   google-cloud-translate (~> 1.2.4)
   jquery-rails
   lit!
@@ -267,4 +269,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.1
+   1.17.3

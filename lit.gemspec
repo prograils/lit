@@ -31,5 +31,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry-byebug', '~> 3.6.0'
   s.add_development_dependency 'vcr', '~> 4.0.0'
   s.add_development_dependency 'webmock', '~> 3.4.2'
+  s.add_development_dependency 'emoji_flag'
 end
 
