@@ -1,3 +1,5 @@
+import pell from 'pell';
+
 let edited_rows = {};
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                   localization: {
-                    translated_value: rowElem.querySelector('textarea').value
+                    translated_value: isHtmlKey ? rowElem.querySelector('.pell').innerHTML : rowElem.querySelector('textarea').value
                   }
                 })
               })
@@ -94,10 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
           refElem = refElem.parentNode;
           if (!refElem) { return; }
         }
-        const textarea = refElem.querySelector('textarea');
-        console.log(pell);
-        debugger;
-        $.fn.jqte(textarea);
+        const textarea = refElem.querySelector('.pell');
+        const pellElement = refElem.querySelector('.pell');
+
+        pell.init({
+          element: pellElement,
+          onChange: html => textarea.value = html
+        })
       }
 
       if (e.target.matches('.request_info_link')) {

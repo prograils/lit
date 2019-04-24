@@ -150,6 +150,12 @@ var __makeRelativeRequire = function(require, mappings, pref) {
 require.register("src/lit/backend/localizations.js", function(exports, require, module) {
 'use strict';
 
+var _pell = require('pell');
+
+var _pell2 = _interopRequireDefault(_pell);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var edited_rows = {};
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -184,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                   localization: {
-                    translated_value: rowElem.querySelector('textarea').value
+                    translated_value: isHtmlKey ? rowElem.querySelector('.pell').innerHTML : rowElem.querySelector('textarea').value
                   }
                 })
               }).then(function (resp) {
@@ -260,10 +266,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
           }
         }
-        var textarea = refElem.querySelector('textarea');
-        console.log(pell);
-        debugger;
-        $.fn.jqte(textarea);
+        var textarea = refElem.querySelector('.pell');
+        var pellElement = refElem.querySelector('.pell');
+
+        _pell2.default.init({
+          element: pellElement,
+          onChange: function onChange(html) {
+            return textarea.value = html;
+          }
+        });
       }
 
       if (e.target.matches('.request_info_link')) {
