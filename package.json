@@ -1,10 +1,13 @@
 {
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2"
+    "auto-reload-brunch": "^2",
+    "babel-brunch": "~6.0",
+    "babel-preset-latest": "^6",
+    "brunch": "^2",
+    "clean-css-brunch": "^2",
+    "uglify-js-brunch": "^2"
   },
-  "scripts": {
-    "js-compile": "npx babel src --out-dir app/assets/javascripts"
+  "dependencies": {
+    "pell": "^1.0.6"
   }
 }

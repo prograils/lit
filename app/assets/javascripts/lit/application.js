@@ -12,7 +12,11 @@
 //
 //= require jquery
 //= require rails-ujs
+//= require ./app
 //= require_directory ./backend/
+
+require('src/lit/backend/localizations');
+require('src/lit/backend/sources');
 
 $(document).ready(function(){
   $('.title').tooltip();

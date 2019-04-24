@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 delete rowElem.dataset.editing;
                 rowElem.innerHTML = html;
                 rowElem.parentElement.querySelector('.show_prev_versions').classList.remove('hidden');
-                debugger;
                 document.querySelector(`a.change_completed_${localizationId} input[type="checkbox"]`).checked = true;
               })
               e.preventDefault();
@@ -95,7 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
           refElem = refElem.parentNode;
           if (!refElem) { return; }
         }
-        textarea = refElem.querySelector('textarea');
+        const textarea = refElem.querySelector('textarea');
+        console.log(pell);
+        debugger;
         $.fn.jqte(textarea);
       }
 
