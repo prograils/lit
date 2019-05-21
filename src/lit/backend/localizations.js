@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!parseInt(e.target.dataset.editing)) {
         edited_rows[e.target.dataset.id] = e.target.innerHTML;
         const rowElem = document.querySelector(`td.localization_row[data-id="${e.target.dataset.id}"]`);
-        if (!parseInt(e.target.dataset.editing)) {
+        if (!parseInt(e.target.dataset.editing) && e.target.dataset.edit) {
           e.target.dataset.editing = '1';
           fetch(e.target.dataset.edit)
           .then(resp => resp.json())

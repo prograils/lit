@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!parseInt(e.target.dataset.editing)) {
         edited_rows[e.target.dataset.id] = e.target.innerHTML;
         var rowElem = document.querySelector('td.localization_row[data-id="' + e.target.dataset.id + '"]');
-        if (!parseInt(e.target.dataset.editing)) {
+        if (!parseInt(e.target.dataset.editing) && e.target.dataset.edit) {
           e.target.dataset.editing = '1';
           fetch(e.target.dataset.edit).then(function (resp) {
             return resp.json();
