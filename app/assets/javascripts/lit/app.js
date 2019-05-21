@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   localizationRows.forEach(function (row) {
     row.addEventListener('click', function (e) {
-      if (parseInt(e.target.dataset.editing) === 0) {
+      if (!parseInt(e.target.dataset.editing)) {
         edited_rows[e.target.dataset.id] = e.target.innerHTML;
         var rowElem = document.querySelector('td.localization_row[data-id="' + e.target.dataset.id + '"]');
         if (!parseInt(e.target.dataset.editing)) {
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({
                   localization: {
-                    translated_value: isHtmlKey ? rowElem.querySelector('.pell').innerHTML : rowElem.querySelector('textarea').value
+                    translated_value: rowElem.querySelector('textarea').value
                   }
                 })
               }).then(function (resp) {
@@ -266,15 +266,26 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
           }
         }
-        var textarea = refElem.querySelector('.pell');
+        var textarea = refElem.querySelector('textarea');
         var pellElement = refElem.querySelector('.pell');
 
-        _pell2.default.init({
-          element: pellElement,
-          onChange: function onChange(html) {
-            return textarea.value = html;
+        if (e.target.checked) {
+          if (!pellElement.content) {
+            _pell2.default.init({
+              element: pellElement,
+              onChange: function onChange(html) {
+                return textarea.value = html;
+              }
+            });
           }
-        });
+
+          pellElement.content.innerHTML = textarea.value;
+          textarea.style.display = 'none';
+          pellElement.style.display = '';
+        } else {
+          textarea.style.display = '';
+          pellElement.style.display = 'none';
+        }
       }
 
       if (e.target.matches('.request_info_link')) {

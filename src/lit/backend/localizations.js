@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   localizationRows.forEach(row => {
     row.addEventListener('click', e => {
-      if (parseInt(e.target.dataset.editing) === 0) {
+      if (!parseInt(e.target.dataset.editing)) {
         edited_rows[e.target.dataset.id] = e.target.innerHTML;
         const rowElem = document.querySelector(`td.localization_row[data-id="${e.target.dataset.id}"]`);
         if (!parseInt(e.target.dataset.editing)) {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                   localization: {
-                    translated_value: isHtmlKey ? rowElem.querySelector('.pell').innerHTML : rowElem.querySelector('textarea').value
+                    translated_value: rowElem.querySelector('textarea').value
                   }
                 })
               })
@@ -96,13 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
           refElem = refElem.parentNode;
           if (!refElem) { return; }
         }
-        const textarea = refElem.querySelector('.pell');
+        const textarea = refElem.querySelector('textarea');
         const pellElement = refElem.querySelector('.pell');
 
-        pell.init({
-          element: pellElement,
-          onChange: html => textarea.value = html
-        })
+        if (e.target.checked) {
+          if (!pellElement.content) {
+            pell.init({
+              element: pellElement,
+              onChange: html => textarea.value = html
+            });
+          }
+
+          pellElement.content.innerHTML = textarea.value;
+          textarea.style.display = 'none';
+          pellElement.style.display = '';
+        } else {
+          textarea.style.display = '';
+          pellElement.style.display = 'none';
+        }
       }
 
       if (e.target.matches('.request_info_link')) {

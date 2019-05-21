@@ -12,3 +12,4 @@ Gemfile.lock
 vendor/bundle
 /tags
 test/dummy/config/database.yml
+node_modules
