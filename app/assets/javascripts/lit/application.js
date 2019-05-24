@@ -10,7 +10,6 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require jquery
 //= require rails-ujs
 //= require ./app
 //= require ./vendor
@@ -18,7 +17,3 @@
 
 require('src/lit/backend/localizations');
 require('src/lit/backend/sources');
-
-$(document).ready(function(){
-  $('.title').tooltip();
-});

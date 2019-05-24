@@ -1,7 +1,5 @@
 module Lit
   class Engine < ::Rails::Engine
-    require 'jquery-rails'
-
     config.autoload_paths += %W[#{Lit::Engine.root}/app/controllers/lit/concerns]
 
     isolate_namespace Lit
