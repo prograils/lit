@@ -13,7 +13,6 @@
 //= require rails-ujs
 //= require ./app
 //= require ./vendor
-//= require_directory ./backend/
 
 require('src/lit/backend/localizations');
 require('src/lit/backend/sources');

@@ -384,6 +384,50 @@ document.addEventListener('DOMContentLoaded', function () {
   if (loadingElement) {
     window.interval = setInterval(updateFunc, 500);
   }
+
+  var tableElem = document.querySelector('.incomming-localizations-table');
+
+  tableElem.addEventListener('click', function (e) {
+    debugger;
+    var button = e.target;
+    if (button.matches('.js-accept-btn')) {
+      e.preventDefault();
+      var url = e.target.href;
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'X-CSRF-Token': Rails.csrfToken(),
+          'Content-Type': 'application/json'
+        }
+      }).then(function (resp) {
+        debugger;
+      });
+    }
+
+    if (button.matches('.js-reject-btn')) {
+      e.preventDefault();
+      if (confirm(e.target.dataset.confirm)) {
+        var _url = e.target.href;
+        debugger;
+        fetch(_url, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': Rails.csrfToken(),
+            'Content-Type': 'application/json'
+          }
+        }).then(function (resp) {
+          debugger;
+        });
+      }
+    }
+  });
+
+  var acceptButtons = document.querySelectorAll('.js-accept-btn');
+  var rejectButtons = document.querySelectorAll('.js-reject-btn');
+
+  acceptButtons.forEach(function (button) {});
+
+  rejectButtons.forEach(function (button) {});
 });
 });
 

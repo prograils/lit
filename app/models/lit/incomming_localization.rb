@@ -4,8 +4,8 @@ module Lit
 
     ## ASSOCIATIONS
     belongs_to :locale
-    belongs_to :localization_key
-    belongs_to :localization
+    belongs_to :localization_key, optional: true
+    belongs_to :localization, optional: true
     belongs_to :source
 
     ## ACCESSORS

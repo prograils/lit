@@ -44,4 +44,54 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loadingElement) {
     window.interval = setInterval(updateFunc, 500);
   }
+
+  const tableElem = document.querySelector('.incomming-localizations-table')
+
+  tableElem.addEventListener('click', e => {
+    debugger;
+    const button = e.target;
+    if (button.matches('.js-accept-btn')) {
+      e.preventDefault();
+      const url = e.target.href;
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'X-CSRF-Token': Rails.csrfToken(),
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(resp => {
+        debugger;
+      })
+    }
+
+    if (button.matches('.js-reject-btn')) {
+      e.preventDefault();
+      if (confirm(e.target.dataset.confirm)) {
+        const url = e.target.href;
+        debugger;
+        fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': Rails.csrfToken(),
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(resp => {
+          debugger;
+        })
+      }
+    }
+  });
+
+  const acceptButtons = document.querySelectorAll('.js-accept-btn');
+  const rejectButtons = document.querySelectorAll('.js-reject-btn');
+
+  acceptButtons.forEach(button => {
+
+  });
+
+  rejectButtons.forEach(button => {
+
+  });
 })

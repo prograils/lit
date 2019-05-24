@@ -11,7 +11,7 @@ module Lit
       @incomming_localization.accept
       respond_to do |format|
         format.html { finish_request }
-        format.js
+        format.json { head :ok }
       end
     end
 
@@ -31,7 +31,7 @@ module Lit
       @incomming_localization.destroy
       respond_to do |format|
         format.html { redirect_to source_incomming_localizations_path(@source) }
-        format.js
+        format.json { head :no_content }
       end
     end
 
