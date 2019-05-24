@@ -40,25 +40,20 @@ module Lit
 
     test 'translating an array localization from known language' do
       call_action :get, :show,
-                  params: { localization_id: @array_localization.id, from: 'en', format: 'js' }
-      assert assigns[:localization] == @en_array_localization
-      assert assigns[:target_localization] == @array_localization
-      assert assigns[:translated_text] == "[en->pl] #{@en_array_localization.translated_value.reverse}"
+                  params: { localization_id: @array_localization.id, from: 'en', format: 'json' }
+      assert parsed_response[:translatedText] == "[en->pl] #{@en_array_localization.translated_value.reverse}"
     end
 
     test 'translating a string localization from known language' do
       call_action :get, :show,
-                  params: { localization_id: @string_localization.id, from: 'en', format: 'js' }
-      assert assigns[:localization] == @en_string_localization
-      assert assigns[:target_localization] == @string_localization
-      assert assigns[:translated_text] == "[en->pl] #{@en_string_localization.translated_value.reverse}"
+                  params: { localization_id: @string_localization.id, from: 'en', format: 'json' }
+      assert parsed_response[:translatedText] == "[en->pl] #{@en_string_localization.translated_value.reverse}"
     end
 
     test 'translating a string localization from itself as auto' do
       call_action :get, :show,
-                  params: { localization_id: @string_localization.id, from: 'auto', format: 'js' }
-      assert assigns[:target_localization] == @string_localization
-      assert assigns[:translated_text] == "[->pl] #{@string_localization.translated_value.reverse}"
+                  params: { localization_id: @string_localization.id, from: 'auto', format: 'json' }
+      assert parsed_response[:translatedText] == "[->pl] #{@string_localization.translated_value.reverse}"
     end
 
     test 'translation error is gracefully intercepted' do
@@ -68,17 +63,13 @@ module Lit
         .raises(Lit::CloudTranslation::TranslationError, 'Something went wrong')
 
       call_action :get, :show,
-                  params: { localization_id: @string_localization.id, from: 'auto', format: 'js' }
+                  params: { localization_id: @string_localization.id, from: 'auto', format: 'json' }
 
-      assert assigns[:error_message].match(/Something went wrong/)
-      pseudo_browser = ExecJS.compile(
-        <<-JS
-        var alert =
-          function(text) { return "Displaying alert: " + "#{assigns[:error_message]}" }
-        JS
-      )
-      assert pseudo_browser.eval(response.body) == 'Displaying alert: ' \
-                                                   "#{assigns[:error_message]}"
+      assert parsed_response[:error].match(/Something went wrong/)
+    end
+
+    def parsed_response
+      JSON.parse(response.body).with_indifferent_access
     end
   end
 end
