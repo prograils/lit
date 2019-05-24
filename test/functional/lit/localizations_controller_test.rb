@@ -101,7 +101,7 @@ module Lit
                   translated_value: %w(three two one),
                   locale_id: @localization.locale_id
               },
-              format: :js
+              format: :json
             }
       else
         put :update,
@@ -131,7 +131,7 @@ module Lit
                 translated_value: 'new-value',
                 locale_id: @localization.locale_id
               },
-              format: :js
+              format: :json
             }
       else
         put :update,
