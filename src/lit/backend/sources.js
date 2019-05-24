@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const tableElem = document.querySelector('.incomming-localizations-table')
 
   tableElem.addEventListener('click', e => {
-    debugger;
     const button = e.target;
     if (button.matches('.js-accept-btn')) {
       e.preventDefault();
@@ -60,16 +59,19 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json'
         }
       })
-      .then(resp => {
-        debugger;
+      .then(({ok}) => {
+        if (ok) {
+          button.parentElement.parentElement.remove(); // remove row
+        } else {
+          alert('Localization could not be accepted.');
+        }
       })
     }
 
     if (button.matches('.js-reject-btn')) {
       e.preventDefault();
-      if (confirm(e.target.dataset.confirm)) {
+      if (confirm("Are you sure?")) {
         const url = e.target.href;
-        debugger;
         fetch(url, {
           method: 'DELETE',
           headers: {
@@ -77,8 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'Content-Type': 'application/json'
           }
         })
-        .then(resp => {
-          debugger;
+        .then(({ok}) => {
+          if (ok) {
+            button.parentElement.parentElement.remove(); // remove row
+          } else {
+            alert('Localization could not be rejected.');
+          }
         })
       }
     }

@@ -388,7 +388,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var tableElem = document.querySelector('.incomming-localizations-table');
 
   tableElem.addEventListener('click', function (e) {
-    debugger;
     var button = e.target;
     if (button.matches('.js-accept-btn')) {
       e.preventDefault();
@@ -399,24 +398,35 @@ document.addEventListener('DOMContentLoaded', function () {
           'X-CSRF-Token': Rails.csrfToken(),
           'Content-Type': 'application/json'
         }
-      }).then(function (resp) {
-        debugger;
+      }).then(function (_ref) {
+        var ok = _ref.ok;
+
+        if (ok) {
+          button.parentElement.parentElement.remove(); // remove row
+        } else {
+          alert('Localization could not be accepted.');
+        }
       });
     }
 
     if (button.matches('.js-reject-btn')) {
       e.preventDefault();
-      if (confirm(e.target.dataset.confirm)) {
+      if (confirm("Are you sure?")) {
         var _url = e.target.href;
-        debugger;
         fetch(_url, {
           method: 'DELETE',
           headers: {
             'X-CSRF-Token': Rails.csrfToken(),
             'Content-Type': 'application/json'
           }
-        }).then(function (resp) {
-          debugger;
+        }).then(function (_ref2) {
+          var ok = _ref2.ok;
+
+          if (ok) {
+            button.parentElement.parentElement.remove(); // remove row
+          } else {
+            alert('Localization could not be rejected.');
+          }
         });
       }
     }
