@@ -150,6 +150,8 @@ var __makeRelativeRequire = function(require, mappings, pref) {
 require.register("src/lit/backend/localizations.js", function(exports, require, module) {
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _pell = require('pell');
 
 var _pell2 = _interopRequireDefault(_pell);
@@ -163,12 +165,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   localizationRows.forEach(function (row) {
     row.addEventListener('click', function (e) {
-      if (!parseInt(e.target.dataset.editing)) {
-        edited_rows[e.target.dataset.id] = e.target.innerHTML;
-        var rowElem = document.querySelector('td.localization_row[data-id="' + e.target.dataset.id + '"]');
-        if (!parseInt(e.target.dataset.editing) && e.target.dataset.edit) {
-          e.target.dataset.editing = '1';
-          fetch(e.target.dataset.edit).then(function (resp) {
+      var tdElem = e.currentTarget;
+      if (!parseInt(tdElem.dataset.editing)) {
+        edited_rows[tdElem.dataset.id] = tdElem.innerHTML;
+        var rowElem = document.querySelector('td.localization_row[data-id="' + tdElem.dataset.id + '"]');
+        if (!parseInt(tdElem.dataset.editing) && tdElem.dataset.edit) {
+          tdElem.dataset.editing = '1';
+          fetch(tdElem.dataset.edit).then(function (resp) {
             return resp.json();
           }).then(function (_ref) {
             var html = _ref.html,
@@ -176,10 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             rowElem.dataset.editing = 1;
             rowElem.innerHTML = html;
-            rowElem.querySelector('textarea').focus();
+            rowElem.querySelector('textarea, input').focus();
             if (isHtmlKey) {
               rowElem.querySelector('.wysiwyg_switch').click();
             }
+
             rowElem.querySelector('form').addEventListener('submit', function (e) {
               var url = e.target.action;
               fetch(url, {
@@ -205,6 +209,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelector('a.change_completed_' + localizationId + ' input[type="checkbox"]').checked = true;
               });
               e.preventDefault();
+            });
+
+            rowElem.querySelector('.js-cloud-translation-link').addEventListener('click', function (e) {
+              e.preventDefault();
+              var url = e.target.href;
+              fetch(url).then(function (resp) {
+                return resp.json();
+              }).then(function (_ref3) {
+                var translatedText = _ref3.translatedText;
+
+                if (typeof translatedText === 'string') {
+                  var textareaElem = rowElem.querySelector('textarea');
+                  textareaElem.value = translatedText;
+                  if (isHtmlKey) {
+                    var pellElement = rowElem.querySelector('.pell');
+                    pellElement.content.innerHTML = translatedText;
+                  }
+                } else if ((typeof translatedText === 'undefined' ? 'undefined' : _typeof(translatedText)) === 'object') {
+                  var inputElems = rowElem.querySelectorAll('input[type="text"]');
+                  inputElems.forEach(function (inputElem, i) {
+                    return inputElem.value = translatedText[i];
+                  });
+                }
+              });
             });
           });
         }

@@ -7,20 +7,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   localizationRows.forEach(row => {
     row.addEventListener('click', e => {
-      if (!parseInt(e.target.dataset.editing)) {
-        edited_rows[e.target.dataset.id] = e.target.innerHTML;
-        const rowElem = document.querySelector(`td.localization_row[data-id="${e.target.dataset.id}"]`);
-        if (!parseInt(e.target.dataset.editing) && e.target.dataset.edit) {
-          e.target.dataset.editing = '1';
-          fetch(e.target.dataset.edit)
+      const tdElem = e.currentTarget;
+      if (!parseInt(tdElem.dataset.editing)) {
+        edited_rows[tdElem.dataset.id] = tdElem.innerHTML;
+        const rowElem = document.querySelector(`td.localization_row[data-id="${tdElem.dataset.id}"]`);
+        if (!parseInt(tdElem.dataset.editing) && tdElem.dataset.edit) {
+          tdElem.dataset.editing = '1';
+          fetch(tdElem.dataset.edit)
           .then(resp => resp.json())
           .then(({html, isHtmlKey}) => {
             rowElem.dataset.editing = 1;
             rowElem.innerHTML = html;
-            rowElem.querySelector('textarea').focus();
+            rowElem.querySelector('textarea, input').focus();
             if (isHtmlKey) {
               rowElem.querySelector('.wysiwyg_switch').click()
             }
+
             rowElem.querySelector('form').addEventListener('submit', e => {
               const url = e.target.action;
               fetch(url, {
@@ -43,7 +45,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector(`a.change_completed_${localizationId} input[type="checkbox"]`).checked = true;
               })
               e.preventDefault();
-            })
+            });
+
+            rowElem.querySelector('.js-cloud-translation-link').addEventListener('click', e => {
+              e.preventDefault();
+              const url = e.target.href;
+              fetch(url).then(resp => resp.json()).then(
+                ({translatedText}) => {
+                  if (typeof(translatedText) === 'string') {
+                    const textareaElem = rowElem.querySelector('textarea');
+                    textareaElem.value = translatedText;
+                    if (isHtmlKey) {
+                      const pellElement = rowElem.querySelector('.pell');
+                      pellElement.content.innerHTML = translatedText;
+                    }
+                  } else if (typeof(translatedText) === 'object') {
+                    const inputElems = rowElem.querySelectorAll('input[type="text"]');
+                    inputElems.forEach((inputElem, i) => inputElem.value = translatedText[i]);
+                  }
+                }
+              );
+            });
           });
         }
       }
