@@ -291,6 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (!pellElement.content) {
             _pell2.default.init({
               element: pellElement,
+              defaultParagraphSeparator: '',
               onChange: function onChange(html) {
                 return textarea.value = html;
               }

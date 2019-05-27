@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!pellElement.content) {
             pell.init({
               element: pellElement,
+              defaultParagraphSeparator: '',
               onChange: html => textarea.value = html
             });
           }
