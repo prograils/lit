@@ -1,1 +1,1 @@
-<%= link_to locale.is_hidden? ? 'Show' : 'Hide', hide_locale_path(locale), :method=>:put, :remote=>true %>
+<%= link_to locale.is_hidden? ? 'Show' : 'Hide', hide_locale_path(locale), remote: true, method: :put, class: 'js-hide-locale-link' %>

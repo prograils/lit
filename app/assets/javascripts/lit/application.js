@@ -15,6 +15,7 @@
 //= require ./vendor
 
 require('src/lit/utils')
+require('src/lit/backend/ui')
+require('src/lit/backend/locales');
 require('src/lit/backend/localizations');
 require('src/lit/backend/sources');
-require('src/lit/backend/ui')

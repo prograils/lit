@@ -147,7 +147,34 @@ var __makeRelativeRequire = function(require, mappings, pref) {
     return require(name);
   }
 };
-require.register("src/lit/backend/localizations.js", function(exports, require, module) {
+require.register("src/lit/backend/locales.js", function(exports, require, module) {
+'use strict';
+
+document.addEventListener('DOMContentLoaded', function () {
+  var handleHideLocaleLinkClick = function handleHideLocaleLinkClick(e) {
+    e.preventDefault;
+    fetch(e.target.href, {
+      method: 'PUT',
+      headers: {
+        'X-CSRF-Token': Rails.csrfToken(),
+        'Content-Type': 'application/json'
+      }
+    }).then(function (resp) {
+      return resp.json();
+    }).then(function (_ref) {
+      var hidden = _ref.hidden;
+
+      e.target.innerHTML = hidden ? 'Show' : 'Hide';
+    });
+  };
+
+  document.querySelectorAll('.js-hide-locale-link').forEach(function (link) {
+    return link.addEventListener('click', handleHideLocaleLinkClick);
+  });
+});
+});
+
+;require.register("src/lit/backend/localizations.js", function(exports, require, module) {
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };

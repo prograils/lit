@@ -17,11 +17,11 @@ module Lit
 
     test 'should hide locale' do
       if new_controller_test_format?
-        put :hide, params: { id: @locale, locale: {}, format: :js }
+        put :hide, params: { id: @locale, locale: {}, format: :json }
       else
-        put :hide, id: @locale, locale: {}, format: :js
+        put :hide, id: @locale, locale: {}, format: :json
       end
-      assert assigns(:locale).is_hidden?
+      assert_equal true, JSON.parse(response.body)['hidden']
     end
 
     test 'should destroy locale' do
