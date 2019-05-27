@@ -426,7 +426,6 @@ document.addEventListener('DOMContentLoaded', function () {
 'use strict';
 
 document.addEventListener('click', function (e) {
-  console.log(e.target);
   if (e.target.matches('[data-toggle="dropdown"]')) {
     document._dropdownOpen = true;
     e.target.parentElement.classList.toggle('open');
