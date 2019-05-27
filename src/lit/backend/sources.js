@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const tableElem = document.querySelector('.incomming-localizations-table');
 
-  tableElem.addEventListener('click', e => {
+  tableElem && tableElem.addEventListener('click', e => {
     const button = e.target;
     if (button.matches('.js-accept-btn')) {
       e.preventDefault();

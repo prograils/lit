@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var tableElem = document.querySelector('.incomming-localizations-table');
 
-  tableElem.addEventListener('click', function (e) {
+  tableElem && tableElem.addEventListener('click', function (e) {
     var button = e.target;
     if (button.matches('.js-accept-btn')) {
       e.preventDefault();
@@ -434,14 +434,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var acceptButtons = document.querySelectorAll('.js-accept-btn');
   var rejectButtons = document.querySelectorAll('.js-reject-btn');
-
-  acceptButtons.forEach(function (button) {});
-
-  rejectButtons.forEach(function (button) {});
 });
 });
 
-;require.register("___globals___", function(exports, require, module) {
+;require.register("src/lit/backend/ui.js", function(exports, require, module) {
+'use strict';
+
+document.addEventListener('click', function (e) {
+  console.log(e.target);
+  if (e.target.matches('[data-toggle="dropdown"]')) {
+    document._dropdownOpen = true;
+    e.target.parentElement.classList.toggle('open');
+  } else {
+    document._dropdownOpen && document.querySelectorAll('.dropdown.open').forEach(function (dropdown) {
+      return dropdown.classList.remove('open');
+    });
+    document._dropdownOpen = false;
+  }
+});
+});
+
+require.register("___globals___", function(exports, require, module) {
   
 });})();require('___globals___');
 
