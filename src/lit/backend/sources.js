@@ -1,3 +1,5 @@
+import Utils from '../utils';
+
 document.addEventListener('DOMContentLoaded', () => {
   const loadingElement = document.querySelector('.loading');
 
@@ -52,12 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (button.matches('.js-accept-btn')) {
       e.preventDefault();
       const url = e.target.href;
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          'X-CSRF-Token': Rails.csrfToken(),
-          'Content-Type': 'application/json'
-        }
+      Utils.fetch(url, {
+        method: 'GET'
       })
         .then(({ ok }) => {
           if (ok) {
@@ -72,12 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       if (confirm("Are you sure?")) {
         const url = e.target.href;
-        fetch(url, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-Token': Rails.csrfToken(),
-            'Content-Type': 'application/json'
-          }
+        Utils.fetch(url, {
+          method: 'DELETE'
         })
           .then(({ ok }) => {
             if (ok) {

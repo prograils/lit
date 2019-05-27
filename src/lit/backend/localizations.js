@@ -26,12 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
               rowElem.querySelector('form').addEventListener('submit', e => {
                 const url = e.target.action;
-                fetch(url, {
+                Utils.fetch(url, {
                   method: 'PATCH',
-                  headers: {
-                    'X-CSRF-Token': Rails.csrfToken(),
-                    'Content-Type': 'application/json'
-                  },
                   body: JSON.stringify({
                     localization: {
                       translated_value: rowElem.querySelector('textarea').value
@@ -51,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
               const handleCloudTranslationLinkClick = e => {
                 e.preventDefault();
                 const url = e.target.href;
-                fetch(url).then(resp => resp.json()).then(
+                Utils.fetch(url).then(resp => resp.json()).then(
                   ({ translatedText }) => {
                     if (typeof (translatedText) === 'string') {
                       const textareaElem = rowElem.querySelector('textarea');

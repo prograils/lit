@@ -150,15 +150,17 @@ var __makeRelativeRequire = function(require, mappings, pref) {
 require.register("src/lit/backend/locales.js", function(exports, require, module) {
 'use strict';
 
+var _utils = require('../utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 document.addEventListener('DOMContentLoaded', function () {
   var handleHideLocaleLinkClick = function handleHideLocaleLinkClick(e) {
     e.preventDefault;
-    fetch(e.target.href, {
-      method: 'PUT',
-      headers: {
-        'X-CSRF-Token': Rails.csrfToken(),
-        'Content-Type': 'application/json'
-      }
+    _utils2.default.fetch(e.target.href, {
+      method: 'PUT'
     }).then(function (resp) {
       return resp.json();
     }).then(function (_ref) {
@@ -217,12 +219,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             rowElem.querySelector('form').addEventListener('submit', function (e) {
               var url = e.target.action;
-              fetch(url, {
+              _utils2.default.fetch(url, {
                 method: 'PATCH',
-                headers: {
-                  'X-CSRF-Token': Rails.csrfToken(),
-                  'Content-Type': 'application/json'
-                },
                 body: JSON.stringify({
                   localization: {
                     translated_value: rowElem.querySelector('textarea').value
@@ -245,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var handleCloudTranslationLinkClick = function handleCloudTranslationLinkClick(e) {
               e.preventDefault();
               var url = e.target.href;
-              fetch(url).then(function (resp) {
+              _utils2.default.fetch(url).then(function (resp) {
                 return resp.json();
               }).then(function (_ref3) {
                 var translatedText = _ref3.translatedText;
@@ -351,6 +349,12 @@ document.addEventListener('DOMContentLoaded', function () {
 ;require.register("src/lit/backend/sources.js", function(exports, require, module) {
 'use strict';
 
+var _utils = require('../utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 document.addEventListener('DOMContentLoaded', function () {
   var loadingElement = document.querySelector('.loading');
 
@@ -404,12 +408,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (button.matches('.js-accept-btn')) {
       e.preventDefault();
       var url = e.target.href;
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          'X-CSRF-Token': Rails.csrfToken(),
-          'Content-Type': 'application/json'
-        }
+      _utils2.default.fetch(url, {
+        method: 'GET'
       }).then(function (_ref) {
         var ok = _ref.ok;
 
@@ -425,12 +425,8 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
       if (confirm("Are you sure?")) {
         var _url = e.target.href;
-        fetch(_url, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-Token': Rails.csrfToken(),
-            'Content-Type': 'application/json'
-          }
+        _utils2.default.fetch(_url, {
+          method: 'DELETE'
         }).then(function (_ref2) {
           var ok = _ref2.ok;
 
@@ -466,7 +462,7 @@ document.addEventListener('click', function (e) {
 });
 
 require.register("src/lit/utils.js", function(exports, require, module) {
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -480,6 +476,15 @@ var Utils = {
       }
     }
     return refElem;
+  },
+
+  fetch: function fetch(resource, init) {
+    return global.fetch(resource, Object.assign({}, {
+      headers: {
+        'X-CSRF-Token': Rails.csrfToken(),
+        'Content-Type': 'application/json'
+      }
+    }, init));
   }
 };
 

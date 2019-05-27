@@ -5,6 +5,18 @@ const Utils = {
       if (!refElem) { return; }
     }
     return refElem;
+  },
+
+  fetch: (resource, init) => {
+    return global.fetch(
+      resource,
+      Object.assign({}, {
+        headers: {
+          'X-CSRF-Token': Rails.csrfToken(),
+          'Content-Type': 'application/json'
+        }
+      }, init)
+    );
   }
 }
 
