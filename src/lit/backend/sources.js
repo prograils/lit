@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.interval = setInterval(updateFunc, 500);
   }
 
-  const tableElem = document.querySelector('.incomming-localizations-table')
+  const tableElem = document.querySelector('.incomming-localizations-table');
 
   tableElem.addEventListener('click', e => {
     const button = e.target;
@@ -59,13 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json'
         }
       })
-      .then(({ok}) => {
-        if (ok) {
-          button.parentElement.parentElement.remove(); // remove row
-        } else {
-          alert('Localization could not be accepted.');
-        }
-      })
+        .then(({ ok }) => {
+          if (ok) {
+            button.parentElement.parentElement.remove(); // remove row
+          } else {
+            alert('Localization could not be accepted.');
+          }
+        })
     }
 
     if (button.matches('.js-reject-btn')) {
@@ -79,25 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
             'Content-Type': 'application/json'
           }
         })
-        .then(({ok}) => {
-          if (ok) {
-            button.parentElement.parentElement.remove(); // remove row
-          } else {
-            alert('Localization could not be rejected.');
-          }
-        })
+          .then(({ ok }) => {
+            if (ok) {
+              button.parentElement.parentElement.remove(); // remove row
+            } else {
+              alert('Localization could not be rejected.');
+            }
+          })
       }
     }
   });
 
   const acceptButtons = document.querySelectorAll('.js-accept-btn');
   const rejectButtons = document.querySelectorAll('.js-reject-btn');
-
-  acceptButtons.forEach(button => {
-
-  });
-
-  rejectButtons.forEach(button => {
-
-  });
 })
