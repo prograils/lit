@@ -14,5 +14,7 @@
 //= require ./app
 //= require ./vendor
 
+require('src/lit/utils')
 require('src/lit/backend/localizations');
 require('src/lit/backend/sources');
+require('src/lit/backend/ui')

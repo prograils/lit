@@ -156,6 +156,10 @@ var _pell = require('pell');
 
 var _pell2 = _interopRequireDefault(_pell);
 
+var _utils = require('../utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var edited_rows = {};
@@ -211,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
               e.preventDefault();
             });
 
-            rowElem.querySelector('.js-cloud-translation-link').addEventListener('click', function (e) {
+            var handleCloudTranslationLinkClick = function handleCloudTranslationLinkClick(e) {
               e.preventDefault();
               var url = e.target.href;
               fetch(url).then(function (resp) {
@@ -233,6 +237,10 @@ document.addEventListener('DOMContentLoaded', function () {
                   });
                 }
               });
+            };
+
+            rowElem.querySelectorAll('.js-cloud-translation-link').forEach(function (link) {
+              link.addEventListener('click', handleCloudTranslationLinkClick);
             });
           });
         }
@@ -245,14 +253,8 @@ document.addEventListener('DOMContentLoaded', function () {
   allLocalizationRows.forEach(function (row) {
     row.addEventListener('click', function (e) {
       if (e.target.matches('form button.cancel')) {
-        var refElem = e.target;
-        if (refElem.localName === 'button') {
-          while (!refElem.matches('td.localization_row')) {
-            refElem = refElem.parentNode;
-            if (!refElem) {
-              return;
-            }
-          }
+        if (e.target.localName === 'button') {
+          var refElem = _utils2.default.closest(e.target, 'td.localization_row');
           refElem.dataset.editing = '0';
           refElem.innerHTML = edited_rows[refElem.dataset.id];
           e.preventDefault();
@@ -267,13 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
   localizationVersionsRows.forEach(function (row) {
     row.addEventListener('click', function (e) {
       if (e.target.matches('.close_versions')) {
-        var refElem = e.target;
-        while (!refElem.matches('tr.localization_versions_row')) {
-          refElem = refElem.parentNode;
-          if (!refElem) {
-            return;
-          }
-        }
+        var refElem = _utils2.default.closest(e.target, 'tr.localization_versions_row');
         refElem.classList.add('hidden');
         refElem.querySelectorAll('td').forEach(function (td) {
           return td.innerHTML = '';
@@ -287,13 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
   localizationKeyRows.forEach(function (row) {
     row.addEventListener('click', function (e) {
       if (e.target.matches('input.wysiwyg_switch')) {
-        var refElem = e.target;
-        while (!refElem.matches('form')) {
-          refElem = refElem.parentNode;
-          if (!refElem) {
-            return;
-          }
-        }
+        var refElem = _utils2.default.closest(e.target, 'form');
         var textarea = refElem.querySelector('textarea');
         var pellElement = refElem.querySelector('.pell');
 
@@ -317,13 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (e.target.matches('.request_info_link')) {
-        var _refElem = e.target;
-        while (!_refElem.matches('tr.localization_key_row')) {
-          _refElem = _refElem.parentNode;
-          if (!_refElem) {
-            return;
-          }
-        }
+        var _refElem = _utils2.default.closest(e.target, 'tr.localization_key_row');
         requestInfoRow = _refElem.querySelector('.request_info_row');
         if (requestInfoRow.classList.contains('hidden')) {
           requestInfoRow.classList.remove('hidden');
@@ -446,12 +430,33 @@ document.addEventListener('click', function (e) {
     document._dropdownOpen = true;
     e.target.parentElement.classList.toggle('open');
   } else {
-    document._dropdownOpen && document.querySelectorAll('.dropdown.open').forEach(function (dropdown) {
+    document._dropdownOpen && document.querySelectorAll('.dropdown.open, .btn-group.open').forEach(function (dropdown) {
       return dropdown.classList.remove('open');
     });
     document._dropdownOpen = false;
   }
 });
+});
+
+require.register("src/lit/utils.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Utils = {
+  closest: function closest(refElem, selector) {
+    while (!refElem.matches(selector)) {
+      refElem = refElem.parentNode;
+      if (!refElem) {
+        return;
+      }
+    }
+    return refElem;
+  }
+};
+
+exports.default = Utils;
 });
 
 require.register("___globals___", function(exports, require, module) {

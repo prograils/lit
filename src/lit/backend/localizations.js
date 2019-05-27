@@ -1,4 +1,5 @@
 import pell from 'pell';
+import Utils from '../utils';
 
 let edited_rows = {};
 
@@ -14,59 +15,63 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!parseInt(tdElem.dataset.editing) && tdElem.dataset.edit) {
           tdElem.dataset.editing = '1';
           fetch(tdElem.dataset.edit)
-          .then(resp => resp.json())
-          .then(({html, isHtmlKey}) => {
-            rowElem.dataset.editing = 1;
-            rowElem.innerHTML = html;
-            rowElem.querySelector('textarea, input').focus();
-            if (isHtmlKey) {
-              rowElem.querySelector('.wysiwyg_switch').click()
-            }
+            .then(resp => resp.json())
+            .then(({ html, isHtmlKey }) => {
+              rowElem.dataset.editing = 1;
+              rowElem.innerHTML = html;
+              rowElem.querySelector('textarea, input').focus();
+              if (isHtmlKey) {
+                rowElem.querySelector('.wysiwyg_switch').click()
+              }
 
-            rowElem.querySelector('form').addEventListener('submit', e => {
-              const url = e.target.action;
-              fetch(url, {
-                method: 'PATCH',
-                headers: {
-                  'X-CSRF-Token': Rails.csrfToken(),
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  localization: {
-                    translated_value: rowElem.querySelector('textarea').value
-                  }
-                })
-              })
-              .then(resp => resp.json())
-              .then(({localizationId, html}) => {
-                delete rowElem.dataset.editing;
-                rowElem.innerHTML = html;
-                rowElem.parentElement.querySelector('.show_prev_versions').classList.remove('hidden');
-                document.querySelector(`a.change_completed_${localizationId} input[type="checkbox"]`).checked = true;
-              })
-              e.preventDefault();
-            });
-
-            rowElem.querySelector('.js-cloud-translation-link').addEventListener('click', e => {
-              e.preventDefault();
-              const url = e.target.href;
-              fetch(url).then(resp => resp.json()).then(
-                ({translatedText}) => {
-                  if (typeof(translatedText) === 'string') {
-                    const textareaElem = rowElem.querySelector('textarea');
-                    textareaElem.value = translatedText;
-                    if (isHtmlKey) {
-                      const pellElement = rowElem.querySelector('.pell');
-                      pellElement.content.innerHTML = translatedText;
+              rowElem.querySelector('form').addEventListener('submit', e => {
+                const url = e.target.action;
+                fetch(url, {
+                  method: 'PATCH',
+                  headers: {
+                    'X-CSRF-Token': Rails.csrfToken(),
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    localization: {
+                      translated_value: rowElem.querySelector('textarea').value
                     }
-                  } else if (typeof(translatedText) === 'object') {
-                    const inputElems = rowElem.querySelectorAll('input[type="text"]');
-                    inputElems.forEach((inputElem, i) => inputElem.value = translatedText[i]);
+                  })
+                })
+                  .then(resp => resp.json())
+                  .then(({ localizationId, html }) => {
+                    delete rowElem.dataset.editing;
+                    rowElem.innerHTML = html;
+                    rowElem.parentElement.querySelector('.show_prev_versions').classList.remove('hidden');
+                    document.querySelector(`a.change_completed_${localizationId} input[type="checkbox"]`).checked = true;
+                  })
+                e.preventDefault();
+              });
+
+              const handleCloudTranslationLinkClick = e => {
+                e.preventDefault();
+                const url = e.target.href;
+                fetch(url).then(resp => resp.json()).then(
+                  ({ translatedText }) => {
+                    if (typeof (translatedText) === 'string') {
+                      const textareaElem = rowElem.querySelector('textarea');
+                      textareaElem.value = translatedText;
+                      if (isHtmlKey) {
+                        const pellElement = rowElem.querySelector('.pell');
+                        pellElement.content.innerHTML = translatedText;
+                      }
+                    } else if (typeof (translatedText) === 'object') {
+                      const inputElems = rowElem.querySelectorAll('input[type="text"]');
+                      inputElems.forEach((inputElem, i) => inputElem.value = translatedText[i]);
+                    }
                   }
-                }
-              );
+                );
+              }
+
+              rowElem.querySelectorAll('.js-cloud-translation-link').forEach(link => {
+                link.addEventListener('click', handleCloudTranslationLinkClick);
+              });
             });
-          });
         }
       }
     })
@@ -77,12 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
   allLocalizationRows.forEach(row => {
     row.addEventListener('click', e => {
       if (e.target.matches('form button.cancel')) {
-        let refElem = e.target;
-        if (refElem.localName === 'button') {
-          while (!refElem.matches('td.localization_row')) {
-            refElem = refElem.parentNode;
-            if (!refElem) { return; }
-          }
+        if (e.target.localName === 'button') {
+          const refElem = Utils.closest(e.target, 'td.localization_row');
           refElem.dataset.editing = '0';
           refElem.innerHTML = edited_rows[refElem.dataset.id];
           e.preventDefault();
@@ -97,11 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   localizationVersionsRows.forEach(row => {
     row.addEventListener('click', e => {
       if (e.target.matches('.close_versions')) {
-        let refElem = e.target;
-        while (!refElem.matches('tr.localization_versions_row')) {
-          refElem = refElem.parentNode;
-          if (!refElem) { return; }
-        }
+        const refElem = Utils.closest(e.target, 'tr.localization_versions_row');
         refElem.classList.add('hidden');
         refElem.querySelectorAll('td').forEach(td => td.innerHTML = '');
       }
@@ -113,11 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
   localizationKeyRows.forEach(row => {
     row.addEventListener('click', e => {
       if (e.target.matches('input.wysiwyg_switch')) {
-        let refElem = e.target;
-        while (!refElem.matches('form')) {
-          refElem = refElem.parentNode;
-          if (!refElem) { return; }
-        }
+        const refElem = Utils.closest(e.target, 'form');
         const textarea = refElem.querySelector('textarea');
         const pellElement = refElem.querySelector('.pell');
 
@@ -139,11 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (e.target.matches('.request_info_link')) {
-        let refElem = e.target;
-        while (!refElem.matches('tr.localization_key_row')) {
-          refElem = refElem.parentNode;
-          if (!refElem) { return; }
-        }
+        const refElem = Utils.closest(e.target, 'tr.localization_key_row');
         requestInfoRow = refElem.querySelector('.request_info_row');
         if (requestInfoRow.classList.contains('hidden')) {
           requestInfoRow.classList.remove('hidden');

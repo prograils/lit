@@ -24,7 +24,7 @@
   <% if Lit::CloudTranslation.provider %>
     <div class="btn-group pull-right">
       <%= link_to "Translate using #{Lit::CloudTranslation.provider.name.demodulize}", cloud_translation_path(from: I18n.default_locale, localization_id: @localization.id), class: 'btn btn-sm btn-default js-cloud-translation-link' %>
-      <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
+      <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" type="button">
         <span class="caret"></span>
         <span class="sr-only">Source languages</span>
       </button>
