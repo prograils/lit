@@ -194,6 +194,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var edited_rows = {};
 
 document.addEventListener('DOMContentLoaded', function () {
+  var localeRows = document.querySelectorAll('td.locale_row');
+
+  localeRows.forEach(function (row) {
+    row.addEventListener('click', function (e) {
+      var closestLink = _utils2.default.closest(e.target, 'a');
+
+      if (closestLink && closestLink.matches('.show_prev_versions')) {
+        e.preventDefault();
+        _utils2.default.fetch(closestLink.href, { method: 'GET' }).then(function (resp) {
+          return resp.json();
+        }).then(function (_ref) {
+          var html = _ref.html,
+              localizationId = _ref.localizationId;
+
+          var versionsCell = _utils2.default.closest(closestLink, 'tbody').querySelector('.localization_versions_row[data-id="' + localizationId + '"] td');
+          _utils2.default.closest(versionsCell, 'tr').classList.remove('hidden');
+          versionsCell.innerHTML = html;
+        });
+      }
+    });
+  });
+
   var localizationRows = document.querySelectorAll('td.localization_row[data-editing="0"]');
 
   localizationRows.forEach(function (row) {
@@ -206,9 +228,9 @@ document.addEventListener('DOMContentLoaded', function () {
           tdElem.dataset.editing = '1';
           fetch(tdElem.dataset.edit).then(function (resp) {
             return resp.json();
-          }).then(function (_ref) {
-            var html = _ref.html,
-                isHtmlKey = _ref.isHtmlKey;
+          }).then(function (_ref2) {
+            var html = _ref2.html,
+                isHtmlKey = _ref2.isHtmlKey;
 
             rowElem.dataset.editing = 1;
             rowElem.innerHTML = html;
@@ -228,9 +250,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
               }).then(function (resp) {
                 return resp.json();
-              }).then(function (_ref2) {
-                var localizationId = _ref2.localizationId,
-                    html = _ref2.html;
+              }).then(function (_ref3) {
+                var localizationId = _ref3.localizationId,
+                    html = _ref3.html;
 
                 delete rowElem.dataset.editing;
                 rowElem.innerHTML = html;
@@ -245,8 +267,8 @@ document.addEventListener('DOMContentLoaded', function () {
               var url = e.target.href;
               _utils2.default.fetch(url).then(function (resp) {
                 return resp.json();
-              }).then(function (_ref3) {
-                var translatedText = _ref3.translatedText;
+              }).then(function (_ref4) {
+                var translatedText = _ref4.translatedText;
 
                 if (typeof translatedText === 'string') {
                   var textareaElem = rowElem.querySelector('textarea');
@@ -366,8 +388,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var link = _utils2.default.closest(e.target, 'a');
       _utils2.default.fetch(link.href, { method: 'GET' }).then(function (resp) {
         return resp.json();
-      }).then(function (_ref4) {
-        var starred = _ref4.starred;
+      }).then(function (_ref5) {
+        var starred = _ref5.starred;
 
         var icon = link.querySelector('i');
         if (starred) {
@@ -385,8 +407,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var link = _utils2.default.closest(e.target, 'a');
       _utils2.default.fetch(link.href, { method: 'PUT' }).then(function (resp) {
         return resp.json();
-      }).then(function (_ref5) {
-        var completed = _ref5.completed;
+      }).then(function (_ref6) {
+        var completed = _ref6.completed;
 
         var icon = link.querySelector('i');
         if (completed) {

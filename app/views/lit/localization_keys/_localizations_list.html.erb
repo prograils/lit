@@ -46,7 +46,7 @@
                   <%= image_tag "lit/famfamfam_flags/#{locale[0,2]}.png" %>
                   <%= locale %>
                   <% if localization %>
-                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization, format: :js), class: "show_prev_versions #{'hidden' unless versions?(localization)}", remote: true do %>
+                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization, format: :json), class: "show_prev_versions #{'hidden' unless versions?(localization)}" do %>
                       <%= draw_icon 'random', title: I18n.t('lit.common.previous_versions', default: 'Previous versions') %>
                     <% end %>
                   <% end %>

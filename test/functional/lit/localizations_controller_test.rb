@@ -42,17 +42,22 @@ module Lit
             params: {
               localization_key_id: @localization.localization_key.id,
               id: @localization.id,
-              format: :js
+              format: :json
             }
       else
         get :previous_versions,
             localization_key_id: @localization.localization_key.id,
             id: @localization.id,
-            format: :js
+            format: :json
       end
       assert_response :success
       assert_not_nil assigns(:localization)
       assert_not_nil assigns(:versions)
+      JSON.parse(response.body).tap do |body|
+        binding.pry
+        assert_not_nil body['html']
+        assert_equal body['localizationId'], assigns[:localization].id
+      end
     end
 
     # PUT /localization_keys/:localization_key_id/localizations/:id

@@ -4,6 +4,26 @@ import Utils from '../utils';
 let edited_rows = {};
 
 document.addEventListener('DOMContentLoaded', () => {
+  const localeRows = document.querySelectorAll('td.locale_row');
+
+  localeRows.forEach(row => {
+    row.addEventListener('click', e => {
+      const closestLink = Utils.closest(e.target, 'a');
+
+      if (closestLink && closestLink.matches('.show_prev_versions')) {
+        e.preventDefault();
+        Utils.fetch(closestLink.href, { method: 'GET' })
+          .then(resp => resp.json())
+          .then(({ html, localizationId }) => {
+            const versionsCell = Utils.closest(closestLink, 'tbody')
+              .querySelector(`.localization_versions_row[data-id="${localizationId}"] td`);
+            Utils.closest(versionsCell, 'tr').classList.remove('hidden');
+            versionsCell.innerHTML = html;
+          })
+      }
+    });
+  });
+
   const localizationRows = document.querySelectorAll('td.localization_row[data-editing="0"]');
 
   localizationRows.forEach(row => {

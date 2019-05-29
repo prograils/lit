@@ -12,7 +12,6 @@ module Lit
     end
 
     def hide
-      binding.pry
       @locale = Locale.find(params[:id])
       @locale.toggle :is_hidden
       @locale.save

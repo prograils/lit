@@ -45,7 +45,17 @@ module Lit
 
     def previous_versions
       @versions = @localization.versions.order(created_at: :desc)
-      respond_to :js
+      respond_to do |format|
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: '/lit/localizations/previous_versions_rows.html',
+              locals: { localization: @localization, versions: @versions }
+            ),
+            localizationId: @localization.id
+          }
+        end
+      end
     end
 
     private
