@@ -342,6 +342,81 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     });
+
+    var handleDeleteLinkClick = function handleDeleteLinkClick(e) {
+      e.preventDefault();
+      var link = _utils2.default.closest(e.target, 'a');
+      if (confirm(link.dataset.litConfirm)) {
+        _utils2.default.fetch(link.href, { method: 'DELETE' }).then(function () {
+          return _utils2.default.closest(link, 'tr').remove();
+        });
+      }
+    };
+
+    var handleRestoreLinkClick = function handleRestoreLinkClick(e) {
+      e.preventDefault();
+      var link = _utils2.default.closest(e.target, 'a');
+      _utils2.default.fetch(link.href, { method: 'PUT' }).then(function () {
+        return _utils2.default.closest(link, 'tr').remove();
+      });
+    };
+
+    var handleStarLinkClick = function handleStarLinkClick(e) {
+      e.preventDefault();
+      var link = _utils2.default.closest(e.target, 'a');
+      _utils2.default.fetch(link.href, { method: 'GET' }).then(function (resp) {
+        return resp.json();
+      }).then(function (_ref4) {
+        var starred = _ref4.starred;
+
+        var icon = link.querySelector('i');
+        if (starred) {
+          icon.classList.add('fa-star');
+          icon.classList.remove('fa-star-o');
+        } else {
+          icon.classList.add('fa-star-o');
+          icon.classList.remove('fa-star');
+        }
+      });
+    };
+
+    var handleCompleteLinkClick = function handleCompleteLinkClick(e) {
+      e.preventDefault();
+      var link = _utils2.default.closest(e.target, 'a');
+      _utils2.default.fetch(link.href, { method: 'PUT' }).then(function (resp) {
+        return resp.json();
+      }).then(function (_ref5) {
+        var completed = _ref5.completed;
+
+        var icon = link.querySelector('i');
+        if (completed) {
+          icon.classList.add('fa-check-circle');
+          icon.classList.remove('fa-check-circle-o');
+        } else {
+          icon.classList.add('fa-check-circle-o');
+          icon.classList.remove('fa-check-circle');
+        }
+        _utils2.default.closest(link, 'tr').querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+          return checkbox.checked = completed;
+        });
+      });
+    };
+
+    row.querySelectorAll('.js-delete-localization-key').forEach(function (deleteLink) {
+      return deleteLink.addEventListener('click', handleDeleteLinkClick);
+    });
+
+    row.querySelectorAll('.js-restore-localization-key').forEach(function (restoreLink) {
+      return restoreLink.addEventListener('click', handleRestoreLinkClick);
+    });
+
+    row.querySelectorAll('.js-star-localization-key').forEach(function (starLink) {
+      return starLink.addEventListener('click', handleStarLinkClick);
+    });
+
+    row.querySelectorAll('.js-complete-localization-key').forEach(function (completeLink) {
+      return completeLink.addEventListener('click', handleCompleteLinkClick);
+    });
   });
 });
 });

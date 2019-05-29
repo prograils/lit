@@ -138,5 +138,68 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+
+    const handleDeleteLinkClick = (e) => {
+      e.preventDefault();
+      const link = Utils.closest(e.target, 'a');
+      if (confirm(link.dataset.litConfirm)) {
+        Utils.fetch(link.href, { method: 'DELETE' })
+          .then(() => Utils.closest(link, 'tr').remove());
+      }
+    }
+
+    const handleRestoreLinkClick = (e) => {
+      e.preventDefault();
+      const link = Utils.closest(e.target, 'a');
+      Utils.fetch(link.href, { method: 'PUT' })
+        .then(() => Utils.closest(link, 'tr').remove());
+    }
+
+    const handleStarLinkClick = (e) => {
+      e.preventDefault();
+      const link = Utils.closest(e.target, 'a');
+      Utils.fetch(link.href, { method: 'GET' })
+        .then(resp => resp.json())
+        .then(({ starred }) => {
+          const icon = link.querySelector('i');
+          if (starred) {
+            icon.classList.add('fa-star');
+            icon.classList.remove('fa-star-o');
+          } else {
+            icon.classList.add('fa-star-o');
+            icon.classList.remove('fa-star');
+          }
+        });
+    }
+
+    const handleCompleteLinkClick = (e) => {
+      e.preventDefault();
+      const link = Utils.closest(e.target, 'a');
+      Utils.fetch(link.href, { method: 'PUT' })
+        .then(resp => resp.json())
+        .then(({ completed }) => {
+          const icon = link.querySelector('i');
+          if (completed) {
+            icon.classList.add('fa-check-circle');
+            icon.classList.remove('fa-check-circle-o');
+          } else {
+            icon.classList.add('fa-check-circle-o');
+            icon.classList.remove('fa-check-circle');
+          }
+          Utils.closest(link, 'tr').querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = completed);
+        });
+    }
+
+    row.querySelectorAll('.js-delete-localization-key')
+      .forEach(deleteLink => deleteLink.addEventListener('click', handleDeleteLinkClick));
+
+    row.querySelectorAll('.js-restore-localization-key')
+      .forEach(restoreLink => restoreLink.addEventListener('click', handleRestoreLinkClick));
+
+    row.querySelectorAll('.js-star-localization-key')
+      .forEach(starLink => starLink.addEventListener('click', handleStarLinkClick));
+
+    row.querySelectorAll('.js-complete-localization-key')
+      .forEach(completeLink => completeLink.addEventListener('click', handleCompleteLinkClick));
   });
 })

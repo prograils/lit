@@ -11,18 +11,18 @@
             <% end %>
           <% end %>
           <% if lk.is_deleted? %>
-            <%= link_to lit.restore_deleted_localization_key_path(lk), method: :put, remote: true, class: 'rotate_left_icon title', title: 'Restore translation key' do %>
+            <%= link_to lit.restore_deleted_localization_key_path(lk), class: 'rotate_left_icon title js-restore-localization-key', title: 'Restore translation key' do %>
               <%= draw_icon 'rotate-left' %>
             <% end %>
           <% end %>
           <% unless lk.is_deleted? %>
-            <%= link_to lit.change_completed_localization_key_path(lk), method: :put, remote: true, class: 'check_icon title', title: 'Complete / incomplete translation key' do %>
-              <%= draw_icon lk.is_starred? ? 'check-circle' : 'check-circle-o' %>
+            <%= link_to lit.change_completed_localization_key_path(lk), class: 'check_icon title js-complete-localization-key', title: 'Complete / incomplete translation key' do %>
+              <%= draw_icon lk.is_completed? ? 'check-circle' : 'check-circle-o' %>
             <% end %>
-            <%= link_to lit.star_localization_key_path(lk), remote: true, class: 'star_icon title', title: 'Star / unstar translation key' do %>
+            <%= link_to lit.star_localization_key_path(lk), class: 'star_icon title js-star-localization-key', title: 'Star / unstar translation key' do %>
               <%= draw_icon lk.is_starred? ? 'star' : 'star-o' %>
             <% end %>
-            <%= link_to lit.localization_key_path(lk), method: :delete, data: {confirm: I18n.t('lit.common.you_sure', default: "Are you sure?")}, remote: true, title: 'Delete translation key', class: 'title' do %>
+            <%= link_to lit.localization_key_path(lk), data: {lit_confirm: I18n.t('lit.common.you_sure', default: "Are you sure?")}, title: 'Delete translation key', class: 'title js-delete-localization-key' do %>
               <%= draw_icon 'trash-o' %>
             <% end %>
           <% end %>

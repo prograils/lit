@@ -44,22 +44,36 @@ module Lit
     def star
       @localization_key.toggle :is_starred
       @localization_key.save
-      respond_to :js
+      respond_to do |format|
+        format.json do
+          render json: { starred: @localization_key.is_starred? }
+        end
+      end
     end
 
     def change_completed
       @localization_key.change_all_completed
-      respond_to :js
+      respond_to do |format|
+        format.json do
+          render json: { completed: @localization_key.is_completed? }
+        end
+      end
     end
 
     def restore_deleted
       @localization_key.restore
-      respond_to :js
+      respond_to do |format|
+        head :ok
+      end
     end
 
     def destroy
       @localization_key.soft_destroy
-      respond_to :js
+      respond_to do |format|
+        format.json do
+          head :no_content
+        end
+      end
     end
 
     private
