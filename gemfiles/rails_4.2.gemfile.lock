@@ -1,8 +1,9 @@
 PATH
   remote: ..
   specs:
-    lit (1.0.1)
+    lit (1.0.2)
       coffee-rails
+      emoji_flag
       jquery-rails
       rails (>= 4.2.0)
       sass-rails
@@ -234,7 +235,6 @@ DEPENDENCIES
   coffee-rails
   database_cleaner
   devise
-  emoji_flag
   google-cloud-translate (~> 1.2.4)
   jquery-rails
   lit!
