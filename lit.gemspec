@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'sass-rails'
+  s.add_dependency 'emoji_flag'
 
   s.add_development_dependency 'appraisal', '~> 2.2.0'
   s.add_development_dependency 'devise', '~> 4.5.0'
