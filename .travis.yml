@@ -9,7 +9,8 @@ gemfile:
   - gemfiles/rails_5.1.gemfile
   - gemfiles/rails_5.2.gemfile
 services:
- - redis-server
+  - postgresql
+  - redis-server
 env:
   - LIT_STORAGE=hash
   - LIT_STORAGE=redis
@@ -18,4 +19,3 @@ before_script:
   - psql -c 'create database lit_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate
 script: "bundle exec rake test"
-
