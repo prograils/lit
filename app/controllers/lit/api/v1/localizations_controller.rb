@@ -22,12 +22,17 @@ module Lit
     private
 
     def fetch_localizations
+      scope = Localization.includes(
+        :locale,
+        :localization_key
+      )
+
       if params[:after].present?
         after_date = Time.parse("#{params[:after]} #{Time.zone.name}")
                          .in_time_zone
-        Localization.after(after_date).to_a
+        scope.after(after_date).to_a
       else
-        Localization.all
+        scope.all
       end
     end
   end
