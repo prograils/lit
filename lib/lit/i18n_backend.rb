@@ -130,7 +130,7 @@ module Lit
         # end
       elsif data.respond_to?(:to_str) || data.is_a?(Array)
         key = ([locale] + scope).join('.')
-        return if startup_process && @cache.keys.member?(key) && Lit.ignore_yaml_on_startup
+        return if startup_process && Lit.ignore_yaml_on_startup && (Thread.current[:lit_cache_keys] || @cache.keys).member?(key)
         @cache.update_locale(key, data, data.is_a?(Array), startup_process)
       elsif data.nil?
         return if startup_process
@@ -140,11 +140,13 @@ module Lit
     end
 
     def load_translations_to_cache
+      Thread.current[:lit_cache_keys] = @cache.keys
       ActiveRecord::Base.transaction do
         (@translations || {}).each do |locale, data|
           store_item(locale, data, [], true) if valid_locale?(locale)
         end
       end
+      Thread.current[:lit_cache_keys] = nil
     end
 
     def init_translations
@@ -156,7 +158,7 @@ module Lit
       # load translations from database to cache
       @cache.load_all_translations
       # load translations from @translations to cache
-      load_translations_to_cache
+      load_translations_to_cache unless Lit.ignore_yaml_on_startup
       @initialized = true
     end
 

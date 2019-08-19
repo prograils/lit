@@ -13,7 +13,12 @@ module Lit
       Dummy::Application.reload_routes!
       @routes = Lit::Engine.routes
       request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials('test')
+      Lit.ignore_yaml_on_startup = false
       Lit.init
+    end
+
+    def teardown
+      Lit.ignore_yaml_on_startup = nil
     end
 
     test 'should get index' do
