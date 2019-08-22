@@ -1,5 +1,6 @@
 require 'lit/engine'
 require 'lit/loader'
+require 'lit/hits_counter'
 
 module Lit
   mattr_accessor :authentication_function
@@ -64,6 +65,10 @@ module Lit
 
   def self.fallback=(_value)
     ::Rails.logger.error "[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead"
+  end
+
+  def self.hits_counter
+    Thread.current[:lit_hits_counter_batch] || Lit::HitsCounter.instance #Lit.get_key_value_engine
   end
 end
 

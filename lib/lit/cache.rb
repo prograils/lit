@@ -19,7 +19,6 @@ end
 module Lit
   class Cache
     def initialize
-      @hits_counter = Lit.get_key_value_engine
       @request_info_store = Lit.get_key_value_engine
       @hits_counter_working = true
       @keys = nil
@@ -29,7 +28,7 @@ module Lit
 
     def [](key)
       key_without_locale = split_key(key).last
-      update_hits_count(key)
+      update_hits_count(key_without_locale)
       store_request_info(key_without_locale)
       localization = localizations[key]
       update_request_keys(key_without_locale, localization)
@@ -140,11 +139,7 @@ module Lit
     end
 
     def get_global_hits_counter(key)
-      @hits_counter['global_hits_counter.' + key]
-    end
-
-    def get_hits_counter(key)
-      @hits_counter['hits_counter.' + key]
+      Lit.hits_counter[key]
     end
 
     def stop_hits_counter
@@ -307,11 +302,9 @@ module Lit
       localization_key
     end
 
-    def update_hits_count(key)
+    def update_hits_count(key_without_locale)
       return unless @hits_counter_working
-      key_without_locale = split_key(key).last
-      @hits_counter.incr('hits_counter.' + key)
-      @hits_counter.incr('global_hits_counter.' + key_without_locale)
+      Lit.hits_counter.incr(key_without_locale)
     end
 
     def store_request_info(key_without_locale)
