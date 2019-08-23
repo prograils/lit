@@ -4,6 +4,11 @@ require 'lit/hits_counter_batch'
 
 module Lit
   module Concerns
+    # Usage:
+    #
+    # class ApplicationController
+    #   include Lit::Concerns::HitsCounterStore
+    # end
     module HitsCounterStore
       extend ::ActiveSupport::Concern
       included do
