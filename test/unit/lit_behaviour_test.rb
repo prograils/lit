@@ -121,6 +121,40 @@ class LitBehaviourTest < ActiveSupport::TestCase
     Lit.loader = old_loader
   end
 
+
+  test 'it wont store key if prefix is added to ignored, but in included keys' do
+    old_loader = Lit.loader
+    key = 'test.of.storage'
+    existing_key = 'existing.string'
+    Lit.included_keys = ['existing']
+    Lit.loader = nil
+    Lit.init
+    I18n.t(key)
+    I18n.t(existing_key)
+    assert !Lit::LocalizationKey.where(localization_key: key).exists?
+    assert Lit::LocalizationKey.where(localization_key: existing_key).exists?
+    Lit.loader = old_loader
+  end
+
+  test 'it wont store key if prefix is added to ignored, but not in included keys' do
+    old_loader = Lit.loader
+    included_key = 'test.of.storage'
+    ignored_key = 'test.of.storage2'
+    ignored_key2 = 'existing.string'
+    Lit.included_keys = ['test']
+    Lit.ignored_keys = ['test.of.storage2']
+    Lit.loader = nil
+    Lit.init
+    I18n.t(included_key)
+    I18n.t(ignored_key)
+    I18n.t(ignored_key2)
+    assert !Lit::LocalizationKey.where(localization_key: ignored_key).exists?
+    assert !Lit::LocalizationKey.where(localization_key: ignored_key2).exists?
+    assert Lit::LocalizationKey.where(localization_key: included_key).exists?
+    Lit.loader = old_loader
+  end
+
+
   test 'it wont store key if ignored_key prefix is a string' do
     old_loader = Lit.loader
     first_key = 'test.of.storage'
