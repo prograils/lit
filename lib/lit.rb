@@ -38,6 +38,7 @@ module Lit
         Lit.included_keys = keys
       end
       Lit.included_keys = [] unless Lit.included_keys.is_a?(Array)
+      Lit.included_keys = Lit.included_keys.map(&:freeze).freeze
 
       if Lit.ignored_keys.is_a?(String)
         keys = Lit.ignored_keys.split(',').map(&:strip)
