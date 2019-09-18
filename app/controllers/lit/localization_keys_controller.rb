@@ -37,6 +37,10 @@ module Lit
          @scope.respond_to?(Kaminari.config.page_method_name)
         @scope = @scope.send(Kaminari.config.page_method_name, params[:page])
       end
+      if defined?(WillPaginate) &&
+         @scope.respond_to?(:paginate)
+        @scope = @scope.paginate(page: params[:page])
+      end
       get_localization_keys
       render action: :index
     end
@@ -88,6 +92,8 @@ module Lit
       end
       if defined?(Kaminari) and @scope.respond_to?(Kaminari.config.page_method_name)
         @localization_keys = @scope.send(Kaminari.config.page_method_name, params[:page])
+      elsif defined?(WillPaginate) and @scope.respond_to?(:paginate)
+        @localization_keys = @scope.paginate(page: params[:page])
       else
         @localization_keys = @scope
       end
