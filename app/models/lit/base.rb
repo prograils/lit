@@ -1,8 +1,8 @@
 class Lit::Base < ActiveRecord::Base
   self.abstract_class = true
 
-  before_save :mark_for_retry_on_create, on: :create
-  before_save :mark_for_retry_on_update, on: :update
+  before_create :mark_for_retry_on_create
+  before_update :mark_for_retry_on_update
 
   attr_accessor :retried_created, :retried_updated
 
