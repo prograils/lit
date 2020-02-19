@@ -75,7 +75,7 @@ module Lit
           nested_keys.merge!(converted, &deep_proc)
         end
       end
-      if (key_selector.present? && key_parts[1] == key_selector)
+      if key_selector.present?
         "var js_locale= #{nested_keys}"
       else
         nested_keys
