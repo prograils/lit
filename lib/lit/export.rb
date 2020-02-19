@@ -69,7 +69,6 @@ module Lit
       nested_keys = {}
       db_localizations.sort.each do |k, v|
         key_parts = k.to_s.split('.')
-        puts "-------------_> #{key_parts.inspect}"
         if (key_selector.present? && key_parts[1] == key_selector) || key_selector.nil?
           converted = key_parts.reverse.reduce(v) { |a, n| { n => a } }
           nested_keys.merge!(converted, &deep_proc)
