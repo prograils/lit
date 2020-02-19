@@ -3,7 +3,7 @@ require 'csv'
 module Lit
   class Export
     def self.call(locale_keys:, format:, include_hits_count: false)
-      raise ArgumentError, "format must be yaml or csv" if %i[yaml_js yaml csv].exclude?(format)
+      raise ArgumentError, "format must be yaml, yaml_js or csv" if %i[yaml_js yaml csv].exclude?(format)
       Lit.loader.cache.load_all_translations
       localizations_scope = Lit::Localization.active
       if locale_keys.present?
@@ -21,7 +21,7 @@ module Lit
         exported_keys.to_yaml
       when :yaml_js
         exported_keys = nested_string_keys_to_hash(db_localizations, "javascript")
-        exported_keys.to_yaml
+        exported_keys.to_json
        when :csv
         relevant_locales = locale_keys.presence || I18n.available_locales.map(&:to_s)
         CSV.generate do |csv|
@@ -69,7 +69,8 @@ module Lit
       nested_keys = {}
       db_localizations.sort.each do |k, v|
         key_parts = k.to_s.split('.')
-        if (key_selector.present? && key_parts[0] == key_selector) || key_selector.nil?
+        puts "-------------_> #{key_parts.inspect}"
+        if (key_selector.present? && key_parts[1] == key_selector) || key_selector.nil?
           converted = key_parts.reverse.reduce(v) { |a, n| { n => a } }
           nested_keys.merge!(converted, &deep_proc)
         end
