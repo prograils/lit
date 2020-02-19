@@ -70,11 +70,16 @@ module Lit
       db_localizations.sort.each do |k, v|
         key_parts = k.to_s.split('.')
         if (key_selector.present? && key_parts[1] == key_selector) || key_selector.nil?
+          key_parts.drop(2) if key_selector.present? 
           converted = key_parts.reverse.reduce(v) { |a, n| { n => a } }
           nested_keys.merge!(converted, &deep_proc)
         end
       end
-      nested_keys
+      if (key_selector.present? && key_parts[1] == key_selector)
+        "var js_locale= #{nested_keys}"
+      else
+        nested_keys
+      end
     end
 
     # This is like Array#transpose but ignores size differences between inner arrays.
