@@ -3,7 +3,7 @@ require 'csv'
 module Lit
   class Export
     def self.call(locale_keys:, format:, include_hits_count: false)
-      raise ArgumentError, "format must be yaml, yaml_js or csv" if %i[yaml_js yaml csv].exclude?(format)
+      raise ArgumentError, "format must be yaml, json_js or csv" if %i[json_js yaml csv].exclude?(format)
       Lit.loader.cache.load_all_translations
       localizations_scope = Lit::Localization.active
       if locale_keys.present?
@@ -19,7 +19,7 @@ module Lit
       when :yaml
         exported_keys = nested_string_keys_to_hash(db_localizations)
         exported_keys.to_yaml
-      when :yaml_js
+      when :json_js
         exported_keys = nested_string_keys_to_hash(db_localizations, "javascript")
         exported_keys.to_json
        when :csv
