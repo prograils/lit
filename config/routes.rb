@@ -24,6 +24,8 @@ Lit::Engine.routes.draw do
       get :starred
       get :find_localization
       get :not_translated
+      get :not_used
+      get :used
       get :visited_again
     end
     resources :localizations, only: [:edit, :update, :show] do

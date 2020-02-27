@@ -9,6 +9,16 @@ module Lit
       get_localization_keys
     end
 
+    def not_used
+      @scope = @scope.not_used
+      get_localization_keys
+    end
+
+    def used
+      @scope = @scope.used
+      get_localization_keys
+    end
+
     def not_translated
       @scope = @scope.not_completed
       get_localization_keys

@@ -1,4 +1,5 @@
 <strong>All localization keys</strong> <%= Lit::LocalizationKey.active.count(:id) %><br/>
+<strong>Used localization keys</strong> <%= Lit::LocalizationKey.where.not(used_last_at: nil).count(:id) %><br/>
 <% @locales.each do |l| %>
   <strong><%= EmojiFlag.new(l.locale) %> <%= I18n.t("lit.locale_to_languages.#{l.locale}", :default=>l.locale) %>:</strong> <span title="<%= "#{l.changed_localizations_count}/#{l.all_localizations_count}" %>"><%= l.translated_percentage %>%</span><br/>
 <% end %>
