@@ -5,8 +5,10 @@
         <strong><%= lk.localization_key %></strong>
         <% if lk.used_last_at.present? %>
           <span class="badge"><%= "#{I18n.t('lit.used', default: 'used')} #{lk.usage_count} #{I18n.t('lit.times_since', default: 'times since')} #{l(Lit::LocalizationKey.maximum(:used_last_at), :format => :short4rb)}, #{I18n.t('lit.times_since', default: 'last use')} #{l(lk.used_last_at, :format => :short4rb)}"  %></span>
-        <% else %>
+        <% elsif Lit::LocalizationKey.maximum(:used_last_at).present? %>
           <span class="badge"><%= "#{I18n.t('lit.not_used', default: 'not used since')} #{l(Lit::LocalizationKey.maximum(:used_last_at), :format => :short4rb)}" %></span>
+        <% else %>
+          <span class="badge"><%= "#{I18n.t('lit.not_used', default: 'not used since')}" %></span>
         <% end %>
         <div class="localization_keys_options">
           <% if Lit.store_request_info %>
