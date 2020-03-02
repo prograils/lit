@@ -52,6 +52,8 @@ Lit::Engine.routes.draw do
     end
   end
 
+  post 'dashboard/clear_usage_data', to: 'dashboard#clear_usage_data', as: "dashboard_clear_usage_data"
+
   resource :cloud_translation, only: :show
 
   root to: 'dashboard#index'
