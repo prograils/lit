@@ -145,12 +145,15 @@ module Lit
     end
 
     def persit_global_hits_counters
+      update_array = []
       @hits_counter.each do |k,v|
         if k.match?(/^global_hits_counter/)
           localization_key = find_localization_key(k.gsub("global_hits_counter.", ""))
-          localization_key.update_columns(usage_count: @hits_counter[k] + localization_key.usage_count.to_i, used_last_at: Time.now)
+          update_array << [localization_key.id, @hits_counter[k] + localization_key.usage_count.to_i]
+          #localization_key.update_columns(usage_count: @hits_counter[k] + localization_key.usage_count.to_i, used_last_at: Time.now)
         end
       end
+      PersitGlobalHitsCountersJob.perform_later(update_array)
     end
 
     def get_hits_counter(key)

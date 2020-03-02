@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_29_103819) do
+ActiveRecord::Schema.define(version: 2020_02_27_082719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,8 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
     t.boolean "is_starred", default: false
     t.boolean "is_deleted", default: false, null: false
     t.boolean "is_visited_again", default: false, null: false
+    t.integer "usage_count"
+    t.datetime "used_last_at"
     t.index ["localization_key"], name: "index_lit_localization_keys_on_localization_key", unique: true
   end
 
