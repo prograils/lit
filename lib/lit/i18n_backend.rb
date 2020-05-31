@@ -160,7 +160,7 @@ module Lit
       # load translations from database to cache
       @cache.load_all_translations
       # load translations from @translations to cache
-      load_translations_to_cache
+      load_translations_to_cache unless Lit.ignore_yaml_on_startup
       @initialized = true
     end
 
