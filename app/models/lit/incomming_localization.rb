@@ -59,14 +59,14 @@ module Lit
     end
 
     def update_existing_localization_data
-      localization.update_attributes!(
+      localization.update!(
         translated_value: translated_value,
         is_changed: true
       )
     end
 
     def update_existing_localization_key_data
-      localization_key.update_attributes!(
+      localization_key.update!(
         is_deleted: localization_key_is_deleted
       )
     end

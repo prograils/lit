@@ -2,11 +2,11 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "admins", force: :cascade do |t|
+  create_table "admins", id: :serial, force: :cascade do |t|
     t.string "email", limit: 255, default: "", null: false
     t.string "encrypted_password", limit: 255, default: "", null: false
     t.string "reset_password_token", limit: 255
@@ -32,13 +32,13 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
-  create_table "lit_incomming_localizations", force: :cascade do |t|
+  create_table "lit_incomming_localizations", id: :serial, force: :cascade do |t|
     t.text "translated_value"
     t.integer "locale_id"
     t.integer "localization_key_id"
     t.integer "localization_id"
-    t.string "locale_str", limit: 255
-    t.string "localization_key_str", limit: 255
+    t.string "locale_str"
+    t.string "localization_key_str"
     t.integer "source_id"
     t.integer "incomming_id"
     t.datetime "created_at"
@@ -51,14 +51,14 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
     t.index ["source_id"], name: "index_lit_incomming_localizations_on_source_id"
   end
 
-  create_table "lit_locales", force: :cascade do |t|
+  create_table "lit_locales", id: :serial, force: :cascade do |t|
     t.string "locale", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "is_hidden", default: false
   end
 
-  create_table "lit_localization_keys", force: :cascade do |t|
+  create_table "lit_localization_keys", id: :serial, force: :cascade do |t|
     t.string "localization_key", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
     t.index ["localization_key"], name: "index_lit_localization_keys_on_localization_key", unique: true
   end
 
-  create_table "lit_localization_versions", force: :cascade do |t|
+  create_table "lit_localization_versions", id: :serial, force: :cascade do |t|
     t.text "translated_value"
     t.integer "localization_id"
     t.datetime "created_at"
@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
     t.index ["localization_id"], name: "index_lit_localization_versions_on_localization_id"
   end
 
-  create_table "lit_localizations", force: :cascade do |t|
+  create_table "lit_localizations", id: :serial, force: :cascade do |t|
     t.integer "locale_id"
     t.integer "localization_key_id"
     t.text "default_value"
@@ -90,17 +90,17 @@ ActiveRecord::Schema.define(version: 2018_11_29_103819) do
     t.index ["localization_key_id"], name: "index_lit_localizations_on_localization_key_id"
   end
 
-  create_table "lit_sources", force: :cascade do |t|
-    t.string "identifier", limit: 255
-    t.string "url", limit: 255
-    t.string "api_key", limit: 255
+  create_table "lit_sources", id: :serial, force: :cascade do |t|
+    t.string "identifier"
+    t.string "url"
+    t.string "api_key"
     t.datetime "last_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "sync_complete"
   end
 
-  create_table "projects", force: :cascade do |t|
+  create_table "projects", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
