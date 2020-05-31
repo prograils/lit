@@ -10,7 +10,8 @@ gemfile:
   - gemfiles/rails_5.2.gemfile
   - gemfiles/rails_6.0.gemfile
 services:
- - redis-server
+  - postgresql
+  - redis-server
 env:
   - LIT_STORAGE=hash
   - LIT_STORAGE=redis
