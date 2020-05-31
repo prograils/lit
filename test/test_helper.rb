@@ -16,7 +16,6 @@ require 'mocha/setup'
 require 'webmock'
 require 'vcr'
 require 'minitest-vcr'
-require 'pry-byebug'
 
 begin
   require 'rails-controller-testing'
