@@ -40,7 +40,7 @@ module Lit
     end
 
     def update
-      if @source.update_attributes(clear_params)
+      if @source.update(clear_params)
         redirect_to @source, notice: 'Source was successfully updated.'
       else
         render action: 'edit'

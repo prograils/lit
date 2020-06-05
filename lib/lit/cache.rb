@@ -132,7 +132,7 @@ module Lit
     def find_locale(locale_key)
       locale_key = locale_key.to_s
       @locale_cache ||= {}
-      unless @locale_cache.key?(locale_key)
+      unless @locale_cache.key?(locale_key) && @locale_cache[locale_key].id
         locale = Lit::Locale.where(locale: locale_key).first_or_create!
         @locale_cache[locale_key] = locale
       end

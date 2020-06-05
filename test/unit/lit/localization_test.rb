@@ -42,7 +42,7 @@ module Lit
       assert_equal 'English translation', I18n.t('scope.text_with_translation_in_english')
       l = Lit::Localization.first
       assert_equal false, l.is_changed?
-      l.update_attributes(translated_value: 'Test')
+      l.update(translated_value: 'Test')
       assert_equal false, l.is_changed?
     end
   end

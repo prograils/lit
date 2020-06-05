@@ -47,7 +47,15 @@ module Lit
 
   def self.check_if_table_exists
     Lit::Locale.table_exists?
-  rescue
+  rescue ActiveRecord::ActiveRecordError => e
+    log_txt =
+      "An #{e.class} error has been raised during Lit initialization. " \
+      "Lit assumes that database tables do not exist.\n\n" \
+      "Error: #{e.message}\n\n" \
+      "Backtrace:\n" \
+      "#{e.backtrace.join("\n")}"
+    Logger.new(STDOUT).error(log_txt) if Rails.env.test? # ensure this is logged to stdout in test
+    ::Rails.logger.error(log_txt)
     false
   end
 

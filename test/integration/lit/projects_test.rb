@@ -20,11 +20,7 @@ class ProjectsTest < ActionDispatch::IntegrationTest
   end
 
   test 'should have error messages' do
-    if ::Rails::VERSION::MAJOR < 5
-      post '/en/projects', project: { name: '' }
-    else
-      post '/en/projects', params: { project: { name: '' } }
-    end
+    post '/en/projects', params: { project: { name: '' } }
     locale = Lit::Locale.where('locale=?', 'en').first
     localization_key = Lit::LocalizationKey.find_by_localization_key! 'activerecord.errors.models.project.attributes.name.blank'
     localization = localization_key.localizations.where(locale_id: locale.id).first

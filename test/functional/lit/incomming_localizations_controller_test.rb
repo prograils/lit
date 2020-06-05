@@ -13,20 +13,12 @@ module Lit
     end
 
     test 'should get index' do
-      if new_controller_test_format?
-        get :index, params: { source_id: @source.id }
-      else
-        get :index, source_id: @source.id
-      end
+      get :index, params: { source_id: @source.id }
       assert_response :success
     end
 
     test 'should properly return to index' do
-      if new_controller_test_format?
-        get :accept_all, params: { source_id: @source.id }
-      else
-        get :accept_all, source_id: @source.id
-      end
+      get :accept_all, params: { source_id: @source.id }
       assert_response :redirect
     end
   end
