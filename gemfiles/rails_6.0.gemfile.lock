@@ -1,8 +1,9 @@
 PATH
   remote: ..
   specs:
-    lit (1.0.1)
+    lit (1.0.2)
       coffee-rails
+      emoji_flag
       jquery-rails
       rails (>= 4.2.0)
       sass-rails
@@ -101,6 +102,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    emoji_flag (0.1.1)
     erubi (1.9.0)
     execjs (2.7.0)
     faraday (0.17.3)
@@ -281,4 +283,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.3
+   2.1.4

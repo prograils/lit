@@ -1,4 +1,5 @@
 require 'csv'
+require 'lit/services/localization_keys_to_hash_service'
 
 module Lit
   class Export
@@ -17,7 +18,7 @@ module Lit
 
       case format
       when :yaml
-        exported_keys = nested_string_keys_to_hash(db_localizations)
+        exported_keys = Lit::LocalizationKeysToHashService.call(db_localizations)
         exported_keys.to_yaml
       when :csv
         relevant_locales = locale_keys.presence || I18n.available_locales.map(&:to_s)
@@ -53,23 +54,6 @@ module Lit
           end
         end
       end
-    end
-
-    private_class_method def self.nested_string_keys_to_hash(db_localizations)
-      # http://subtech.g.hatena.ne.jp/cho45/20061122
-      deep_proc = proc do |_k, s, o|
-        if s.is_a?(Hash) && o.is_a?(Hash)
-          next s.merge(o, &deep_proc)
-        end
-        next o
-      end
-      nested_keys = {}
-      db_localizations.sort.each do |k, v|
-        key_parts = k.to_s.split('.')
-        converted = key_parts.reverse.reduce(v) { |a, n| { n => a } }
-        nested_keys.merge!(converted, &deep_proc)
-      end
-      nested_keys
     end
 
     # This is like Array#transpose but ignores size differences between inner arrays.
