@@ -17,9 +17,9 @@ module Lit
     end
 
     def [](key)
-      if Lit.redis.exists(_prefixed_key_for_array(key))
+      if Lit.redis.exists?(_prefixed_key_for_array(key))
         Lit.redis.lrange(_prefixed_key(key), 0, -1)
-      elsif Lit.redis.exists(_prefixed_key_for_nil(key))
+      elsif Lit.redis.exists?(_prefixed_key_for_nil(key))
         nil
       else
         Lit.redis.get(_prefixed_key(key))
@@ -56,7 +56,7 @@ module Lit
     end
 
     def has_key?(key)
-      Lit.redis.exists(_prefixed_key(key))
+      Lit.redis.exists?(_prefixed_key(key))
     end
     alias key? has_key?
 
