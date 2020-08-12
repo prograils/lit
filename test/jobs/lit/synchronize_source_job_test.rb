@@ -28,7 +28,7 @@ if defined?(ActiveJob)
         assert_performed_jobs(1) do
           assert_equal 0, @source.incomming_localizations.count
           do_job
-          assert_equal 2, @source.incomming_localizations.count
+          assert_equal 5, @source.incomming_localizations.count
         end
       end
     end

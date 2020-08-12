@@ -117,6 +117,7 @@ module Lit
       cache_localizations = form_cache_localizations(keys_of_subtree, values_of_subtree)
 
       full_subtree = Lit::LocalizationKeysToHashService.call(cache_localizations)
+      full_subtree.transform_keys!(&:to_sym)
       full_subtree.dig(*key.split('.'))
     end
 
