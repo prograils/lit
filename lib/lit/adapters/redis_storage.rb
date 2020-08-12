@@ -18,10 +18,18 @@ module Lit
       Lit.redis
     end
 
+    # This handles a change in the redis-rb gem that changes exists => exists?
+    def exists?(key)
+      # Use recommended binary-returning method create [with this redis-rb commit](https://github.com/redis/redis-rb/commit/bf42fc9e0db4a1719d9b1ecc65aeb20425d44427).
+      return Lit.redis.exists?(key) if Lit.redis.respond_to?(:exists?)
+      # Fall back with older gem
+      Lit.redis.exists(key)
+    end
+    
     def [](key)
-      if Lit.redis.exists?(_prefixed_key_for_array(key))
+      if self.exists?(_prefixed_key_for_array(key))
         Lit.redis.lrange(_prefixed_key(key), 0, -1)
-      elsif Lit.redis.exists?(_prefixed_key_for_nil(key))
+      elsif self.exists?(_prefixed_key_for_nil(key))
         nil
       else
         val = Lit.redis.get(_prefixed_key(key))
@@ -61,7 +69,7 @@ module Lit
     end
 
     def has_key?(key)
-      Lit.redis.exists?(_prefixed_key(key))
+      self.exists?(_prefixed_key(key))
     end
     alias key? has_key?
 
