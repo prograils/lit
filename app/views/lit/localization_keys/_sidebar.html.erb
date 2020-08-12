@@ -12,7 +12,19 @@
       </div>
     <% end %>
     <ul class="nav nav-pills nav-stacked">
-      <li class="<%= "active" if params[:action]=='not_translated' %>">
+      <li class="<%= "active" if params[:action]=='not_used' %>">
+        <%= link_to lit.not_used_localization_keys_path do -%>
+          <%= draw_icon 'times-circle' %>
+          not used
+        <% end %>
+      </li>
+      <li class="<%= "active" if params[:action]=='used' %>">
+        <%= link_to lit.used_localization_keys_path do -%>
+          <%= draw_icon 'check-circle' %>
+          used
+        <% end %>
+      </li>
+       <li class="<%= "active" if params[:action]=='not_translated' %>">
         <%= link_to lit.not_translated_localization_keys_path do -%>
           <%= draw_icon 'pencil' %>
           not translated

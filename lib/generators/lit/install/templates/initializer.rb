@@ -50,7 +50,10 @@ Lit.set_last_updated_at_upon_creation = true
 # For more information please check the README.md
 Lit.store_request_info = false
 
-# Initialize lit
-Lit.init
+# Persist global_hits_counter every 1000 lookups, set to nil or comment out to disable
+Lit.persit_global_hits_count = 1000 
+
+# Initialize lit unless it ist disabled by setting the SKIP_LIT enviroment variable. Disabling is usefull to speed up the startup, for example to execute migrations
+Lit.init unless ENV["SKIP_LIT"] == "1"
 
 

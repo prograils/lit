@@ -3,6 +3,8 @@ module Lit
     attr_accessor :interpolated_key
 
     ## SCOPES
+    scope :used, -> { where.not(used_last_at: nil) }
+    scope :not_used, -> { where(used_last_at: nil) }
     scope :completed, -> { where(is_completed: true) }
     scope :not_completed, -> { where(is_completed: false) }
     scope :starred, -> { where(is_starred: true) }

@@ -24,6 +24,8 @@ Lit::Engine.routes.draw do
       get :starred
       get :find_localization
       get :not_translated
+      get :not_used
+      get :used
       get :visited_again
     end
     resources :localizations, only: [:edit, :update, :show] do
@@ -49,6 +51,8 @@ Lit::Engine.routes.draw do
       end
     end
   end
+
+  post 'dashboard/clear_usage_data', to: 'dashboard#clear_usage_data', as: "dashboard_clear_usage_data"
 
   resource :cloud_translation, only: :show
 

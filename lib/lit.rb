@@ -17,6 +17,7 @@ module Lit
   mattr_accessor :all_translations_are_html_safe
   mattr_accessor :set_last_updated_at_upon_creation
   mattr_accessor :store_request_info
+  mattr_accessor :persit_global_hits_count
 
   class << self
     attr_accessor :loader

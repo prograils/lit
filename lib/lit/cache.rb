@@ -20,6 +20,7 @@ module Lit
   class Cache
     def initialize
       @hits_counter = Lit.get_key_value_engine
+      @hits = 0
       @request_info_store = Lit.get_key_value_engine
       @hits_counter_working = true
       @keys = nil
@@ -141,6 +142,18 @@ module Lit
 
     def get_global_hits_counter(key)
       @hits_counter['global_hits_counter.' + key]
+    end
+
+    def persit_global_hits_counters
+      update_array = []
+      @hits_counter.each do |k,v|
+        if k.match?(/^global_hits_counter/)
+          localization_key = find_localization_key(k.gsub("global_hits_counter.", ""))
+          update_array << [localization_key.id, @hits_counter[k] + localization_key.usage_count.to_i]
+          #localization_key.update_columns(usage_count: @hits_counter[k] + localization_key.usage_count.to_i, used_last_at: Time.now)
+        end
+      end
+      PersitGlobalHitsCountersJob.perform_later(update_array)
     end
 
     def get_hits_counter(key)
@@ -310,6 +323,8 @@ module Lit
     def update_hits_count(key)
       return unless @hits_counter_working
       key_without_locale = split_key(key).last
+      @hits += 1
+      persit_global_hits_counters if Lit.persit_global_hits_count.present? && (@hits%Lit.persit_global_hits_count) == 0
       @hits_counter.incr('hits_counter.' + key)
       @hits_counter.incr('global_hits_counter.' + key_without_locale)
     end
