@@ -25,7 +25,7 @@ module Lit
       # Fall back with older gem
       Lit.redis.exists(key)
     end
-    
+
     def [](key)
       if self.exists?(_prefixed_key_for_array(key))
         Lit.redis.lrange(_prefixed_key(key), 0, -1)
@@ -35,7 +35,7 @@ module Lit
         val = Lit.redis.get(_prefixed_key(key))
         return val if val.present?
 
-        get_subtree_of_key(_prefixed_key(key))
+        get_subtree_of_key(key)
       end
     end
 

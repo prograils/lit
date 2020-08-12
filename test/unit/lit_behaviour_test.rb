@@ -234,6 +234,23 @@ class LitBehaviourTest < ActiveSupport::TestCase
     assert Lit::Localization.count == loc_count + 1
   end
 
+  test 'cache tree structure of keys and retrieve it from redis like I18n does' do
+    Lit.humanize_key = true
+    assert_difference 'Lit::LocalizationKey.count', 2 do
+      I18n.t('scopes.hash.sub_one', default: 'Left leaf')
+      I18n.t('scopes.hash.sub_two', default: 'Right leaf')
+    end
+    assert_no_database_queries do
+      assert_equal 'Left leaf', I18n.t('scopes.hash.sub_one')
+      assert_equal 'Right leaf', I18n.t('scopes.hash.sub_two')
+    end
+    hash_result = I18n.t('scopes.hash')
+    assert hash_result.is_a?(Hash)
+    assert hash_result.key?('sub_one')
+    assert hash_result.key?('sub_two')
+    assert_equal hash_result['sub_one'], 'Left leaf'
+  end
+
   private
 
   def find_localization_for(key, locale)

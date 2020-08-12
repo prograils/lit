@@ -21,3 +21,27 @@ array:
     - three
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
+
+hash_main:
+  locale: en
+  localization_key: hash_main
+  translated_value: the_root
+  default_value: the_root
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+  
+hash_sub_one:
+  locale: en
+  localization_key: hash_sub_one
+  translated_value: left_leaf
+  default_value: left_leaf
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+  
+hash_sub_two:
+  locale: en
+  localization_key: hash_sub_two
+  translated_value: right_leaf
+  default_value: right_leaf
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
