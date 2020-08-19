@@ -246,9 +246,9 @@ class LitBehaviourTest < ActiveSupport::TestCase
     end
     hash_result = I18n.t('scopes.hash')
     assert hash_result.is_a?(Hash)
-    assert hash_result.key?('sub_one')
-    assert hash_result.key?('sub_two')
-    assert_equal hash_result['sub_one'], 'Left leaf'
+    assert hash_result.key?(:sub_one)
+    assert hash_result.key?(:sub_two)
+    assert_equal hash_result[:sub_one], 'Left leaf'
   end
 
   private
