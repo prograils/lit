@@ -110,7 +110,7 @@ module Lit
     end
 
     def subtree_of_key(key)
-      keys_of_subtree = Lit.redis.scan_each(match: "#{_prefixed_key(key)}*").to_a
+      keys_of_subtree = Lit.redis.keys("#{_prefixed_key(key)}*")
       return nil if keys_of_subtree.empty?
 
       values_of_subtree = Lit.redis.mget(keys_of_subtree)
