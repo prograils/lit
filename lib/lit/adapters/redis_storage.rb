@@ -35,7 +35,7 @@ module Lit
         val = Lit.redis.get(_prefixed_key(key))
         return val if val.present?
 
-        get_subtree_of_key(key)
+        subtree_of_key(key)
       end
     end
 
@@ -109,7 +109,7 @@ module Lit
       _prefix + 'nil_flags:' + key.to_s
     end
 
-    def get_subtree_of_key(key)
+    def subtree_of_key(key)
       keys_of_subtree = Lit.redis.scan_each(match: "#{_prefixed_key(key)}*").to_a
       return nil if keys_of_subtree.empty?
 
