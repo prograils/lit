@@ -32,8 +32,7 @@ class ImportTest < ActiveSupport::TestCase
       end
     end
 
-    test 'does not override existing default or translated localization ' \
-         "values in raw mode (#{format})" do
+    test "override only default but not translated in raw mode (#{format})" do
       input = imported_file("import.#{ext}.normal")
       I18n.with_locale(:en) { I18n.t('scopes.foo', default: 'bar') }
       I18n.with_locale(:pl) { I18n.t('scopes.foo', default: 'baz') }
@@ -47,9 +46,9 @@ class ImportTest < ActiveSupport::TestCase
 
       pl_loc = foo_key_localizations.find_by("locale = 'pl'")
       assert(pl_loc.translated_value == 'bazzz')
-      assert(pl_loc.default_value == 'baz')
+      assert(pl_loc.default_value == 'foo pl')
       assert(
-        foo_key_localizations.find_by("locale = 'en'").default_value == 'bar'
+        foo_key_localizations.find_by("locale = 'en'").default_value == 'foo en'
       )
     end
 
