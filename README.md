@@ -145,6 +145,13 @@ These credentials can be given in three ways:
       ... # see Google docs link above for reference
     }
   end
+  
+  # For example, for Rails 6, from encrypted credentials file (HashWithIndifferentAccess is used, because the keys in
+   the credentials.config could be strings or, as well, symbols):
+  
+  Lit::CloudTranslation.configure do |config|
+    config.keyfile_hash = HashWithIndifferentAccess.new(Rails.application.credentials.config[:google_translate_api])
+  end
   ```
 * directly via `GOOGLE_TRANSLATE_API_<element>` environment variables, where e.g. the `GOOGLE_TRANSLATE_API_PROJECT_ID` variable corresponds to the `project_id` element of a JSON keyfile. Typically, only the following variables are mandatory:
   * `GOOGLE_TRANSLATE_API_PROJECT_ID`
