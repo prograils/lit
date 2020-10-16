@@ -24,6 +24,15 @@ class ExportTest < ActiveSupport::TestCase
     assert parsed_yaml.keys == %w[en]
   end
 
+  test 'exports nested keys to yaml properly even when localization is present for root key' do
+    yaml = Lit::Export.call(locale_keys: %i[en], format: :yaml)
+    parsed_yaml = YAML.load(yaml)
+    nested_part = parsed_yaml['en']['scopes']['hash']
+    assert nested_part.is_a?(Hash)
+    assert nested_part.key?('sub_one')
+    assert nested_part.key?('sub_two')
+  end
+
   test 'exports all locales to csv when locale keys not specified' do
     csv = Lit::Export.call(locale_keys: [], format: :csv)
     parsed_csv = CSV.parse(csv)
@@ -57,8 +66,8 @@ class ExportTest < ActiveSupport::TestCase
   end
 
   test 'includes hits count if specified' do
-    seen_lk = Lit::LocalizationKey.first
-    unseen_lk = Lit::LocalizationKey.second
+    seen_lk = Lit::LocalizationKey.find_by(localization_key: 'scopes.string')
+    unseen_lk = Lit::LocalizationKey.find_by(localization_key: 'scopes.array')
     10.times { I18n.t(seen_lk.localization_key) }
     csv = Lit::Export.call(locale_keys: [], format: :csv, include_hits_count: true)
     parsed_csv = CSV.parse(csv)
