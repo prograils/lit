@@ -11,6 +11,7 @@ class RemoteInteractorService
   rescue => e
     return unless defined?(Rails)
     ::Rails.logger.error { "Lit remote error: #{e}" }
+    nil # Return nil to be consistent with checks for .nil? otherwise returns True
   end
 
   private

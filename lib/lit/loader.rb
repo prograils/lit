@@ -4,6 +4,7 @@ require 'lit/cache'
 require 'lit/export'
 require 'lit/import'
 require 'lit/cloud_translation'
+require 'emoji_flag'
 
 module Lit
   class Loader

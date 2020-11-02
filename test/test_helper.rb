@@ -16,7 +16,6 @@ require 'mocha/setup'
 require 'webmock'
 require 'vcr'
 require 'minitest-vcr'
-require 'pry-byebug'
 
 begin
   require 'rails-controller-testing'
@@ -110,16 +109,8 @@ class ActionController::TestCase
   # @example
   #   call_action :get, :show, params: { ... }
   def call_action(verb, action, params: {})
-    if new_controller_test_format?
-      send verb, action, params: params
-    else
-      send verb, action, params
-    end
+    send verb, action, params: params
   end
-end
-
-def new_controller_test_format?
-  Rails::VERSION::MAJOR >= 5 && Rails::VERSION::MINOR > 0
 end
 
 VCR.configure do |config|

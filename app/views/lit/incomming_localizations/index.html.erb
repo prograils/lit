@@ -25,7 +25,7 @@
   <% @incomming_localizations.each do |il| %>
     <tr data-id="<%= il.id %>">
       <td colspan="3">
-        <%= image_tag "lit/famfamfam_flags/#{il.locale_str[0,2]}.png" %>
+        <%= image_tag EmojiFlag.new(il.locale_str) %>
         <strong><%= il.full_key %></strong>
       </td>
     </tr>

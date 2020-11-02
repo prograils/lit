@@ -9,7 +9,7 @@ module Lit
         key = scope_key_by_partial(key)
         key = pluralized_key(key, count) if count
 
-        content = super(key, options)
+        content = super(key, options.symbolize_keys)
         if !options[:skip_lit] && lit_authorized?
           content = get_translateable_span(key, content)
         end

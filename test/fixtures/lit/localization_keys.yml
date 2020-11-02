@@ -12,3 +12,18 @@ string:
   localization_key: 'scopes.string'
   created_at: <%= Time.current %>
   updated_at: <%= Time.current %>
+
+hash_main:
+  localization_key: 'scopes.hash'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+hash_sub_one:
+  localization_key: 'scopes.hash.sub_one'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+hash_sub_two:
+  localization_key: 'scopes.hash.sub_two'
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

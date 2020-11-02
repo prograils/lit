@@ -128,7 +128,7 @@ Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Google
 
 ...and make sure you have this in your Gemfile:
 ```
-gem 'google-cloud-translate'
+gem 'google-cloud-translate', '~> 1.2.4'
 ```
 
 To use translation via Google, you need to obtain a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) containing all the credentials required by the API.
@@ -144,6 +144,13 @@ These credentials can be given in three ways:
       'private_key_id' => 'keyid',
       ... # see Google docs link above for reference
     }
+  end
+  
+  # For example, for Rails 6, from encrypted credentials file (HashWithIndifferentAccess is used, because the keys in
+   the credentials.config could be strings or, as well, symbols):
+  
+  Lit::CloudTranslation.configure do |config|
+    config.keyfile_hash = HashWithIndifferentAccess.new(Rails.application.credentials.config[:google_translate_api])
   end
   ```
 * directly via `GOOGLE_TRANSLATE_API_<element>` environment variables, where e.g. the `GOOGLE_TRANSLATE_API_PROJECT_ID` variable corresponds to the `project_id` element of a JSON keyfile. Typically, only the following variables are mandatory:
@@ -273,7 +280,8 @@ Lit.store_request_info = true
 1. `gem install bundler && bundle install` - ensure Bundler and all required gems are installed
 2. `bundle exec appraisal install` - install gems from appraisal's gemfiles
 3. `cp test/dummy/config/database.yml.sample test/dummy/config/database.yml` - move a database.yml in place (remember to fill your DB credentials in it)
-4. `RAILS_ENV=test appraisal rails-5.2 rake db:setup` - setup lit DB (see test/config/database.yml); do it only once, it does not matter which Rails version you use for `appraisal`
+4. `RAILS_ENV=test bundle exec appraisal rails-5.2 rake db:setup` - setup lit DB (see test/config/database.yml); do it
+ only once, it does not matter which Rails version you use for `appraisal`
 5. `bundle exec appraisal rake` - run the tests!
 
 ### License

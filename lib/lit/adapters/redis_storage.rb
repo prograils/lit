@@ -1,4 +1,6 @@
 require 'redis'
+require 'lit/services/localization_keys_to_hash_service'
+
 module Lit
   extend self
   def redis
@@ -16,13 +18,24 @@ module Lit
       Lit.redis
     end
 
+    # This handles a change in the redis-rb gem that changes exists => exists?
+    def exists?(key)
+      # Use recommended binary-returning method create [with this redis-rb commit](https://github.com/redis/redis-rb/commit/bf42fc9e0db4a1719d9b1ecc65aeb20425d44427).
+      return Lit.redis.exists?(key) if Lit.redis.respond_to?(:exists?)
+      # Fall back with older gem
+      Lit.redis.exists(key)
+    end
+
     def [](key)
-      if Lit.redis.exists(_prefixed_key_for_array(key))
+      if self.exists?(_prefixed_key_for_array(key))
         Lit.redis.lrange(_prefixed_key(key), 0, -1)
-      elsif Lit.redis.exists(_prefixed_key_for_nil(key))
+      elsif self.exists?(_prefixed_key_for_nil(key))
         nil
       else
-        Lit.redis.get(_prefixed_key(key))
+        val = Lit.redis.get(_prefixed_key(key))
+        return val if val.present?
+
+        subtree_of_key(key)
       end
     end
 
@@ -56,7 +69,7 @@ module Lit
     end
 
     def has_key?(key)
-      Lit.redis.exists(_prefixed_key(key))
+      self.exists?(_prefixed_key(key))
     end
     alias key? has_key?
 
@@ -95,6 +108,25 @@ module Lit
 
     def _prefixed_key_for_nil(key = '')
       _prefix + 'nil_flags:' + key.to_s
+    end
+
+    def subtree_of_key(key)
+      keys_of_subtree = Lit.redis.keys("#{_prefixed_key(key)}*")
+      return nil if keys_of_subtree.empty?
+
+      values_of_subtree = Lit.redis.mget(keys_of_subtree)
+      cache_localizations = form_cache_localizations(keys_of_subtree, values_of_subtree)
+
+      full_subtree = Lit::LocalizationKeysToHashService.call(cache_localizations)
+      requested_part = full_subtree.dig(*key.split('.'))
+      return nil if requested_part.blank?
+      return requested_part if requested_part.is_a?(String)
+
+      requested_part.deep_transform_keys(&:to_sym)
+    end
+
+    def form_cache_localizations(keys, values)
+      Hash[keys.map { |k| k.sub(_prefix, '') }.zip(values)]
     end
   end
 end

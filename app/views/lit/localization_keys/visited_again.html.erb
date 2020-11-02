@@ -4,6 +4,9 @@
 
 <% if defined?(Kaminari)  %>
   <%= paginate @localization_keys, :theme=>"lit" %>
+<% elsif defined?(WillPaginate)  %>
+  <%= will_paginate @localization_keys %>
 <% end %>
+
 
 <%= render 'sidebar' %>
