@@ -27,23 +27,31 @@ module Lit
       # current instance cache
       @localization_object_cache = {}
       @localization_key_object_cache = {}
-      @localization_cache = {}
+      clear_localization_cache
+    end
+
+    def localization_cache
+      Thread.current[:lit_thread_cache] ||= {}
+    end
+
+    def clear_localization_cache
+      Thread.current[:lit_thread_cache] = {}
     end
 
     def [](key)
       value = nil
-      unless @localization_cache.key?(key)
+      unless localization_cache.key?(key)
         value = localizations[key]
-        @localization_cache[key] = value
+        localization_cache[key] = value
       else
-        value = @localization_cache[key]
+        value = localization_cache[key]
       end
-      if Lit.hits_counter_enabled ||
-         Lit.store_request_info ||
-         Lit.store_request_keys
 
+      update_hits_count(key) if Lit.hits_counter_enabled
+
+      if Lit.store_request_info ||
+         Lit.store_request_keys
         key_without_locale = split_key(key).last
-        update_hits_count(key)
         store_request_info(key_without_locale)
         update_request_keys(key_without_locale, localization)
       end
@@ -60,7 +68,7 @@ module Lit
 
     def has_key?(key)
       # check for instance cache first
-      @localization_cache.has_key?(key) || localizations.has_key?(key)
+      localization_cache.has_key?(key) || localizations.has_key?(key)
     end
 
     def sync
@@ -83,6 +91,7 @@ module Lit
       localization = find_localization(locale, key_without_locale, value: value, force_array: force_array, update_value: true)
       return localization.translation if startup_process && localization.is_changed?
       localizations[key] = localization.translation if localization
+      localization_cache[key] = localizations[key]
     end
 
     def update_cache(key, value)
@@ -98,7 +107,7 @@ module Lit
       delete_localization(locale, key_without_locale)
       @localization_key_object_cache = {}
       @localization_object_cache = {}
-      @localization_cache = {}
+      clear_localization_cache
     end
 
     def load_all_translations
@@ -334,6 +343,7 @@ module Lit
     def store_request_info(key_without_locale)
       return unless Lit.store_request_info
       return unless Thread.current[:lit_current_request_path].present?
+
       info = get_request_info(key_without_locale)
       parts = info.split(' ').push(Thread.current[:lit_current_request_path]).uniq
       parts.shift if parts.count > 10
@@ -341,7 +351,9 @@ module Lit
     end
 
     def update_request_keys(key_without_locale, localization)
+      return unless Lit.store_request_keys
       return if Thread.current[:lit_request_keys].nil?
+
       Thread.current[:lit_request_keys] ||= {}
       Thread.current[:lit_request_keys][key_without_locale] = localization
     end

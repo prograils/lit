@@ -69,11 +69,15 @@ module Lit
 
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
+
+      # we might want to return content later, but we first need to check if it's in cache
+      had_key = @cache.has_key?(key_with_locale)
+
       # check in cache or in simple backend
       content = @cache[key_with_locale] || super
 
       # return if content is in cache - it CAN be `nil`
-      return content if @cache.has_key?(key_with_locale)
+      return content if had_key
 
       return content if parts.size <= 1
 
@@ -176,6 +180,7 @@ module Lit
     end
 
     def valid_locale?(locale)
+      ::Rails.logger.info "Accessing locale : #{locale}"
       @locales ||= ::Rails.configuration.i18n.available_locales
       !@locales || @locales.map(&:to_s).include?(locale.to_s)
     end
@@ -185,10 +190,6 @@ module Lit
     end
 
     def should_cache?(key_with_locale, options)
-      if @cache.has_key?(key_with_locale)
-        return false unless options[:default] && !options[:default].is_a?(Array)
-      end
-
       _, key_without_locale = ::Lit::Cache.split_key(key_with_locale)
       return false if is_ignored_key(key_without_locale)
 
