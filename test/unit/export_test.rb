@@ -6,9 +6,17 @@ class ExportTest < ActiveSupport::TestCase
   fixtures :all
 
   def setup
+    @old_hits_counter_enabled = Lit.init.cache.instance_variable_get(:@hits_counter)
+    Lit.hits_counter_enabled = true
     I18n.backend.reset_available_locales_cache
+    Lit.init.cache.instance_variable_set(:@hits_counter_working, true)
     Lit.init.cache.instance_variable_get(:@hits_counter).clear
     Lit.init.cache.instance_variable_get(:@hits_counter).clear
+  end
+
+  def teardown
+    Lit.init.cache.instance_variable_set(:@hits_counter_working, @old_hits_counter_enabled)
+    Lit.hits_counter_enabled = @old_hits_counter_enabled
   end
 
   test 'exports all locales to yaml when locale keys not specified' do

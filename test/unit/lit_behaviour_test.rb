@@ -16,7 +16,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
 
     I18n.load_path = []
     Lit.humanize_key = false
-    I18n.backend = Backend.new(Lit.loader.cache)
+    I18n.backend = Backend.new(Lit::Cache.new)
     super
   end
 

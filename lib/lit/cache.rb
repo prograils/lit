@@ -30,14 +30,6 @@ module Lit
       clear_localization_cache
     end
 
-    def localization_cache
-      Thread.current[:lit_thread_cache] ||= {}
-    end
-
-    def clear_localization_cache
-      Thread.current[:lit_thread_cache] = {}
-    end
-
     def [](key)
       value = nil
       unless localization_cache.key?(key)
@@ -46,8 +38,7 @@ module Lit
       else
         value = localization_cache[key]
       end
-
-      update_hits_count(key) if Lit.hits_counter_enabled
+      update_hits_count(key) if @hits_counter_working
 
       if Lit.store_request_info ||
          Lit.store_request_keys
@@ -97,6 +88,7 @@ module Lit
     def update_cache(key, value)
       key = key.to_s
       localizations[key] = value
+      localization_cache[key] = value
     end
 
     def delete_locale(key)
@@ -145,6 +137,7 @@ module Lit
       @localization_key_object_cache = {}
       @localization_object_cache = {}
       @localization_cache = {}
+      clear_localization_cache
     end
 
     def reset
@@ -179,6 +172,14 @@ module Lit
 
     def restore_hits_counter
       @hits_counter_working = true
+    end
+
+    def localization_cache
+      Thread.current[:lit_thread_cache] ||= {}
+    end
+
+    def clear_localization_cache
+      Thread.current[:lit_thread_cache] = {}
     end
 
     private
@@ -335,6 +336,7 @@ module Lit
 
     def update_hits_count(key)
       return unless @hits_counter_working
+
       key_without_locale = split_key(key).last
       @hits_counter.incr('hits_counter.' + key)
       @hits_counter.incr('global_hits_counter.' + key_without_locale)
