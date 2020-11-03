@@ -90,11 +90,13 @@ module Lit
     private
 
     def _prefix
-      prefix = 'lit:'
+      return @prefix_cached if @prefix_cached.present?
+
+      @prefix_cached = 'lit:'
       if Lit.storage_options.is_a?(Hash) && Lit.storage_options.key?(:prefix)
-        prefix += "#{Lit.storage_options[:prefix]}:"
+        @prefix_cached += "#{Lit.storage_options[:prefix]}:"
       end
-      prefix
+      @prefix_cached
     end
 
     def _prefixed_key(key = '')

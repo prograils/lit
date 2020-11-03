@@ -16,7 +16,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
 
     I18n.load_path = []
     Lit.humanize_key = false
-    I18n.backend = Backend.new(Lit.loader.cache)
+    I18n.backend = Backend.new(Lit::Cache.new)
     super
   end
 
@@ -142,6 +142,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     load_sample_yml('en.yml')
     old_loader = Lit.loader
     Lit.loader = nil
+    Lit.ignore_yaml_on_startup = false
     Lit.init
 
     # Defaults from yml: en.foo: bar, en.nil_thing: [nothing]

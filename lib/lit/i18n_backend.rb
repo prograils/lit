@@ -69,11 +69,20 @@ module Lit
 
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
       key_with_locale = parts.join('.')
+
+      # we might want to return content later, but we first need to check if it's in cache.
+      # it's important to rememver, that accessing non-existen key modifies cache by creating one
+      had_key = @cache.has_key?(key_with_locale)
+
       # check in cache or in simple backend
       content = @cache[key_with_locale] || super
+
+      # return if content is in cache - it CAN be `nil`
+      return content if had_key && !options[:default]
+
       return content if parts.size <= 1
 
-      if content.nil? && should_cache?(key_with_locale, options)
+      if content.nil? && should_cache?(key_with_locale, options, had_key)
         new_content = @cache.init_key_with_value(key_with_locale, content)
         content = new_content if content.nil? # Content can change when Lit.humanize is true for example
         # so there is no content in cache - it might not be if ie. we're doing
@@ -107,7 +116,7 @@ module Lit
           # it anyway if we return nil, but then it will wrap it also in
           # translation_missing span.
           # Humanizing key should be last resort
-          if content.nil? && Lit.humanize_key && key.match(Lit.humanize_key_ignored).nil?
+          if content.nil? && Lit.humanize_key && Lit.humanize_key_ignored.match(key).nil?
             content = key.to_s.split('.').last.humanize
             if content.present?
               @cache[key_with_locale] = content
@@ -130,7 +139,7 @@ module Lit
         # end
       elsif data.respond_to?(:to_str) || data.is_a?(Array)
         key = ([locale] + scope).join('.')
-        return if startup_process && @cache.keys.member?(key) && Lit.ignore_yaml_on_startup
+        return if startup_process && Lit.ignore_yaml_on_startup && (Thread.current[:lit_cache_keys] || @cache.keys).member?(key)
         @cache.update_locale(key, data, data.is_a?(Array), startup_process)
       elsif data.nil?
         return if startup_process
@@ -140,11 +149,13 @@ module Lit
     end
 
     def load_translations_to_cache
+      Thread.current[:lit_cache_keys] = @cache.keys
       ActiveRecord::Base.transaction do
         (@translations || {}).each do |locale, data|
           store_item(locale, data, [], true) if valid_locale?(locale)
         end
       end
+      Thread.current[:lit_cache_keys] = nil
     end
 
     def init_translations
@@ -156,7 +167,7 @@ module Lit
       # load translations from database to cache
       @cache.load_all_translations
       # load translations from @translations to cache
-      load_translations_to_cache
+      load_translations_to_cache unless Lit.ignore_yaml_on_startup
       @initialized = true
     end
 
@@ -180,8 +191,9 @@ module Lit
       Lit.ignored_keys.any?{ |k| key_without_locale.start_with?(k) }
     end
 
-    def should_cache?(key_with_locale, options)
-      if @cache.has_key?(key_with_locale)
+    # checks if should cache. `had_key` is passed, as once cache has been accesed, it's already modified and key exists
+    def should_cache?(key_with_locale, options, had_key)
+      if had_key
         return false unless options[:default] && !options[:default].is_a?(Array)
       end
 

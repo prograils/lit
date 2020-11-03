@@ -6,7 +6,12 @@ class WelcomeControllerTest < ActionController::TestCase
     Lit::LocalizationKey.delete_all
     Lit::LocalizationVersion.delete_all
     Lit.loader = nil
+    Lit.ignore_yaml_on_startup = false
     Lit.init
+  end
+
+  def teardown
+    Lit.ignore_yaml_on_startup = nil
   end
 
   test 'should properly show index' do

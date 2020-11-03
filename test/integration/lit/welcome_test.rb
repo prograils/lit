@@ -5,11 +5,14 @@ class WelcomeTest < ActionDispatch::IntegrationTest
   def setup
     @old_humanize_key = Lit.humanize_key
     @old_fallbacks = Rails.application.config.i18n.fallbacks
+    Lit.ignore_yaml_on_startup = false
+    Lit.init
   end
 
   def teardown
     Lit.humanize_key = @old_humanize_key
     Rails.application.config.i18n.fallbacks = @old_fallbacks
+    Lit.ignore_yaml_on_startup = nil
   end
 
   test "should properly display 'Hello world' in english" do
