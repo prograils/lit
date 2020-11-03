@@ -29,10 +29,13 @@ Lit.all_translations_are_html_safe = false
 # <span title="translation missing string"></span>
 Lit.humanize_key = false
 
-# If set to `true` will always parse yaml files upon startup and update cache
-# values with ones with yaml - but only, if those keys haven't been changed via
-# web ui before
+# If set to `false` will always parse yaml files upon startup and update cached
+# values with ones with yaml (but only, if those keys haven't been changed via
+# web ui before)
 Lit.ignore_yaml_on_startup = true
+
+# Array of ignored keys or key prefixes
+Lit.ignored_keys = ['i18n.transliterate'].freeze
 
 # API enabled? API allows third party browsing your translations, as well as
 # synchronizing them between environments
