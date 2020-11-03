@@ -44,7 +44,7 @@ module Lit
          Lit.store_request_keys
         key_without_locale = split_key(key).last
         store_request_info(key_without_locale)
-        update_request_keys(key_without_locale, localization)
+        update_request_keys(key_without_locale, value)
       end
       value
     end
