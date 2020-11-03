@@ -177,7 +177,9 @@ module Lit
     end
 
     def is_ignored_key(key_without_locale)
-      Lit.ignored_keys.any?{ |k| key_without_locale.start_with?(k) }
+      return true  if Lit.included_keys.any? && !Lit.included_keys.any?{ |k| key_without_locale.start_with?(k) }
+
+      Lit.ignored_keys.any?{ |k| key_without_locale.start_with?(k) }      
     end
 
     def should_cache?(key_with_locale, options)

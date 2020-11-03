@@ -10,6 +10,7 @@ module Lit
   mattr_accessor :humanize_key
   mattr_accessor :humanize_key_ignored_keys
   mattr_accessor :humanize_key_ignored
+  mattr_accessor :included_keys
   mattr_accessor :ignored_keys
   mattr_accessor :ignore_yaml_on_startup
   mattr_accessor :api_enabled
@@ -31,6 +32,14 @@ module Lit
       Lit.humanize_key_ignored = %w[i18n date datetime number time support ]
       Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
       Lit.humanize_key_ignored = %r{(#{Lit.humanize_key_ignored.join('|')}).*}
+
+      if Lit.included_keys.is_a?(String)
+        keys = Lit.included_keys.split(',').map(&:strip)
+        Lit.included_keys = keys
+      end
+      Lit.included_keys = [] unless Lit.included_keys.is_a?(Array)
+      Lit.included_keys = Lit.included_keys.map(&:freeze).freeze
+
       if Lit.ignored_keys.is_a?(String)
         keys = Lit.ignored_keys.split(',').map(&:strip)
         Lit.ignored_keys = keys.freeze
