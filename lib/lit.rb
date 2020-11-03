@@ -33,11 +33,9 @@ module Lit
       Lit.humanize_key_ignored = %w[i18n date datetime number time support ]
       Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
       Lit.humanize_key_ignored = Regexp.new("(#{Lit.humanize_key_ignored.join('|')}).*")
-      if Lit.ignored_keys.is_a?(String)
-        keys = Lit.ignored_keys.split(',').map(&:strip)
-        Lit.ignored_keys = keys
-      end
       Lit.ignore_yaml_on_startup = true if Lit.ignore_yaml_on_startup.nil?
+
+      Lit.ignored_keys = Lit.ignored_keys.split(',').map(&:strip) if Lit.ignored_keys.is_a?(String)
       Lit.ignored_keys = [] unless Lit.ignored_keys.is_a?(Array)
       Lit.ignored_keys = Lit.ignored_keys.map(&:freeze).freeze
 
