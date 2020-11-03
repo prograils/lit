@@ -142,6 +142,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     load_sample_yml('en.yml')
     old_loader = Lit.loader
     Lit.loader = nil
+    Lit.ignore_yaml_on_startup = false
     Lit.init
 
     # Defaults from yml: en.foo: bar, en.nil_thing: [nothing]

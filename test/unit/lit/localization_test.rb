@@ -7,8 +7,13 @@ module Lit
       Lit::LocalizationKey.delete_all
       Lit::LocalizationVersion.delete_all
       Lit.loader = nil
+      Lit.ignore_yaml_on_startup = false
       Lit.init
       I18n.locale = :en
+    end
+
+    def teardown
+      Lit.ignore_yaml_on_startup = nil
     end
 
     test 'does not create version upon creation' do
