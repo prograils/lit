@@ -91,6 +91,7 @@ module Lit
 
     def _prefix
       return @prefix_cached if @prefix_cached.present?
+
       @prefix_cached = 'lit:'
       if Lit.storage_options.is_a?(Hash) && Lit.storage_options.key?(:prefix)
         @prefix_cached += "#{Lit.storage_options[:prefix]}:"
