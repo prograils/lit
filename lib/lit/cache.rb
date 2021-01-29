@@ -18,6 +18,9 @@ end
 
 module Lit
   class Cache
+    @@last_update = nil
+    @@localization_cache = {}
+
     def initialize
       @hits_counter = Lit.get_key_value_engine
       @request_info_store = Lit.get_key_value_engine
@@ -32,6 +35,7 @@ module Lit
 
     def [](key)
       value = nil
+      check_and_clean_if_required
       unless localization_cache.key?(key)
         value = localizations[key]
         localization_cache[key] = value
@@ -81,6 +85,7 @@ module Lit
       locale = find_locale(locale_key)
       localization = find_localization(locale, key_without_locale, value: value, force_array: force_array, update_value: true)
       return localization.translation if startup_process && localization.is_changed?
+
       localizations[key] = localization.translation if localization
       localization_cache[key] = localizations[key]
     end
@@ -175,11 +180,21 @@ module Lit
     end
 
     def localization_cache
-      Thread.current[:lit_thread_cache] ||= {}
+      # Thread.current[:lit_thread_cache] ||= {}
+      @@localization_cache ||= {}
     end
 
     def clear_localization_cache
-      Thread.current[:lit_thread_cache] = {}
+      # Thread.current[:lit_thread_cache] = {}
+      @@localization_cache = {}
+    end
+
+    def check_and_clean_if_required
+      return if Thread.current[:localization_cache_valid]
+
+      last_update = Lit.get_key_value_engine['lit_last_updated_at']
+      clear_localization_cache if last_update != @@last_update
+      Thread.current[:localization_cache_valid] = true
     end
 
     private
