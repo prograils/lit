@@ -76,6 +76,9 @@ class WelcomeTest < ActionDispatch::IntegrationTest
     localization.translated_value = text
     localization.save!
     localization.update_column :is_changed, true
+    # difference between two calls is too narrow to test this otherwise
+    # check lit/lit/cache.rb:198
+    localization.update_column :updated_at, localization.reload.updated_at + 1.second
     Lit.init.cache.refresh_key(localization.full_key)
     visit('/pl/welcome')
     localization.reload

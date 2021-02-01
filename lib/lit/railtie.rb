@@ -1,12 +1,11 @@
 module Lit
   class Railtie < ::Rails::Railtie
-    ## INITIALIZE IN config/initialize if you want to use redis!!!
-    initializer :initialize_lit_rails, after: :before_initialize do
-      # Lit::Rails.initialize
-    end
+    initializer :lit_middleware do |app|
+      app.config.middleware.insert_after ActionDispatch::RequestId, Lit::Middleware
 
-    # rake_tasks do
-    # load "tasks/lit_tasks.rake"
-    # end
+      ActiveSupport::Reloader.to_complete do
+        Thread.current[:localization_cache_valid] = false
+      end
+    end
   end
 end

@@ -125,6 +125,7 @@ module Lit
       @localization_object_cache.delete(key)
       localization = find_localization(locale, key_without_locale, default_fallback: true)
       localizations[key] = localization.translation if localization
+      clear_localization_cache
     end
 
     def delete_key(key)
@@ -190,10 +191,15 @@ module Lit
     end
 
     def check_and_clean_if_required
+      # we want this method to run only once during a request or background job
       return if Thread.current[:localization_cache_valid]
 
-      last_update = Lit.get_key_value_engine['lit_last_updated_at']
-      clear_localization_cache if last_update != @@last_update
+      # get most recently updated translation and compare with what we store in class var
+      last_up = Lit::Localization.order(updated_at: :desc).limit(1).pluck(:updated_at).first.to_i
+      if last_up != @@last_update
+        clear_localization_cache
+        @@last_update = last_up
+      end
       Thread.current[:localization_cache_valid] = true
     end
 

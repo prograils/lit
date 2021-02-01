@@ -11,6 +11,7 @@ module Lit
 end
 
 if defined?(Rails::Railtie)
+  require 'lit/middleware'
   require 'lit/railtie'
 else
   Lit::Rails.initialize
