@@ -54,7 +54,6 @@ module Lit
 
     def after_update_operations
       @localization.update_column :is_changed, true
-      Lit.get_key_value_engine['lit_last_updated_at'] = Time.now.to_i
     end
 
     def clear_params
