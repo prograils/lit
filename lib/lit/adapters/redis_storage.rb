@@ -20,7 +20,6 @@ module Lit
 
     # This handles a change in the redis-rb gem that changes exists => exists?
     def exists?(key)
-      ::Rails.logger.info('terefere')
       # Use recommended binary-returning method create [with this redis-rb commit](https://github.com/redis/redis-rb/commit/bf42fc9e0db4a1719d9b1ecc65aeb20425d44427).
       return Lit.redis.exists?(key) if Lit.redis.respond_to?(:exists?)
 
