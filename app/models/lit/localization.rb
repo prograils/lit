@@ -6,19 +6,14 @@ module Lit
     ## SCOPES
     scope :changed, -> { where is_changed: true }
     scope :not_changed, -> { where is_changed: false }
+
     # @HACK: dirty, find a way to round date to full second
-    scope :after, lambda { |dt|
-      where('updated_at >= ?', dt + 1.second)
-        .where(is_changed: true)
-    }
-    scope :active, lambda {
-      joins(:localization_key)
-        .where(Lit::LocalizationKey.table_name => { is_deleted: false })
-    }
+    scope :after, lambda { |dt| where('updated_at >= ?', dt + 1.second).where(is_changed: true) }
+    scope :active, lambda { joins(:localization_key).where(Lit::LocalizationKey.table_name => { is_deleted: false }) }
 
     ## ASSOCIATIONS
-    belongs_to :locale
-    belongs_to :localization_key, touch: true
+    belongs_to :locale, required: true
+    belongs_to :localization_key, touch: true, required: true
     has_many :localization_versions, dependent: :destroy
     has_many :versions, class_name: '::Lit::LocalizationVersion'
 
@@ -31,9 +26,7 @@ module Lit
     ## ACCESSORS
     attr_accessor :full_key_str
 
-    unless defined?(::ActionController::StrongParameters)
-      attr_accessible :translated_value, :locale_id
-    end
+    attr_accessible :translated_value, :locale_id unless defined?(::ActionController::StrongParameters)
 
     ## BEFORE & AFTER
     with_options if: :translated_value_changed? do |o|
@@ -94,6 +87,5 @@ module Lit
       translated_value = translated_value_was || default_value
       localization_versions.new(translated_value: translated_value)
     end
-
   end
 end
