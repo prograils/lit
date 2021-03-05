@@ -26,7 +26,6 @@ class SynchronizeSourceService
     inc_loc.localization_key_is_deleted = localization_key_deleted?(loc)
     inc_loc.localization_key = find_localization_key(inc_loc)
     inc_loc.translated_value = loc['value']
-    return unless inc_loc.valid? # this also triggers connection with localization
     return if inc_loc.duplicated?(loc['value'])
 
     inc_loc.save!
