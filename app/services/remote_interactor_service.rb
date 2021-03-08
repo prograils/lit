@@ -27,7 +27,7 @@ class RemoteInteractorService
 
   def initialize_request(uri)
     req = Net::HTTP::Get.new(uri.request_uri)
-    req.add_field('Authorization', %(Token token="#{@source.api_key}"))
+    req.add_field('Authorization', "Token token=\"#{@source.api_key}\"")
     req
   end
 
@@ -41,6 +41,7 @@ class RemoteInteractorService
   def perform_request(connection, request)
     res = connection.start { |http| http.request(request) }
     return res unless res.is_a?(Net::HTTPSuccess)
+
     JSON.parse(res.body)
   end
 end

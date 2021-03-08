@@ -36,39 +36,27 @@ module Lit
     def duplicated?(val)
       set_localization
       return false if localization_has_changed?
-      translated_value =
-        localization.read_attribute_before_type_cast('translated_value')
-      if localization.is_changed? && !translated_value.nil?
-        translated_value == val
-      else
-        localization.read_attribute_before_type_cast('default_value') == val
-      end
+
+      localization.translation == val
     end
 
     private
 
     def set_localization
       return if locale.blank? || localization_key.blank?
-      self.localization = localization_key.localizations
-                                          .find_by(locale_id: locale_id)
+      self.localization = localization_key.localizations.find_by(locale_id: locale_id)
     end
 
     def localization_has_changed?
-      localization.blank? ||
-        localization.is_deleted != localization_key_is_deleted
+      localization.blank? || localization.is_deleted != localization_key_is_deleted
     end
 
     def update_existing_localization_data
-      localization.update!(
-        translated_value: translated_value,
-        is_changed: true
-      )
+      localization.update!(translated_value: translated_value, is_changed: true)
     end
 
     def update_existing_localization_key_data
-      localization_key.update!(
-        is_deleted: localization_key_is_deleted
-      )
+      localization_key.update!(is_deleted: localization_key_is_deleted)
     end
 
     def assign_new_localization_data
@@ -83,25 +71,23 @@ module Lit
 
     def assign_new_localization_key
       self.localization_key =
-        Lit::LocalizationKey.where(
-          localization_key: localization_key_str,
-          is_deleted: localization_key_is_deleted
-        ).first_or_create!
+        Lit::LocalizationKey.where(localization_key: localization_key_str, is_deleted: localization_key_is_deleted)
+          .first_or_create!
     end
 
     def assign_new_localization
       self.localization =
-        Lit::Localization.where(localization_key_id: localization_key.id)
-                         .where(locale_id: locale.id)
-                         .first_or_initialize
+        Lit::Localization
+          .where(localization_key_id: localization_key.id)
+          .where(locale_id: locale.id)
+          .first_or_initialize
       localization.translated_value = translated_value
       localization.is_changed = true
       localization.save!
     end
 
     def update_cache
-      Lit.init.cache.update_cache localization.full_key,
-                                  localization.translation
+      Lit.init.cache.update_cache localization.full_key, localization.translation
     end
   end
 end
