@@ -3,6 +3,7 @@ module Lit
     require 'jquery-rails'
 
     config.autoload_paths += %W[#{Lit::Engine.root}/app/controllers/lit/concerns]
+    paths.add 'lib', eager_load: true # Zeitwerk compatibility
 
     isolate_namespace Lit
 
