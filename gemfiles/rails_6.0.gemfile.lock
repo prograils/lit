@@ -274,7 +274,7 @@ DEPENDENCIES
   pg (~> 1.1.4)
   pry-byebug (~> 3.9.0)
   pry-rails
-  rails (~> 6.0.0.beta3)
+  rails (~> 6.0.3)
   rails-controller-testing
   redis
   sass-rails
@@ -283,4 +283,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.3
+   2.2.13

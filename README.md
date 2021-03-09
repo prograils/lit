@@ -37,10 +37,10 @@ gem 'lit'
 
 2. run `bundle install`
 
-3. run installation generator `bundle exec rails g lit:install`
-  (for production/staging environment `redis` is suggested as key value engine. `hash` will not work in multi process environment)
+3. Add `config.i18n.available_locales = [...]` to `application.rb` - it's required to precompile appropriate language flags in lit backend.
 
-4. Add `config.i18n.available_locales = [...]` to `application.rb` - it's required to precompile appropriate language flags in lit backend.
+4. run installation generator `bundle exec rails g lit:install`
+  (for production/staging environment `redis` is suggested as key value engine. `hash` will not work in multi process environment)
 
 5. After doing above and restarting app, point your browser to `http://app/lit`
 
@@ -145,10 +145,10 @@ These credentials can be given in three ways:
       ... # see Google docs link above for reference
     }
   end
-  
+
   # For example, for Rails 6, from encrypted credentials file (HashWithIndifferentAccess is used, because the keys in
    the credentials.config could be strings or, as well, symbols):
-  
+
   Lit::CloudTranslation.configure do |config|
     config.keyfile_hash = HashWithIndifferentAccess.new(Rails.application.credentials.config[:google_translate_api])
   end
