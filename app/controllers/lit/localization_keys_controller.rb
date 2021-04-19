@@ -119,18 +119,15 @@ module Lit
     def localization_for(locale, localization_key)
       @_localization_for ||= {}
       key = [locale, localization_key]
-      ret = @_localization_for[key]
-      if ret == false
-        nil
-      elsif ret.nil?
+      if @_localization_for.key?(key)
+        @_localization_for[key]
+      else
         ret = grouped_localizations[localization_key][locale]
         unless ret
           Lit.init.cache.refresh_key("#{locale}.#{localization_key.localization_key}")
-          ret = localization_key.localizations.where(locale_id: Lit.init.cache.find_locale(locale).id).first
+          ret = localization_key.localizations.find_by(locale_id: Lit.init.cache.find_locale(locale).id)
         end
-        @_localization_for[key] = ret ? ret : false
-      else
-        ret
+        @_localization_for[key] = ret ? ret : nil
       end
     end
     helper_method :localization_for

@@ -215,6 +215,7 @@ module Lit
 
     def find_localization(locale, key_without_locale, value: nil, force_array: false, update_value: false, default_fallback: false)
       return nil if value.is_a?(Hash)
+
       full_key = "#{locale}.#{key_without_locale}"
       ActiveRecord::Base.transaction do
         localization_key = find_localization_key(key_without_locale)
