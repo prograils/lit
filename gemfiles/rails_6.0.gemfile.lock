@@ -165,6 +165,8 @@ GEM
     nio4r (2.5.7)
     nokogiri (1.11.3-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.11.3-x86_64-linux)
+      racc (~> 1.4)
     orm_adapter (0.5.0)
     os (1.1.1)
     pg (1.2.3)
@@ -262,6 +264,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   appraisal (~> 2.4.0)
