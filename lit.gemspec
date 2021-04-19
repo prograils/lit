@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sass-rails'
   s.add_dependency 'emoji_flag'
 
-  s.add_development_dependency 'appraisal', '~> 2.2.0'
+  s.add_development_dependency 'appraisal', '~> 2.4.0'
   s.add_development_dependency 'devise', '~> 4.7.1'
   s.add_development_dependency 'google-cloud-translate', '~> 1.2.4'
   s.add_development_dependency 'minitest', '~> 5.11.3'

@@ -2,7 +2,7 @@ appraise 'rails-5.2' do
   source 'https://rubygems.org'
   gem 'rails', '~> 5.2.0'
   gem 'devise'
-  gem 'pg', '~> 1.1.3'
+  gem 'pg', '~> 1.2.3'
   gem 'redis'
   gem 'capybara'
   gem 'database_cleaner'
@@ -15,13 +15,14 @@ appraise 'rails-5.2' do
   gem 'pry-rails'
   gem 'rails-controller-testing'
   gem 'minitest'
+  gem 'm', '~> 1.5.0'
 end
 
 appraise 'rails-6.0' do
   source 'https://rubygems.org'
   gem 'rails', '~> 6.0.3'
   gem 'devise'
-  gem 'pg', '~> 1.1.4'
+  gem 'pg', '~> 1.2.3'
   gem 'redis'
   gem 'capybara'
   gem 'database_cleaner'
@@ -34,13 +35,14 @@ appraise 'rails-6.0' do
   gem 'pry-rails'
   gem 'rails-controller-testing'
   gem 'minitest'
+  gem 'm', '~> 1.5.0'
 end
 
 appraise 'rails-6.1' do
   source 'https://rubygems.org'
   gem 'rails', '~> 6.1.3'
   gem 'devise'
-  gem 'pg', '~> 1.1.4'
+  gem 'pg', '~> 1.2.3'
   gem 'redis'
   gem 'capybara'
   gem 'database_cleaner'
@@ -53,4 +55,5 @@ appraise 'rails-6.1' do
   gem 'pry-rails'
   gem 'rails-controller-testing'
   gem 'minitest'
+  gem 'm', '~> 1.5.0'
 end

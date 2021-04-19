@@ -21,7 +21,7 @@ class Lit::Base < ActiveRecord::Base
 
   private
 
-  def create_or_update(*args, &block)
+  def create_or_update(**kwargs, &block)
     @was_saved_with_insert = true if new_record?
     @was_saved_with_update = true if persisted?
 

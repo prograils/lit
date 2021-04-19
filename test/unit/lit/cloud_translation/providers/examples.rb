@@ -12,14 +12,14 @@ def cloud_provider_examples(described_klass)
 
     describe 'when single string is given' do
       it 'translates single string to target language' do
-        subject.must_match(/\blis\b/)
+        _(subject).must_match(/\blis\b/)
       end
 
       describe 'when string contains interpolation' do
         let(:text) { 'here is your %{meal}, enjoy' }
 
         it 'does not translate stuff enclosed in %{}' do
-          subject.must_match(/%{meal}/)
+          _(subject).must_match(/%{meal}/)
         end
       end
 
@@ -29,7 +29,7 @@ def cloud_provider_examples(described_klass)
       let(:text) { %w[awesome stuff] }
 
       it 'translates array of strings to target language' do
-        subject.length.must_equal 2
+        _(subject.length).must_equal 2
       end
     end
 
@@ -37,11 +37,11 @@ def cloud_provider_examples(described_klass)
       let(:text) { [nil, 'awesome', nil, 'stuff'] }
 
       it 'translates array to target language, converting nil to ""' do
-        subject.first.must_equal ''
-        subject.second.must_be :present?
-        subject.third.must_equal ''
-        subject.fourth.must_be :present?
-        subject.length.must_equal 4
+        _(subject.first).must_equal ''
+        _(subject.second).must_be :present?
+        _(subject.third).must_equal ''
+        _(subject.fourth).must_be :present?
+        _(subject.length).must_equal 4
       end
     end
   end
@@ -53,7 +53,7 @@ def cloud_provider_examples(described_klass)
 
     describe 'when single string is given' do
       it 'translates single string to target language' do
-        subject.must_match(/\blis\b/)
+        _(subject).must_match(/\blis\b/)
       end
     end
 
@@ -61,7 +61,7 @@ def cloud_provider_examples(described_klass)
       let(:text) { %w[awesome stuff] }
 
       it 'translates array of strings to target language' do
-        subject.length.must_equal 2
+        _(subject.length).must_equal 2
       end
     end
   end
