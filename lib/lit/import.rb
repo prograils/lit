@@ -3,14 +3,14 @@ require 'csv'
 module Lit
   class Import
     class << self
-      def call(*args)
-        new(*args).perform
+      def call(**kwargs)
+        new(**kwargs).perform
       end
     end
 
     attr_reader :input, :locale_keys, :format, :skip_nil
 
-    def initialize(input:, locale_keys: [], format:, skip_nil: true, dry_run: false, raw: false)
+    def initialize(input:, format:, locale_keys: [], skip_nil: true, dry_run: false, raw: false)
       raise ArgumentError, 'format must be yaml or csv' if %i[yaml csv].exclude?(format.to_sym)
       @input = input
       @locale_keys = locale_keys.presence || I18n.available_locales
@@ -143,7 +143,7 @@ module Lit
                          .find_by('localization_key = ? and locale = ?', key, locale)
 
         return unless existing_translation
-        
+
         if @raw
           existing_translation.update(default_value: value)
         else
