@@ -116,15 +116,12 @@ module Lit
       @_localization_for ||= {}
       key = [locale, localization_key]
       ret = @_localization_for[key]
-      binding.pry if localization_key == 'scopes.string'
       if ret == false
         nil
       elsif ret.nil?
         ret = grouped_localizations[localization_key][locale]
         unless ret
-          ::Rails.logger.info "******** REFRESHING the key"
           Lit.init.cache.refresh_key("#{locale}.#{localization_key.localization_key}")
-          ::Rails.logger.info "******** FETCHING the key"
           ret = localization_key.localizations.where(locale_id: Lit.init.cache.find_locale(locale).id).first
         end
         @_localization_for[key] = ret ? ret : false
