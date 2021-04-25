@@ -11,17 +11,17 @@
  *= require './backend/jquery-te-1.4.0.css'
  *= require_self
  */
-.detail_wrapper{
+.detail_wrapper {
   padding: 10px 0 0 50px;
 }
-.detail_wrapper table tr td.locale_row{
+.detail_wrapper table tr td.locale_row {
   width: 75px;
 }
-.localization_key_row .localization_keys_options{
+.localization_key_row .localization_keys_options {
   display: none;
   float: right;
 }
-.localization_key_row:hover .localization_keys_options{
+.localization_key_row:hover .localization_keys_options {
   display: block;
 }
 
@@ -29,29 +29,29 @@ li.key_prefix .fa-chevron-right {
   float: right;
   margin-top: 2px;
   margin-right: -6px;
-  opacity: .25;
+  opacity: 0.25;
 }
 
-.hidden{
+.hidden {
   display: none;
 }
-i.fa{
+i.fa {
   color: black;
 }
-.nav.nav-stacked>li>a {
-padding: 5px 7px;
+.nav.nav-stacked > li > a {
+  padding: 5px 7px;
 }
-.well{
+.well {
   background-color: white;
   border-radius: 0px;
 }
-.well label{
+.well label {
   font-weight: normal;
 }
 .well .form-search {
   margin-bottom: 15px;
 }
-.localization_row em{
+.localization_row em {
   color: #bbb;
 }
 .loading {
@@ -59,4 +59,7 @@ padding: 5px 7px;
 }
 .loaded {
   display: none;
+}
+.copy_to_clipboard_btn {
+  cursor: pointer;
 }
