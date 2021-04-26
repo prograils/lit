@@ -25,6 +25,7 @@ Lit::Engine.routes.draw do
       get :find_localization
       get :not_translated
       get :visited_again
+      post :batch_touch
     end
     resources :localizations, only: [:edit, :update, :show] do
       member do

@@ -12,7 +12,7 @@
  *= require_self
  */
 .detail_wrapper {
-  padding: 10px 0 0 50px;
+  padding: 10px 0 0 10px;
 }
 .detail_wrapper table tr td.locale_row {
   width: 75px;
