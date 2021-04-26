@@ -71,6 +71,21 @@ module Lit
       assert_not @localization_key.reload.is_deleted
     end
 
+    test 'touches search results in batch' do
+      v = lit_localization_keys(:string)
+      a = lit_localization_keys(:array)
+      v.update_column :updated_at, 1.day.ago
+      a.update_column :updated_at, 1.day.ago
+      post :batch_touch, params: { key: 'value' }, format: :js
+      assert_in_delta(v.reload.updated_at, 1.second.ago, 5)
+      assert_in_delta(a.reload.updated_at, 1.day.ago, 5)
+    end
+
+    test 'wont fail when there wont be any search results when touching in batch' do
+      post :batch_touch, params: { key: 'valuefoobar' }, format: :js
+      assert_response :success
+    end
+
     private
 
     def with_fresh_cache

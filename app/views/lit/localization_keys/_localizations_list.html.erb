@@ -1,4 +1,7 @@
-<table class="table">
+<div class="col-12 text-right">
+  <%= link_to "batch touch", lit.batch_touch_localization_keys_path(key: params[:key], key_prefix: params[:key_prefix]), method: :post, remote: true, class: 'btn btn-sm btn-primary', data: { confirm: 'This will "touch" all search results making them subject of synchronization. Proceed?'} %>
+</div>
+<table class="table mt-1">
   <%- @localization_keys.each do |lk| %>
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
@@ -30,26 +33,30 @@
         <div class="detail_wrapper">
           <table class="table table-bordered table-striped">
             <tr>
-              <th class="col-md-8">Translation</th>
-              <th class="col-md-2 text-center">Locale</th>
+              <th class="col-md-1"></th>
+              <th class="col-md-9">Translation</th>
+              <th class="col-md-1 text-center">Locale</th>
               <% unless lk.is_deleted? %>
-                <th class="col-md-2 text-center">Completed</th>
+                <th class="col-md-1 text-center">Completed</th>
               <% end %>
             </tr>
             <%- available_locales.each do |locale| %>
               <%- localization = localization_for(locale, lk) %>
               <tr>
+                <td>
+                  <% if localization %>
+                    <%= draw_icon 'clock-o', title: "Last updated at #{localization.updated_at.to_s(:db)}" %>
+                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization, format: :js), class: "js-show_prev_versions #{'hidden' unless versions?(localization)}", remote: true do %>
+                      <%= draw_icon 'random', title: I18n.t('lit.common.previous_versions', default: 'Previous versions') %>
+                    <% end %>
+                  <% end %>
+                </td>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization, format: :js) %>" data-editing=0 data-content="">
                   <%= render partial: 'localization_row', locals: {localization: Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
                 </td>
                 <td class="locale_row text-center">
                   <%= EmojiFlag.new(locale) %>
                   <%= locale %>
-                  <% if localization %>
-                    <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization, format: :js), class: "show_prev_versions #{'hidden' unless versions?(localization)}", remote: true do %>
-                      <%= draw_icon 'random', title: I18n.t('lit.common.previous_versions', default: 'Previous versions') %>
-                    <% end %>
-                  <% end %>
                 </td>
                 <% unless lk.is_deleted? %>
                   <td class="text-center">
@@ -65,7 +72,7 @@
             <% end %>
             <% if Lit.store_request_info %>
               <tr class="hidden request_info_row">
-                <td colspan="2">
+                <td colspan="3">
                   <strong>Translation key recently displayed on following pages:</strong>
                   <ul>
                     <% Lit.init.cache.get_request_info(lk.localization_key).split(' ').reverse.each do |l| %>
