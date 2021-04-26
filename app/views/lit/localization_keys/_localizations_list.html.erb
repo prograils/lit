@@ -6,6 +6,7 @@
     <tr class="localization_key_row" data-id="<%= lk.id %>">
       <td>
         <strong><%= lk.localization_key %></strong>
+        <i class="fa fa-clipboard js-copy_to_clipboard copy_to_clipboard_btn " data-key="<%= lk.localization_key %>"></i>
         <span class="badge"><%= Lit.init.cache.get_global_hits_counter(lk.localization_key) %></span>
         <div class="localization_keys_options">
           <% if Lit.store_request_info %>
