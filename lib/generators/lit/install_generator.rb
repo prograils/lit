@@ -11,24 +11,22 @@ module Lit
       desc 'Automates Lit installation'
 
       def set_authentication_function
-        @authentication_function = options['authentication-function'].presence ||
-              ask("What's the authentication function, ie. :authenticate_user! :").presence ||
-              nil
+        @authentication_function =
+          options['authentication-function'].presence ||
+            ask("What's the authentication function, ie. :authenticate_user! :").presence || nil
       end
 
       def set_key_value_engine
-        @key_value_engine = options['key-value-engine'].presence ||
-              ask("What's the key value engine? ([hash] OR redis):").presence ||
-              :hash
+        @key_value_engine =
+          options['key-value-engine'].presence || ask("What's the key value engine? ([hash] OR redis):").presence ||
+            :hash
       end
 
       def add_redis_dependency
         if @key_value_engine == 'redis'
           puts 'Adding redis dependency'
           gem 'redis'
-          Bundler.with_clean_env do
-            run 'bundle install'
-          end
+          Bundler.with_clean_env { run 'bundle install' }
         end
       end
 
@@ -42,7 +40,7 @@ module Lit
           puts 'Skipping config/initializers/lit.rb creation, file already exists!'
         else
           puts 'Adding lit initializer (config/initializers/lit.rb)...'
-          template 'initializer.rb', path
+          template 'initializer.erb', path
         end
       end
 
