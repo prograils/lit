@@ -42,6 +42,7 @@ module Lit
       Lit.hits_counter_enabled = false if Lit.hits_counter_enabled.nil?
       Lit.store_request_info = false if Lit.store_request_info.nil?
       Lit.store_request_keys = false if Lit.store_request_keys.nil?
+
       # if loading all translations on start, migrations have to be already
       # performed, fails on first deploy
       # self.loader.cache.load_all_translations
@@ -67,11 +68,11 @@ module Lit
   def self.get_key_value_engine
     case Lit.key_value_engine
     when 'redis'
-      require 'lit/adapters/redis_storage'
-      return RedisStorage.new
+      # require 'lit/adapters/redis_storage'
+      return ::Lit::Adapters::RedisStorage.new
     else
-      require 'lit/adapters/hash_storage'
-      return HashStorage.new
+      # require 'lit/adapters/hash_storage'
+      return ::Lit::Adapters::HashStorage.new
     end
   end
 
