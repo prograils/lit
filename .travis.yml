@@ -1,7 +1,8 @@
 language: ruby
-exclude:
-  - rvm: 3.0.1
-    gemfile: gemfiles/rails_5.2.gemfile
+jobs:
+  exclude:
+    - rvm: 3.0.1
+      gemfile: gemfiles/rails_5.2.gemfile
 rvm:
   - 2.7.3
   - 3.0.1
