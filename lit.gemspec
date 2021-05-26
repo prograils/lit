@@ -4,7 +4,7 @@ require 'lit/version'
 
 Gem::Specification.new do |s|
   s.name = 'lit'
-  s.version = Lit::VERSION
+  s.version = Lit.version
   s.authors = ['Maciej Litwiniuk', 'Piotr Boniecki', 'Michał Buszkiewicz', 'Szymon Soppa']
   s.email = ['maciej@litwiniuk.net']
   s.license = 'MIT'
