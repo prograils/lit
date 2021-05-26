@@ -30,7 +30,7 @@ module Lit
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
       Lit.humanize_key_ignored_keys = [] if Lit.humanize_key_ignored_keys.nil?
-      Lit.humanize_key_ignored = %w[i18n date datetime number time support ]
+      Lit.humanize_key_ignored = %w[i18n date datetime number time support]
       Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
       Lit.humanize_key_ignored = Regexp.new("(#{Lit.humanize_key_ignored.join('|')}).*")
       Lit.ignore_yaml_on_startup = true if Lit.ignore_yaml_on_startup.nil?
@@ -55,10 +55,10 @@ module Lit
   rescue ActiveRecord::ActiveRecordError => e
     log_txt =
       "An #{e.class} error has been raised during Lit initialization. " \
-      "Lit assumes that database tables do not exist.\n\n" \
-      "Error: #{e.message}\n\n" \
-      "Backtrace:\n" \
-      "#{e.backtrace.join("\n")}"
+        "Lit assumes that database tables do not exist.\n\n" \
+        "Error: #{e.message}\n\n" \
+        "Backtrace:\n" \
+        "#{e.backtrace.join("\n")}"
     Logger.new(STDOUT).error(log_txt) if ::Rails.env.test? # ensure this is logged to stdout in test
     ::Rails.logger.error(log_txt)
     false
@@ -76,10 +76,8 @@ module Lit
   end
 
   def self.fallback=(_value)
-    ::Rails.logger.error "[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead"
+    ::Rails.logger.error '[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead'
   end
 end
 
-if defined? Rails
-  require 'lit/rails'
-end
+require 'lit/rails' if defined?(Rails)

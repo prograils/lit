@@ -1,4 +1,4 @@
-module Lit
+module Lit::Adapters
   class HashStorage < Hash
     def incr(key)
       self[key] ||= 0
