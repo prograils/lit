@@ -3,7 +3,7 @@
 # `nil` will let everyone in.
 Lit.authentication_function = <%= @authentication_function || 'nil' %>
 
-# Which authentication verification function to use (ie. :user_signed_in)?
+# Which authentication verification function to use (ie. :user_signed_in?)?
 # This is used together with frontend translation module to determine, if
 # helper button should be applied and translations wrapped in custom span
 Lit.authentication_verification = <%= @authentication_verification || 'nil' %>
@@ -52,6 +52,11 @@ Lit.set_last_updated_at_upon_creation = true
 # path that triggered translation key to be displayed / accessed
 # For more information please check the README.md
 Lit.store_request_info = false
+
+# Store request keys - this will store all keys used to render a page. Useful
+# only when combined with Lit::RequestKeysStore concern to view those keys in
+# frontend
+Lit.store_request_keys = false
 
 # Initialize lit
 Lit.init
