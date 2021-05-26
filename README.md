@@ -22,9 +22,14 @@ Highly inspired by Copycopter by thoughtbot.
 9. (On request) stores paths where translation keys were called
 10. (On request) is able to show all translation keys used to render current page
 
+
 ### Screenshots
 
-Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
+[Feature overview on YouTube](https://www.youtube.com/watch?v=_T9Kg05VvLI)
+
+![lit live translation](https://prograils-com-stuff.s3.amazonaws.com/lit/lit-front.gif)
+
+Check wiki for more: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
 
 ### Installation
 
