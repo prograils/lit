@@ -3,6 +3,7 @@ module Lit
     require 'jquery-rails'
 
     config.autoload_paths += %W[#{Lit::Engine.root}/app/controllers/lit/concerns]
+
     paths.add 'lib', eager_load: true # Zeitwerk compatibility
 
     isolate_namespace Lit
@@ -13,16 +14,12 @@ module Lit
     end
 
     initializer 'lit.reloader' do |app|
-      config.to_prepare do
-        Lit.loader.cache.reset_local_cache if Lit.loader
-      end
+      config.to_prepare { Lit.loader.cache.reset_local_cache if Lit.loader }
     end
 
     initializer 'lit.migrations.append' do |app|
       unless app.root.to_s.include?(root.to_s)
-        config.paths['db/migrate'].expanded.each do |expanded_path|
-          app.config.paths['db/migrate'] << expanded_path
-        end
+        config.paths['db/migrate'].expanded.each { |expanded_path| app.config.paths['db/migrate'] << expanded_path }
       end
     end
 

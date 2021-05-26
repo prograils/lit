@@ -115,7 +115,7 @@ module Lit
       values_of_subtree = Lit.redis.mget(keys_of_subtree)
       cache_localizations = form_cache_localizations(keys_of_subtree, values_of_subtree)
 
-      full_subtree = Lit::LocalizationKeysToHashService.call(cache_localizations)
+      full_subtree = Lit::Services::LocalizationKeysToHashService.call(cache_localizations)
       requested_part = full_subtree.dig(*key.split('.'))
       return nil if requested_part.blank?
       return requested_part if requested_part.is_a?(String)
