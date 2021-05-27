@@ -30,7 +30,7 @@ module Lit
       self.loader ||= Loader.new
       Lit.humanize_key = false if Lit.humanize_key.nil?
       Lit.humanize_key_ignored_keys = [] if Lit.humanize_key_ignored_keys.nil?
-      Lit.humanize_key_ignored = %w[i18n date datetime number time support ]
+      Lit.humanize_key_ignored = %w[i18n date datetime number time support]
       Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
       Lit.humanize_key_ignored = Regexp.new("(#{Lit.humanize_key_ignored.join('|')}).*")
       Lit.ignore_yaml_on_startup = true if Lit.ignore_yaml_on_startup.nil?
@@ -42,6 +42,7 @@ module Lit
       Lit.hits_counter_enabled = false if Lit.hits_counter_enabled.nil?
       Lit.store_request_info = false if Lit.store_request_info.nil?
       Lit.store_request_keys = false if Lit.store_request_keys.nil?
+
       # if loading all translations on start, migrations have to be already
       # performed, fails on first deploy
       # self.loader.cache.load_all_translations
@@ -55,10 +56,10 @@ module Lit
   rescue ActiveRecord::ActiveRecordError => e
     log_txt =
       "An #{e.class} error has been raised during Lit initialization. " \
-      "Lit assumes that database tables do not exist.\n\n" \
-      "Error: #{e.message}\n\n" \
-      "Backtrace:\n" \
-      "#{e.backtrace.join("\n")}"
+        "Lit assumes that database tables do not exist.\n\n" \
+        "Error: #{e.message}\n\n" \
+        "Backtrace:\n" \
+        "#{e.backtrace.join("\n")}"
     Logger.new(STDOUT).error(log_txt) if ::Rails.env.test? # ensure this is logged to stdout in test
     ::Rails.logger.error(log_txt)
     false
@@ -67,19 +68,17 @@ module Lit
   def self.get_key_value_engine
     case Lit.key_value_engine
     when 'redis'
-      require 'lit/adapters/redis_storage'
-      return RedisStorage.new
+      # require 'lit/adapters/redis_storage'
+      return ::Lit::Adapters::RedisStorage.new
     else
-      require 'lit/adapters/hash_storage'
-      return HashStorage.new
+      # require 'lit/adapters/hash_storage'
+      return ::Lit::Adapters::HashStorage.new
     end
   end
 
   def self.fallback=(_value)
-    ::Rails.logger.error "[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead"
+    ::Rails.logger.error '[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead'
   end
 end
 
-if defined? Rails
-  require 'lit/rails'
-end
+require 'lit/rails' if defined?(Rails)

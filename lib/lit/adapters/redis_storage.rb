@@ -13,7 +13,7 @@ module Lit
     Lit.redis_url || ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL']
   end
 
-  class RedisStorage
+  class Adapters::RedisStorage
     def initialize
       Lit.redis
     end
@@ -44,9 +44,7 @@ module Lit
       delete(k)
       if v.is_a?(Array)
         Lit.redis.set(_prefixed_key_for_array(k), '1')
-        v.each do |ve|
-          Lit.redis.rpush(_prefixed_key(k), ve.to_s)
-        end
+        v.each { |ve| Lit.redis.rpush(_prefixed_key(k), ve.to_s) }
       elsif v.nil?
         Lit.redis.set(_prefixed_key_for_nil(k), '1')
         Lit.redis.set(_prefixed_key(k), '')
@@ -79,9 +77,7 @@ module Lit
     end
 
     def sort
-      Lit.redis.keys.sort.map do |k|
-        [k, self.[](k)]
-      end
+      Lit.redis.keys.sort.map { |k| [k, self.[](k)] }
     end
 
     def prefix
@@ -119,7 +115,7 @@ module Lit
       values_of_subtree = Lit.redis.mget(keys_of_subtree)
       cache_localizations = form_cache_localizations(keys_of_subtree, values_of_subtree)
 
-      full_subtree = Lit::LocalizationKeysToHashService.call(cache_localizations)
+      full_subtree = Lit::Services::LocalizationKeysToHashService.call(cache_localizations)
       requested_part = full_subtree.dig(*key.split('.'))
       return nil if requested_part.blank?
       return requested_part if requested_part.is_a?(String)

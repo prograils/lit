@@ -4,7 +4,7 @@ require 'lit/version'
 
 Gem::Specification.new do |s|
   s.name = 'lit'
-  s.version = Lit::VERSION
+  s.version = Lit.version
   s.authors = ['Maciej Litwiniuk', 'Piotr Boniecki', 'Michał Buszkiewicz', 'Szymon Soppa']
   s.email = ['maciej@litwiniuk.net']
   s.license = 'MIT'
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
                    non-technicals. "
 
   s.files = Dir['{app,config,db,lib}/**/*'] + %w[MIT-LICENSE Rakefile README.md]
-  s.add_dependency 'rails', '>= 4.2.0'
+  s.add_dependency 'rails', '>= 5.2.0'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'sass-rails'

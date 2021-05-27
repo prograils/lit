@@ -1,9 +1,11 @@
 .lit-key-generic {
 }
-.lit-key-highlight{
-  text-decoration: underline wavy red !important;
+.lit-key-highlight {
+  text-decoration: underline !important;
+  text-decoration-color: red !important;
+  text-decoration-style: wavy !important;
 }
-#lit_button_wrapper{
+#lit_button_wrapper {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -15,16 +17,15 @@
   cursor: pointer;
   color: white;
 }
-#lit_button_wrapper.lit-highlight-enabled{
+#lit_button_wrapper.lit-highlight-enabled {
   background-color: lightgreen;
 }
-#lit_textarea{
+#lit_textarea {
   position: absolute;
   padding: 0 0 1px 0;
   margin: 0 0 0 0;
   border: 0;
   border-bottom: 1px solid red;
-
 }
 .lit-translations-info.collapsed {
   position: fixed;
@@ -38,7 +39,7 @@
   cursor: pointer;
   color: white;
 }
-.lit-translations-info.expanded{
+.lit-translations-info.expanded {
   position: absolute;
   display: block;
   width: 80%;
@@ -52,16 +53,16 @@
   z-index: 90;
 }
 
-.lit-translations-info.collapsed span.lit-open-button{
+.lit-translations-info.collapsed span.lit-open-button {
   display: block;
 }
-.lit-translations-info.expanded span.lit-open-button{
+.lit-translations-info.expanded span.lit-open-button {
   display: none;
 }
-.lit-translations-info.collapsed span.lit-close-button{
+.lit-translations-info.collapsed span.lit-close-button {
   display: none;
 }
-.lit-translations-info.expanded span.lit-close-button{
+.lit-translations-info.expanded span.lit-close-button {
   display: block;
   position: fixed;
   right: 10%;
@@ -71,16 +72,16 @@
   background-color: white;
   padding: 10px 10px 5px;
 }
-.lit-translations-info.collapsed ul.lit-translations-list{
+.lit-translations-info.collapsed ul.lit-translations-list {
   display: none;
 }
-.lit-translations-info.expanded ul.lit-translations-list{
+.lit-translations-info.expanded ul.lit-translations-list {
 }
 
-.lit-translations-info.expanded ul.lit-translations-list li{
+.lit-translations-info.expanded ul.lit-translations-list li {
   margin: 5px;
 }
 
-.lit-translations-info.expanded #lit_textarea{
+.lit-translations-info.expanded #lit_textarea {
   padding: 2px;
 }

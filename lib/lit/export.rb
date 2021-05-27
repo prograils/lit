@@ -4,7 +4,7 @@ require 'lit/services/localization_keys_to_hash_service'
 module Lit
   class Export
     def self.call(locale_keys:, format:, include_hits_count: false)
-      raise ArgumentError, "format must be yaml or csv" if %i[yaml csv].exclude?(format)
+      raise ArgumentError, 'format must be yaml or csv' if %i[yaml csv].exclude?(format)
       Lit.loader.cache.load_all_translations
       localizations_scope = Lit::Localization.active
       if locale_keys.present?
@@ -12,13 +12,11 @@ module Lit
         localizations_scope = localizations_scope.where(locale_id: locale_ids) unless locale_ids.empty?
       end
       db_localizations = {}
-      localizations_scope.find_each do |l|
-        db_localizations[l.full_key] = l.translation
-      end
+      localizations_scope.find_each { |l| db_localizations[l.full_key] = l.translation }
 
       case format
       when :yaml
-        exported_keys = Lit::LocalizationKeysToHashService.call(db_localizations)
+        exported_keys = Lit::Services::LocalizationKeysToHashService.call(db_localizations)
         exported_keys.to_yaml
       when :csv
         relevant_locales = locale_keys.presence || I18n.available_locales.map(&:to_s)
@@ -46,9 +44,7 @@ module Lit
               relevant_locales.map { |l| Array.wrap(db_localizations["#{l}.#{key_without_locale}"]) }
             transpose(key_localizations_per_locale).each do |translation_series|
               csv_row = [key_without_locale, *translation_series]
-              if include_hits_count
-                csv_row << (Lit.init.cache.get_global_hits_counter(key_without_locale) || 0)
-              end
+              csv_row << (Lit.init.cache.get_global_hits_counter(key_without_locale) || 0) if include_hits_count
               csv << csv_row
             end
           end
@@ -59,9 +55,7 @@ module Lit
     # This is like Array#transpose but ignores size differences between inner arrays.
     private_class_method def self.transpose(matrix)
       maxlen = matrix.max { |x| x.length }.length
-      matrix.each do |array|
-        array[maxlen - 1] = nil if array.length < maxlen
-      end
+      matrix.each { |array| array[maxlen - 1] = nil if array.length < maxlen }
       matrix.transpose
     end
   end

@@ -22,9 +22,14 @@ Highly inspired by Copycopter by thoughtbot.
 9. (On request) stores paths where translation keys were called
 10. (On request) is able to show all translation keys used to render current page
 
+
 ### Screenshots
 
-Check wiki: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
+[Feature overview on YouTube](https://www.youtube.com/watch?v=_T9Kg05VvLI)
+
+![lit live translation](https://prograils-com-stuff.s3.amazonaws.com/lit/lit-front.gif)
+
+Check wiki for more: [Screenshots](https://github.com/prograils/lit/wiki/Screenshots)
 
 ### Installation
 
@@ -199,17 +204,17 @@ Also applies to upgrading from `0.4.pre.alpha` versions.
 
 1. Add `Lit::FrontendHelper` to your `ApplicationController`
 
-	```ruby
-	helper Lit::FrontendHelper
-	```
+```ruby
+helper Lit::FrontendHelper
+```
 
 2. In you layout file include lit assets
 
-	```erb
-	<% if admin_user_signed_in? %>
-	  <%= lit_frontend_assets %>
-	<% end %>
-	```
+```erb
+<% if admin_user_signed_in? %>
+  <%= lit_frontend_assets %>
+<% end %>
+```
 
 3. You're good to go - now log in to lit (if required) and open your frontend in separate tab (to have session persisted). On the bottom-right of your page you should see "Enable / disable lit highlight" - after enabling it you'll be able to click and translate phrases directly in your frontend
 
@@ -217,13 +222,14 @@ Also applies to upgrading from `0.4.pre.alpha` versions.
 
 5. This feature requires jQuery! (at least for now)
 
+
 ### Storing request info
 
-1. Include `Lit::Concerns::RequestInfoStore` concern in your `ApplicationController`
+1. Include `Lit::RequestInfoStore` concern in your `ApplicationController`
 
-	```ruby
-	include Lit::Concerns::RequestInfoStore
-	```
+```ruby
+include Lit::RequestInfoStore
+```
 
 2. In lit initializer (`lit.rb`) set `store_request_info` config to true
 
@@ -238,25 +244,31 @@ Lit.store_request_info = true
 
 1. Add `Lit::FrontendHelper` in your `ApplicationController`
 
-	```ruby
-	include Lit::FrontendHelper
-	```
+```ruby
+helper Lit::FrontendHelper
+```
 
-2. Include `Lit::Concerns::RequestKeysStore` concern in your `ApplicationController`
+2. Include `Lit::RequestKeysStore` concern in your `ApplicationController`
 
-	```ruby
-	include Lit::Concerns::RequestKeysStore
-	```
+```ruby
+include Lit::RequestKeysStore
+```
 
-3. On the bottom of you layout file call `lit_translations_info` helper function
+3. Enable storing of request keys in lit initializer `config/initializers/lit.rb`
 
-	```erb
-	<%= lit_translations_info %>
-	```
+```ruby
+Lit.store_request_keys = true
+```
 
-4. From now on you'll be able to see all translation keys that were used to render current page. This feature works great with on-site live translations!
+4. On the bottom of you layout file call `lit_translations_info` helper function
 
-5. Lit authorized user must be signed in for this feature to work! This feature requires jQuery!
+```erb
+<%= lit_translations_info %>
+```
+
+5. From now on you'll be able to see all translation keys that were used to render current page. This feature works great with on-site live translations!
+
+6. Lit authorized user must be signed in for this feature to work! This feature requires jQuery!
 
 
 
