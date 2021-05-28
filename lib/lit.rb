@@ -1,5 +1,6 @@
 require 'lit/engine'
 require 'lit/loader'
+require 'lit/adapters'
 
 module Lit
   mattr_accessor :authentication_function
@@ -68,10 +69,10 @@ module Lit
   def self.get_key_value_engine
     case Lit.key_value_engine
     when 'redis'
-      # require 'lit/adapters/redis_storage'
+      require 'lit/adapters/redis_storage'
       return ::Lit::Adapters::RedisStorage.new
     else
-      # require 'lit/adapters/hash_storage'
+      require 'lit/adapters/hash_storage'
       return ::Lit::Adapters::HashStorage.new
     end
   end

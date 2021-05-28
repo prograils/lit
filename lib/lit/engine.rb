@@ -4,7 +4,7 @@ module Lit
 
     config.autoload_paths += %W[#{Lit::Engine.root}/app/controllers/lit/concerns]
 
-    paths.add 'lib', eager_load: true # Zeitwerk compatibility
+    paths.add 'lib'
 
     isolate_namespace Lit
 

@@ -1,0 +1,2 @@
+module Lit::Adapters
+end
