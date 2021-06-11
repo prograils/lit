@@ -136,19 +136,19 @@ module Lit
         # is the array
         val = value.is_a?(Array) ? [value] : value
         I18n.t(key, default: val)
+      end
 
-        # this indicates that this translation already exists
-        existing_translation =
-        Lit::Localization.joins(:locale, :localization_key)
-                         .find_by('localization_key = ? and locale = ?', key, locale)
+      # this indicates that this translation already exists
+      existing_translation =
+      Lit::Localization.joins(:locale, :localization_key)
+                        .find_by('localization_key = ? and locale = ?', key, locale)
 
-        if @raw
-          existing_translation.update(default_value: value)
-        else
-          existing_translation.update(translated_value: value, is_changed: true)
-          lkey = existing_translation.localization_key
-          lkey.update(is_deleted: false) if lkey.is_deleted
-        end
+      if @raw
+        existing_translation.update(default_value: value)
+      else
+        existing_translation.update(translated_value: value, is_changed: true)
+        lkey = existing_translation.localization_key
+        lkey.update(is_deleted: false) if lkey.is_deleted
       end
     end
 
