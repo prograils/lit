@@ -142,8 +142,6 @@ module Lit
         Lit::Localization.joins(:locale, :localization_key)
                          .find_by('localization_key = ? and locale = ?', key, locale)
 
-        return unless existing_translation
-
         if @raw
           existing_translation.update(default_value: value)
         else
