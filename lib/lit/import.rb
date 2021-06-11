@@ -119,12 +119,13 @@ module Lit
     # This is mean to insert a value for a key in a given locale
     # using some kind of strategy which depends on the service's options.
     #
-    # For instance, when @raw option is true (it's the default),
-    # if a key already exists, it overrides the default_value of the
-    # existing localization key; otherwise, with @raw set to false,
-    # it keeps the default as it is and, no matter if a translated value
-    # is there, translated_value is overridden with the imported one
-    # and is_changed is set to true.
+    # For instance, when @raw option is false (it's the default),
+    # if a key already exists its default_value is kept, but the
+    # translated_value is overridden with the imported one and is_changed
+    # is set to true. 
+    # When @raw is true the translation is kept the same, but the
+    # default_value overridden.
+    
     def upsert(locale, key, value) # rubocop:disable Metrics/MethodLength
       I18n.with_locale(locale) do
         # when an array has to be inserted with a default value, it needs to
