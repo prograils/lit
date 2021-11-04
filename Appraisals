@@ -16,6 +16,7 @@ appraise 'rails-5.2' do
   gem 'rails-controller-testing'
   gem 'minitest'
   gem 'm', '~> 1.5.0'
+  gem 'google-cloud-translate', '~> 1.2.4'
 end
 
 appraise 'rails-6.0' do
@@ -36,11 +37,12 @@ appraise 'rails-6.0' do
   gem 'rails-controller-testing'
   gem 'minitest'
   gem 'm', '~> 1.5.0'
+  gem 'google-cloud-translate', '~> 1.2.4'
 end
 
 appraise 'rails-6.1' do
   source 'https://rubygems.org'
-  gem 'rails', '~> 6.1.3'
+  gem 'rails', '~> 6.1.4.1'
   gem 'devise'
   gem 'pg', '~> 1.2.3'
   gem 'redis'
@@ -56,4 +58,5 @@ appraise 'rails-6.1' do
   gem 'rails-controller-testing'
   gem 'minitest'
   gem 'm', '~> 1.5.0'
+  gem 'google-cloud-translate', '~> 2.1.2'
 end
