@@ -111,7 +111,7 @@ module Lit::CloudTranslation::Providers
     def sanitize_text(text_or_array)
       case text_or_array
       when String
-        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>')
+        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>').gsub(/\r\n/, '<code>0</code>')
       when Array
         text_or_array.map { |s| sanitize_text(s) }
       when nil
@@ -124,7 +124,7 @@ module Lit::CloudTranslation::Providers
     def unsanitize_text(text_or_array)
       case text_or_array
       when String
-        text_or_array.gsub(/<code>__LIT__(.+?)__LIT__<\/code>/, '%{\1}')
+        text_or_array.gsub(%r{<code>0</code>}, "\r\n").gsub(%r{<code>__LIT__(.+?)__LIT__</code>}, '%{\1}')
       when Array
         text_or_array.map { |s| unsanitize_text(s) }
       else

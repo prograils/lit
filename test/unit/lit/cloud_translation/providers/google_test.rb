@@ -66,4 +66,16 @@ describe Lit::CloudTranslation::Providers::Google, vcr: { record: :none } do
       end
     end
   end
+
+  describe 'edge cases' do
+    describe 'when text contains newline characters' do
+      let(:text) { "Some longer paragraph text\r\nOne line below" }
+
+      it 'translation comes back preserving those characters' do
+        result = Lit::CloudTranslation::Providers::Google.translate(text: text, to: 'pl')
+        assert result.include?("\r\n")
+        assert result.include?("tekstu akapitu \r\n Jeden wiersz")
+      end
+    end
+  end
 end
