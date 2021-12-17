@@ -16,9 +16,22 @@ module Lit
       I18n.const_set(:RESERVED_KEYS, reserved_keys.freeze)
     end
 
+    ## DOC
+    ## Translation flow starts with Rails-provided ActionView::Helpers::TranslationHelper `translate` method
+    ## In that method any calls to `I18n.translate` are catched by this method below (because Lit acts as I18 backend)
+    ## Any calls in Lit to `super` go straight to I18n
     def translate(locale, key, options = {})
       options[:lit_default_copy] = options[:default].dup if can_dup_default(options)
       content = super(locale, key, options)
+
+      if on_rails_6_1_or_higher?
+        @untranslated_key = key if key.present? && options[:default].instance_of?(Object)
+
+        if key.nil? && options[:lit_default_copy].present?
+          update_default_localization(locale, content, options)
+        end
+      end
+
       if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
       else
@@ -53,6 +66,17 @@ module Lit
     end
 
     private
+
+    def on_rails_6_1_or_higher?
+      "#{::Rails::VERSION::MAJOR}#{::Rails::VERSION::MINOR}".to_i == 61 ||
+        ::Rails::VERSION::MAJOR >= 7
+    end
+
+    def update_default_localization(locale, content, options)
+      parts = I18n.normalize_keys(locale, @untranslated_key, options[:scope], options[:separator])
+      key_with_locale = parts.join('.')
+      @cache.update_locale(key_with_locale, content, content.is_a?(Array))
+    end
 
     def can_dup_default(options = {})
       return false unless options.key?(:default)
