@@ -75,6 +75,54 @@ http_interactions:
             ]
           }
         }
-    http_version: 
+    http_version:
   recorded_at: Thu, 10 Jan 2019 13:47:15 GMT
+- request:
+    method: post
+    uri: https://oauth2.googleapis.com/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJleGFsdGVkLXBhdHRlcm4tMTIxNjExQGFwcHNwb3QuZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imh0dHBzOi8vb2F1dGgyLmdvb2dsZWFwaXMuY29tL3Rva2VuIiwiZXhwIjoxNjM2MDM5MDQzLCJpYXQiOjE2MzYwMzg5MjMsInNjb3BlIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vYXV0aC9jbG91ZC1wbGF0Zm9ybSJ9.OwbPGHd8oxHD_nIVtwpvfCKfjcGyceE4SZK47KS5bcV2Iu4yUPkqhDoT73NIsG5uQ82c96FgBviJH8NNFGjyZH_tpuo2e6G2hdrf_IDmtQ7ioxHkSHtW6TqyiYrOWIBzC0hk4lMSEdKn-NvthIYdARNoJLI90Tdq2U3QoXnvDhd9_HASquRibRel0n6emQt_zsrHqdggv2U3XWYdHrY4tMDXieXno64IrXjDm7-k7EBsvFEGh8iX-aEtZG8t0zW3V_9_IxDvYYFuUd34csy3Ip_m1zqSc32GNbrJrldsgxpAmf_aFvOG3TdTNUl8azr1xEYIN-98BygRS9LvSvqXEA
+    headers:
+      User-Agent:
+      - Faraday v1.8.0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Thu, 04 Nov 2021 15:16:23 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443";
+        ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"access_token":"ya29.c.b0AXv0zTN_sVlwkky1PMVvD1Avyp7mvjPEO46NmyAv0vtWKkX2kwmGZXEmGJUHojrCv7q-q8ffZYsoXa43rrRWiwoO_c4ksboA2WefVcX2wo4ee4EC8q1Zp6_y6jXS1JXE-yBoEZ29mMWsODFhJZmXLnXIIvXwOF7MhdAQq4mP4geqKr7Y_e8PbHduPhWohqkSC1iW6TMY-wFsdDu4EwkxzxbShn2tTt4......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................","expires_in":3599,"token_type":"Bearer"}'
+    http_version:
+  recorded_at: Thu, 04 Nov 2021 15:16:23 GMT
 recorded_with: VCR 4.0.0

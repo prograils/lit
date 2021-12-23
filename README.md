@@ -135,6 +135,10 @@ Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Google
 ```
 gem 'google-cloud-translate', '~> 1.2.4'
 ```
+...we also support V2 of Google Cloud Translate gem, should you need it:
+```
+gem 'google-cloud-translate', '~> 2.1.2'
+```
 
 To use translation via Google, you need to obtain a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) containing all the credentials required by the API.
 

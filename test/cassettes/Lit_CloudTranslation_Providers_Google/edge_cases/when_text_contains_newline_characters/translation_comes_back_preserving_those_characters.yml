@@ -1,0 +1,109 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://oauth2.googleapis.com/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJleGFsdGVkLXBhdHRlcm4tMTIxNjExQGFwcHNwb3QuZ3NlcnZpY2VhY2NvdW50LmNvbSIsImF1ZCI6Imh0dHBzOi8vb2F1dGgyLmdvb2dsZWFwaXMuY29tL3Rva2VuIiwiZXhwIjoxNjM2MDQ2MzIwLCJpYXQiOjE2MzYwNDYyMDAsInNjb3BlIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vYXV0aC9jbG91ZC1wbGF0Zm9ybSJ9.azvrcE91ueMmJzcobWywCNv0VXpSskaa4UVqlX1S_FEe5x2hIVFJKdwQJB8bbbTC0AZH2ESiLOugkcq-KyohYOp2CgnE6qMxk7gV1V-J-bl7u_8tZUt4LFWrLx1sSIGMRY6IUztMnXhzfrjjWSSeGBe_YZ1ZAikRz5UO07i2JLH57VdPAmd2Tm7WuTVF8N8wMVeTalyPkgeE-l2evWEbluuT0vr8RDKrNDDiw5oUkWiGPRyeXrWj0QN-UAlVGGqznSlcWvAIA6_bj0pgxBoVrgVJqS9nGSmtDdXs-NrbkIqPluda7GGf8cA9w0TE2CNWhn8eImOAarNbmQ6_DJLMrA
+    headers:
+      User-Agent:
+      - Faraday v1.8.0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Thu, 04 Nov 2021 17:17:40 GMT
+      Server:
+      - scaffolding on HTTPServer2
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443";
+        ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: '{"access_token":"ya29.c.b0AXv0zTMfbtXXtlziux7wPsrgIlOj6ZtTJqxj8xnP4rvVUlqIdj_JzqB-k2n3DvYO_wWcstPD3TCWaXYSTfw42E5EAhzJ2hqr1afs_U4ws14VczdYjLvjGn0m-cjkwqq4Dbr8KF8-nEeQQKrAYNZ6OVs6qLlr_ESGmQ9yQks4r2EWtyNiiPxMPVPGdL-L-REGrnK3HYIgK0TUPhL2hTS3kI7YaqG3fE8......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................","expires_in":3599,"token_type":"Bearer"}'
+    http_version:
+  recorded_at: Thu, 04 Nov 2021 17:17:40 GMT
+- request:
+    method: post
+    uri: https://translation.googleapis.com/language/translate/v2
+    body:
+      encoding: UTF-8
+      string: '{"q":["Some longer paragraph text\u003ccode\u003e0\u003c/code\u003eOne
+        line below"],"target":"pl"}'
+    headers:
+      User-Agent:
+      - gcloud-ruby/2.1.2
+      Google-Cloud-Resource-Prefix:
+      - projects/
+      Content-Type:
+      - application/json
+      X-Goog-Api-Client:
+      - gl-ruby/2.7.4 gccl/2.1.2
+      Authorization:
+      - Bearer ya29.c.b0AXv0zTMfbtXXtlziux7wPsrgIlOj6ZtTJqxj8xnP4rvVUlqIdj_JzqB-k2n3DvYO_wWcstPD3TCWaXYSTfw42E5EAhzJ2hqr1afs_U4ws14VczdYjLvjGn0m-cjkwqq4Dbr8KF8-nEeQQKrAYNZ6OVs6qLlr_ESGmQ9yQks4r2EWtyNiiPxMPVPGdL-L-REGrnK3HYIgK0TUPhL2hTS3kI7YaqG3fE8......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+      Cache-Control:
+      - no-store
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Vary:
+      - Origin
+      - Referer
+      - X-Origin
+      Date:
+      - Thu, 04 Nov 2021 17:17:40 GMT
+      Server:
+      - ESF
+      Cache-Control:
+      - private
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443";
+        ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkYXRhIjogewogICAgInRyYW5zbGF0aW9ucyI6IFsKICAgICAgewogICAgICAgICJ0cmFuc2xhdGVkVGV4dCI6ICJUcm9jaMSZIGTFgnXFvHN6ZWdvIHRla3N0dSBha2FwaXR1IFx1MDAzY2NvZGVcdTAwM2UwXHUwMDNjL2NvZGVcdTAwM2UgSmVkZW4gd2llcnN6IHBvbmnFvGVqIiwKICAgICAgICAiZGV0ZWN0ZWRTb3VyY2VMYW5ndWFnZSI6ICJlbiIKICAgICAgfQogICAgXQogIH0KfQo=
+    http_version:
+  recorded_at: Thu, 04 Nov 2021 17:17:40 GMT
+recorded_with: VCR 4.0.0
