@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    lit (1.1.4)
+    lit (1.1.5)
       coffee-rails
       emoji_flag
       jquery-rails
