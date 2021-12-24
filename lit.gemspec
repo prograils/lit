@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'appraisal', '~> 2.4.0'
   s.add_development_dependency 'devise', '~> 4.7.1'
-  s.add_development_dependency 'google-cloud-translate', '~> 1.2.4'
   s.add_development_dependency 'minitest', '~> 5.11.3'
   s.add_development_dependency 'minitest-vcr', '~> 1.4.0'
   s.add_development_dependency 'pry-byebug', '~> 3.9.0'

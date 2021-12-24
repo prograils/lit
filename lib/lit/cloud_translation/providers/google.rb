@@ -45,13 +45,10 @@ module Lit::CloudTranslation::Providers
   #   end
   class Google < Base
     def translate(text:, from: nil, to:, **opts)
-      @client ||=
-        ::Google::Cloud::Translate.new(project_id: config.keyfile_hash['project_id'],
-                                       credentials: config.keyfile_hash)
-      result = @client.translate(sanitize_text(text), from: from, to: to, **opts)
+      result = client.translate(sanitize_text(text), from: from, to: to, **opts)
       unsanitize_text(
         case result
-        when ::Google::Cloud::Translate::Translation then result.text
+        when translation_class then result.text
         when Array then result.map(&:text)
         end
       )
@@ -66,6 +63,27 @@ module Lit::CloudTranslation::Providers
     end
 
     private
+
+    def client
+      @client ||= begin
+        args = {
+          project_id: config.keyfile_hash['project_id'], credentials: config.keyfile_hash,
+          version: :v2
+        }
+        if Gem.loaded_specs['google-cloud-translate'].version < Gem::Version.create('2.0')
+          args = args.tap { |hs| hs.delete(:version) }
+        end
+        ::Google::Cloud::Translate.new(**args)
+      end
+    end
+
+    def translation_class
+      if Gem.loaded_specs['google-cloud-translate'].version < Gem::Version.create('2.0')
+        ::Google::Cloud::Translate::Translation
+      else
+        ::Google::Cloud::Translate::V2::Translation
+      end
+    end
 
     def default_config
       if ENV['GOOGLE_TRANSLATE_API_KEYFILE'].blank?
@@ -93,7 +111,7 @@ module Lit::CloudTranslation::Providers
     def sanitize_text(text_or_array)
       case text_or_array
       when String
-        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>')
+        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>').gsub(/\r\n/, '<code>0</code>')
       when Array
         text_or_array.map { |s| sanitize_text(s) }
       when nil
@@ -106,7 +124,7 @@ module Lit::CloudTranslation::Providers
     def unsanitize_text(text_or_array)
       case text_or_array
       when String
-        text_or_array.gsub(/<code>__LIT__(.+?)__LIT__<\/code>/, '%{\1}')
+        text_or_array.gsub(%r{<code>0</code>}, "\r\n").gsub(%r{<code>__LIT__(.+?)__LIT__</code>}, '%{\1}')
       when Array
         text_or_array.map { |s| unsanitize_text(s) }
       else

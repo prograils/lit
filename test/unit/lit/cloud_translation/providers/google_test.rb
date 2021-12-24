@@ -24,17 +24,24 @@ describe Lit::CloudTranslation::Providers::Google, vcr: { record: :none } do
                       'client_x509_cert_url' => 'https://www.googleapis.com/robot/v1/metadata/x509/redacted@redacted.iam.gserviceaccount.com' }
       # rubocop:enable Metrics/LineLength
     )
-    Google::Cloud::Translate::Credentials.stubs(:new).returns(OpenStruct.new)
+    Google::Auth::Credentials.stubs(:new).returns(OpenStruct.new)
   end
 
   cloud_provider_examples(Lit::CloudTranslation::Providers::Google)
 
+  def gtranslate_api_class
+    if Gem.loaded_specs['google-cloud-translate'].version < Gem::Version.create('2.0')
+      ::Google::Cloud::Translate::Api
+    else
+      ::Google::Cloud::Translate::V2::Api
+    end
+  end
+
   describe 'errors' do
     describe 'when credentials error occurs' do
       before do
-        ::Google::Cloud::Translate::Api
-          .any_instance
-          .stubs(:translate)
+        gtranslate_api_class
+          .any_instance.stubs(:translate)
           .raises(Signet::AuthorizationError, 'Credentials error')
       end
 
@@ -47,9 +54,8 @@ describe Lit::CloudTranslation::Providers::Google, vcr: { record: :none } do
 
     describe 'when translation error occurs' do
       before do
-        ::Google::Cloud::Translate::Api
-          .any_instance
-          .stubs(:translate)
+        gtranslate_api_class
+          .any_instance.stubs(:translate)
           .raises(::Google::Cloud::InternalError, 'Google failure')
       end
 
@@ -57,6 +63,18 @@ describe Lit::CloudTranslation::Providers::Google, vcr: { record: :none } do
         assert_raises Lit::CloudTranslation::TranslationError do
           Lit::CloudTranslation::Providers::Google.translate(text: text, to: to)
         end
+      end
+    end
+  end
+
+  describe 'edge cases' do
+    describe 'when text contains newline characters' do
+      let(:text) { "Some longer paragraph text\r\nOne line below" }
+
+      it 'translation comes back preserving those characters' do
+        result = Lit::CloudTranslation::Providers::Google.translate(text: text, to: 'pl')
+        assert result.include?("\r\n")
+        assert result.include?("tekstu akapitu \r\n Jeden wiersz")
       end
     end
   end
