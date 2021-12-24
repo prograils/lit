@@ -4,7 +4,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+### Added
+- Proper CHANGELOG [@pnikrat](https://github.com/pnikrat)
+
+## [WIP]
 - Efforts to use Vanilla JS and remove jQuery [WIP]
+- Fix for `Undefined method 'id' for False class` error in view partial [WIP]
+
+## [1.1.5] - 2021-12-23
+### Added
+- Lit is now compatible with Zeitwerk and classic loader [@mlitwiniuk](https://github.com/mlitwiniuk)
+- When using Cloud translations, support V2 `google-cloud-translate` gem [@pnikrat](https://github.com/pnikrat)
+- Proper Rails 6.1 support. Fixes new Rails translate logic not saving defaults in Lit [@pnikrat](https://github.com/pnikrat)
+- Add screenshots to README [@mlitwiniuk](https://github.com/mlitwiniuk)
+
+### Changed
+- Lit now uses Ruby 2.7.4 [@pnikrat](https://github.com/pnikrat)
+
+### Fixed
+- When cloud translating strings with newline characters they are now properly preserved when returned from cloud translation provider [@pnikrat](https://github.com/pnikrat)
+
+## [1.1.4] - 2021-04-27
+### Fixed / Changed
+- Move initializer template to `erb`. This may fix some errors on Lit installation [@mlitwiniuk](https://github.com/mlitwiniuk)
+
+## [1.1.2] - 2021-04-26
+### Added
+- Ruby 3.0 compatibility [@mlitwiniuk](https://github.com/mlitwiniuk)
+- Option to batch-touch localizations. This marks them for synchronization again [@mlitwiniuk](https://github.com/mlitwiniuk)
+- Copy localization key to clipboard from Lit dashboard [@mlitwiniuk](https://github.com/mlitwiniuk)
+
+### Removed
+- Rails 5.1 support. Use 5.2 or higher
+
+## [1.1.1] - 2021-03-08
+### Added
+- Performance improvements: caching translation values in memory [@mlitwiniuk](https://github.com/mlitwiniuk)
+- More thread-safety: added middleware to clear Thread.current value after request is done [@mlitwiniuk](https://github.com/mlitwiniuk)
+
+### Fixed
+- Fixes problem with duplication on synchronization - when synchronizing with remote record duplication was not properly checked [@mlitwiniuk](https://github.com/mlitwiniuk)
+
+## [1.1.0] - 2020-11-03
+### Added
+- Lit startup performance improvements - memoize cache keys during startup [@vincentvanbush](https://github.com/vincentvanbush)
+- Cache consecutive calls to same localization key + other performance improvements [@mlitwiniuk](https://github.com/mlitwiniuk)
+- Support WillPaginate if present in project
+- Extra includes to avoid unnecessary queries in API controllers
+- Support for Rails 6 and I18n 1.6 [@mlitwiniuk](https://github.com/mlitwiniuk) & [@vincentvanbush](https://github.com/vincentvanbush)
+- Support Redis 5.0 [@usiegj00](https://github.com/usiegj00)
+- Lit now properly returns hash/subtree of translations when asked for non-leaf node [@pnikrat](https://github.com/pnikrat)
+
+### Changed
+- Use local Bootstrap instead of CDN [@sweetyclem](https://github.com/sweetyclem/)
+- Generated initializer now respects `ignored_keys` setting [@mlitwiniuk](https://github.com/mlitwiniuk)
+
+### Fixed
+- Remote interactor service fixes [@usiegj00](https://github.com/usiegj00)
+- Import will now update only default value when `raw` option is true [@AliSepehri](https://github.com/AliSepehri)
+- Fix Rails constant reference and some README improvements [@texpert](https://github.com/texpert)
 
 ## [1.0.2] - 2019-06-27
 ### Fixed
@@ -146,7 +204,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## 0.0.3 - 2012-12-31
 - Initial release
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/prograils/lit/compare/1.1.5...HEAD
+[1.1.5]: https://github.com/prograils/lit/compare/573b2f4272976a78951953a8ee37f2a533e181a1...1.1.5
+[1.1.4]: https://github.com/prograils/lit/compare/4cedfd00e29b85e848502dd82d479cff0777322b...573b2f4272976a78951953a8ee37f2a533e181a1
+[1.1.2]: https://github.com/prograils/lit/compare/1.1.1...4cedfd00e29b85e848502dd82d479cff0777322b
+[1.1.1]: https://github.com/prograils/lit/compare/1.1.0...1.1.1
+[1.1.0]: https://github.com/prograils/lit/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/prograils/lit/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/prograils/lit/compare/1.0...1.0.1
 [1.0]: https://github.com/prograils/lit/compare/0.4.0%2Dalpha...1.0
