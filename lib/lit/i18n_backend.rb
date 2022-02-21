@@ -28,7 +28,7 @@ module Lit
         @untranslated_key = key if key.present? && options[:default].instance_of?(Object)
 
         if key.nil? && options[:lit_default_copy].present?
-          update_default_localization(locale, content, options)
+          update_default_localization(locale, options)
         end
       end
 
@@ -72,10 +72,12 @@ module Lit
         ::Rails::VERSION::MAJOR >= 7
     end
 
-    def update_default_localization(locale, content, options)
+    def update_default_localization(locale, options)
       parts = I18n.normalize_keys(locale, @untranslated_key, options[:scope], options[:separator])
       key_with_locale = parts.join('.')
-      @cache.update_locale(key_with_locale, content, content.is_a?(Array))
+      content = options[:lit_default_copy]
+      # we do not force array on singular strings packed into Array
+      @cache.update_locale(key_with_locale, content, content.is_a?(Array) && content.length > 1)
     end
 
     def can_dup_default(options = {})

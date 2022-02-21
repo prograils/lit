@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-### Added
-- Proper CHANGELOG [@pnikrat](https://github.com/pnikrat)
+### Fixed
+- When running Lit on Rails 6.1 defaults could sometimes be overwritten [@pnikrat](https://github.com/pnikrat)
 
 ## [WIP]
 - Efforts to use Vanilla JS and remove jQuery [WIP]
@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - When using Cloud translations, support V2 `google-cloud-translate` gem [@pnikrat](https://github.com/pnikrat)
 - Proper Rails 6.1 support. Fixes new Rails translate logic not saving defaults in Lit [@pnikrat](https://github.com/pnikrat)
 - Add screenshots to README [@mlitwiniuk](https://github.com/mlitwiniuk)
+- Proper CHANGELOG [@pnikrat](https://github.com/pnikrat)
 
 ### Changed
 - Lit now uses Ruby 2.7.4 [@pnikrat](https://github.com/pnikrat)
