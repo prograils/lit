@@ -32,6 +32,8 @@ class I18nBackendTest < ActiveSupport::TestCase
   end
 
   test 'auto-humanizes key when Lit.humanize_key=true' do
+    # since Rails 6.1 pure i18n calls should not be humanized
+    skip if I18n.backend.send(:on_rails_6_1_or_higher?)
     Lit.humanize_key = true
     I18n.locale = :en
     test_key = 'this_will_get_humanized'
@@ -65,7 +67,8 @@ class I18nBackendTest < ActiveSupport::TestCase
     loc_key_count = -> { Lit::LocalizationKey.where(localization_key: [test_key, fallback_key]).count }
     assert_equal 0, loc_key_count.call
     assert_equal 'foobar', I18n.t(test_key, default: [fallback_key, 'foobar'])
-    assert_equal 2, loc_key_count.call
+    # We do not create localization key record for fallback keys if value is found
+    assert_equal 1, loc_key_count.call
 
     # on subsequent translation calls, they should not be fetched from DB
     assert_no_database_queries do

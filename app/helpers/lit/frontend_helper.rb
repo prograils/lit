@@ -23,6 +23,18 @@ module Lit::FrontendHelper
     def t(key, options = {})
       translate(key, options)
     end
+
+    def missing_translation(key, options)
+      # We try to humanize the key. Rails will do
+      # it anyway in below call to super, but then it will wrap it also in
+      # translation_missing span.
+      # Humanizing key should be last resort
+      if Lit::Services::HumanizeService.should_humanize?(key)
+        return Lit::Services::HumanizeService.humanize_and_cache(key, options)
+      end
+
+      super(key, options)
+    end
   end
   prepend Lit::FrontendHelper::TranslationKeyWrapper
 
