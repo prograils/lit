@@ -252,6 +252,18 @@ class LitBehaviourTest < ActiveSupport::TestCase
     assert_equal hash_result[:sub_one], 'Left leaf'
   end
 
+  test 'it must not overwrite default with I18n content when calling same key twice ' \
+    'with different interpolations' do
+    assert_difference 'Lit::LocalizationKey.count', 1 do
+      I18n.t('interpolated_key', default: 'Candidate %{name}', name: 'Tester')
+    end
+    assert_no_difference 'Lit::LocalizationKey.count' do
+      result = I18n.t('interpolated_key', default: 'Candidate %{name}', name: 'Famous person')
+      assert_equal result, 'Candidate Famous person'
+    end
+    assert_equal find_localization_for('interpolated_key', :en).default_value, 'Candidate %{name}'
+  end
+
   private
 
   def find_localization_for(key, locale)

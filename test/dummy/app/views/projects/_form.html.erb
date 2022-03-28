@@ -11,6 +11,8 @@
     </div>
   <% end %>
 
+  <div><%= t('some_random.key') %></div>
+  <div><%= t('another_random.key', default: 'Random') %></div>
   <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>

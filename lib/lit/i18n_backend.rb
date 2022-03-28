@@ -1,4 +1,5 @@
 require 'i18n'
+require 'lit/services/humanize_service'
 
 module Lit
   class I18nBackend
@@ -28,7 +29,7 @@ module Lit
         @untranslated_key = key if key.present? && options[:default].instance_of?(Object)
 
         if key.nil? && options[:lit_default_copy].present?
-          update_default_localization(locale, content, options)
+          update_default_localization(locale, options)
         end
       end
 
@@ -72,10 +73,12 @@ module Lit
         ::Rails::VERSION::MAJOR >= 7
     end
 
-    def update_default_localization(locale, content, options)
+    def update_default_localization(locale, options)
       parts = I18n.normalize_keys(locale, @untranslated_key, options[:scope], options[:separator])
       key_with_locale = parts.join('.')
-      @cache.update_locale(key_with_locale, content, content.is_a?(Array))
+      content = options[:lit_default_copy]
+      # we do not force array on singular strings packed into Array
+      @cache.update_locale(key_with_locale, content, content.is_a?(Array) && content.length > 1)
     end
 
     def can_dup_default(options = {})
@@ -118,12 +121,18 @@ module Lit
             if options[:lit_default_copy].is_a?(Array)
               default = options[:lit_default_copy].map do |key_or_value|
                 if key_or_value.is_a?(Symbol)
-                  I18n.normalize_keys(nil, key_or_value.to_s, options[:scope], options[:separator]).join('.').to_sym
+                  normalized = I18n.normalize_keys(
+                    nil, key_or_value.to_s, options[:scope], options[:separator]
+                  ).join('.')
+                  if on_rails_6_1_or_higher? && Lit::Services::HumanizeService.should_humanize?(key)
+                    Lit::Services::HumanizeService.humanize(normalized)
+                  else
+                    normalized.to_sym
+                  end
                 else
                   key_or_value
                 end
               end
-              default = default.first if default.is_a?(Array)
             else
               default = options[:lit_default_copy]
             end
@@ -131,21 +140,15 @@ module Lit
           end
           # if we have content now, let's store it in cache
           if content.present?
-            @cache[key_with_locale] = content
-            content = @cache[key_with_locale]
-          end
-          # content might be nil - default value passed to cache was in fact
-          # useless.
-          # if content is still nil, we may try to humanize it. Rails will do
-          # it anyway if we return nil, but then it will wrap it also in
-          # translation_missing span.
-          # Humanizing key should be last resort
-          if content.nil? && Lit.humanize_key && Lit.humanize_key_ignored.match(key).nil?
-            content = key.to_s.split('.').last.humanize
-            if content.present?
-              @cache[key_with_locale] = content
-              content = @cache[key_with_locale]
+            content = Array.wrap(content).compact.reject(&:empty?).reverse.find do |default_cand|
+              @cache[key_with_locale] = default_cand
+              @cache[key_with_locale]
             end
+          end
+
+          if content.nil? && !on_rails_6_1_or_higher? && Lit::Services::HumanizeService.should_humanize?(key)
+            @cache[key_with_locale] = Lit::Services::HumanizeService.humanize(key)
+            content = @cache[key_with_locale]
           end
         end
       end
