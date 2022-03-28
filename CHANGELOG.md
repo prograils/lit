@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-### Fixed
-- When running Lit on Rails 6.1 defaults could sometimes be overwritten [@pnikrat](https://github.com/pnikrat)
 
 ## [WIP]
 - Efforts to use Vanilla JS and remove jQuery [WIP]
 - Fix for `Undefined method 'id' for False class` error in view partial [WIP]
+
+## [1.1.6] - 2022-03-28
+### Fixed
+- When running Lit on Rails 6.1 defaults could sometimes be overwritten [@pnikrat](https://github.com/pnikrat)
 
 ## [1.1.5] - 2021-12-23
 ### Added
@@ -205,7 +207,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## 0.0.3 - 2012-12-31
 - Initial release
 
-[Unreleased]: https://github.com/prograils/lit/compare/1.1.5...HEAD
+[Unreleased]: https://github.com/prograils/lit/compare/1.1.6...HEAD
+[1.1.6]: https://github.com/prograils/lit/compare/1.1.5...1.1.6
 [1.1.5]: https://github.com/prograils/lit/compare/573b2f4272976a78951953a8ee37f2a533e181a1...1.1.5
 [1.1.4]: https://github.com/prograils/lit/compare/4cedfd00e29b85e848502dd82d479cff0777322b...573b2f4272976a78951953a8ee37f2a533e181a1
 [1.1.2]: https://github.com/prograils/lit/compare/1.1.1...4cedfd00e29b85e848502dd82d479cff0777322b
