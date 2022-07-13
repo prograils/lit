@@ -39,7 +39,7 @@ module Lit::FrontendHelper
   prepend Lit::FrontendHelper::TranslationKeyWrapper
 
   def javascript_lit_tag
-    javascript_include_tag 'lit/lit_frontend'
+    javascript_include_tag 'lit/lit_frontend', defer: true
   end
 
   def stylesheet_lit_tag
