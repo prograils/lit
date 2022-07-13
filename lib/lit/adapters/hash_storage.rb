@@ -34,7 +34,7 @@ module Lit::Adapters
     end
 
     def subtree_keys(key)
-      keys.select { |k| k.match?(/\A#{key}*/) }
+      keys.select { |k| k.match?(/\A#{Regexp.quote(key)}*/) }
     end
 
     def form_cache_localizations(keys_of_subtree)

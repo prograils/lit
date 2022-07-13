@@ -264,6 +264,17 @@ class LitBehaviourTest < ActiveSupport::TestCase
     assert_equal find_localization_for('interpolated_key', :en).default_value, 'Candidate %{name}'
   end
 
+  test 'it does not break on simple form/complicated keys when using regex in hash storage' do
+    prev_kv_engine = Lit.key_value_engine
+    Lit.key_value_engine = 'hash'
+    key = 'helpers.label.meta_signings.contract_signings_attributes][0]' \
+          '[contract_documents.contract]'
+    result = I18n.t(key, default: 'Contract')
+    assert_equal result, 'Contract'
+    assert_equal find_localization_for(key, :en).default_value, 'Contract'
+    Lit.key_value_engine = prev_kv_engine
+  end
+
   private
 
   def find_localization_for(key, locale)
