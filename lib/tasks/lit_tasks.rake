@@ -20,7 +20,7 @@ namespace :lit do
     locale_keys.each do |loc|
       path = Rails.root.join('config', 'locales',
                              "#{loc}.#{file_extension(export_format)}")
-      if exported = Lit::Export.call(locale_keys: locale_keys, format: export_format)
+      if exported = Lit::Export.call(locale_keys: loc, format: export_format)
         File.write(path, exported)
         puts "Successfully exported #{path}."
       end
