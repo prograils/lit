@@ -53,18 +53,18 @@
                   <% end %>
                 </td>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization, format: :js) %>" data-editing=0 data-content="">
-                  <% cached = Lit.init.cache["#{locale}.#{lk.localization_key}"]%>
-                  <% if cached.is_a?(Array) %>
+                  <% cached_locale = Lit.init.cache["#{locale}.#{lk.localization_key}"]%>
+                  <% if cached_locale.is_a?(Array) %>
                     <ul>
-                      <% cached.each do |l| %>
+                      <% cached_locale.each do |l| %>
                         <li><%= l %></li>
                       <% end %>
                     </ul>
                   <% else %>
-                    <% if cached.nil? %>
+                    <% if cached_locale.nil? %>
                       <em title="<%= I18n.t('lit.value_not_yet_translated', default: 'Value not yet translated') %>">null</em>
                     <% else %>
-                      <%= cached %>
+                      <%= cached_locale %>
                     <% end %>
                   <% end %>
                 </td>
