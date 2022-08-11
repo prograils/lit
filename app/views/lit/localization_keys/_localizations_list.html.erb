@@ -53,7 +53,20 @@
                   <% end %>
                 </td>
                 <td class="localization_row" data-id="<%= localization.id%>" data-edit="<%= edit_localization_key_localization_path(lk, localization, format: :js) %>" data-editing=0 data-content="">
-                  <%= render partial: 'localization_row', locals: {localization: Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
+                  <% cached = Lit.init.cache["#{locale}.#{lk.localization_key}"]%>
+                  <% if cached.is_a?(Array) %>
+                    <ul>
+                      <% cached.each do |l| %>
+                        <li><%= l %></li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <% if cached.nil? %>
+                      <em title="<%= I18n.t('lit.value_not_yet_translated', default: 'Value not yet translated') %>">null</em>
+                    <% else %>
+                      <%= cached %>
+                    <% end %>
+                  <% end %>
                 </td>
                 <td class="locale_row text-center">
                   <%= EmojiFlag.new(locale) %>
