@@ -1,0 +1,13 @@
+<% if localization.is_a?(Array) %>
+  <ul>
+    <% localization.each do |l| %>
+      <li><%= l %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <% if localization.nil? %>
+    <em title="<%= I18n.t('lit.value_not_yet_translated', default: 'Value not yet translated') %>">null</em>
+  <% else %>
+    <%= localization %>
+  <% end %>
+<% end %>
