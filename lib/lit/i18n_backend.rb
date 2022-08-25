@@ -36,6 +36,9 @@ module Lit
       if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
         content.html_safe
       else
+        if(content == {:html=>""})
+          return ""
+        end
         content
       end
     end
