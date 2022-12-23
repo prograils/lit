@@ -5,7 +5,7 @@ module Lit
     def setup
       DatabaseCleaner.clean_with :truncation
       stub_request(:get, 'http://testhost.com/lit/api/v1/last_change.json').to_return(
-        body: { last_change: 1.hour.ago.to_s(:db) }.to_json,
+        body: { last_change: 1.hour.ago.to_fs(:db) }.to_json,
       )
       @source = Lit::Source.create url: 'http://testhost.com/lit', api_key: 'test', identifier: 'test'
     end

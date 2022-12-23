@@ -5,7 +5,7 @@ module Lit
     fixtures 'lit/sources'
     def setup
       stub_request(:get, 'http://testhost.com/lit/api/v1/last_change.json').
-          to_return(body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
+          to_return(body: { last_change: 1.hour.ago.to_fs(:db) }.to_json)
       stub_request(:get, 'http://testhost.nope/lit/api/v1/last_change.json').
           to_return(body: 'Nothing to be found around here', status: 404)
     end

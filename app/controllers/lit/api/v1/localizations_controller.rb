@@ -1,5 +1,5 @@
 module Lit
-  class Api::V1::LocalizationsController < Api::V1::BaseController
+  class Api::V1::LocalizationsController < Api::V1::BaseLitController
     def index
       @localizations = fetch_localizations
       render json:

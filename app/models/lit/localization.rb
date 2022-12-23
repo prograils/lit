@@ -63,7 +63,7 @@ module Lit
     end
 
     def last_change
-      updated_at.to_s(:db)
+      updated_at.to_fs(:db)
     end
 
     def update_default_value(value)

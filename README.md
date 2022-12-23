@@ -296,7 +296,7 @@ Lit.store_request_keys = true
 1. `gem install bundler && bundle install` - ensure Bundler and all required gems are installed
 2. `bundle exec appraisal install` - install gems from appraisal's gemfiles
 3. `cp test/dummy/config/database.yml.sample test/dummy/config/database.yml` - move a database.yml in place (remember to fill your DB credentials in it)
-4. `RAILS_ENV=test bundle exec appraisal rails-5.2 rake db:setup` - setup lit DB (see test/config/database.yml); do it
+4. `RAILS_ENV=test bundle exec appraisal rails-7.0 rake db:setup` - setup lit DB (see test/config/database.yml); do it
  only once, it does not matter which Rails version you use for `appraisal`
 5. `bundle exec appraisal rake` - run the tests!
 

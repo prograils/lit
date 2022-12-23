@@ -11,7 +11,7 @@ class SynchronizeSourceService
   private
 
   def synchronize_localizations
-    after_date = @source.last_updated_at&.to_s(:db)
+    after_date = @source.last_updated_at&.to_fs(:db)
     result = interactor.send_request Lit::Source::LOCALIZATIONS_PATH, after: after_date
     return unless result&.is_a?(Array)
     result.each { |loc| synchronize_localization loc }

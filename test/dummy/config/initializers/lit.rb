@@ -6,4 +6,6 @@ Lit.ignore_yaml_on_startup = true
 Lit.api_enabled = true
 Lit.api_key = 'ala'
 Lit.all_translations_are_html_safe = true
-Lit.init
+Rails.application.config.after_initialize do
+  Lit.init
+end

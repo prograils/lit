@@ -26,7 +26,7 @@ module Lit
       content = super(locale, key, options)
 
       if on_rails_6_1_or_higher?
-        @untranslated_key = key if key.present? && options[:default].instance_of?(Object)
+        @untranslated_key = key if key.present? && options[:default].instance_of?(Integer)
 
         if key.nil? && options[:lit_default_copy].present?
           update_default_localization(locale, options)
