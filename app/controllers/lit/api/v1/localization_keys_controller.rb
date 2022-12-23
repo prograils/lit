@@ -6,7 +6,7 @@ module Lit
       @localization_keys = fetch_localization_keys
       render json: @localization_keys.as_json(
         root: false, only: %i[id localization_key is_deleted]
-      )
+      ).to_json
     end
 
     private

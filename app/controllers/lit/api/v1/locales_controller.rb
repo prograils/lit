@@ -6,7 +6,7 @@ module Lit
       class LocalesController < Api::V1::BaseLitController
         def index
           @locales = Locale.all
-          render json: @locales.as_json(root: false, only: %i[id locale])
+          render json: @locales.as_json(root: false, only: %i[id locale]).to_json
         end
       end
     end
