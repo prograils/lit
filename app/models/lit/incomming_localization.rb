@@ -76,6 +76,8 @@ module Lit
     end
 
     def assign_new_localization
+      create_other_localizations if localization_key.localizations.blank?
+
       self.localization =
         Lit::Localization
           .where(localization_key_id: localization_key.id)
@@ -84,6 +86,19 @@ module Lit
       localization.translated_value = translated_value
       localization.is_changed = true
       localization.save!
+    end
+
+    def create_other_localizations
+      ::Lit::Locale.where.not(id: locale.id).pluck(:id).each do |locale_id|
+        localization =
+          Lit::Localization
+            .where(localization_key_id: localization_key.id)
+            .where(locale_id: locale_id)
+            .first_or_initialize
+        localization.translated_value = translated_value
+        localization.save!
+        Lit.init.cache.update_cache localization.full_key, localization.translation
+      end
     end
 
     def update_cache

@@ -16,5 +16,5 @@ appraise 'rails-7.0' do
   gem 'rails-controller-testing'
   gem 'minitest'
   gem 'm', '~> 1.5.0'
-  gem 'google-cloud-translate', '~> 2.1.2'
+  gem "google-cloud-translate", "1.2.4"
 end
