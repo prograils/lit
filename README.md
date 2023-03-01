@@ -122,6 +122,24 @@ Currently, Google and Yandex translation providers are supported, but extending 
 Configure your translation provider using one of routines described below. When a translation provider is configured, each localization in Lit web UI will have a "Translate using _Provider Name_" button next to it, which by default translates to the localization's language from the localization currently saved for the app's `I18n.default_locale`.
 Next to the button, there is a dropdown that allows translating from the key's localization in a language different than the default one.
 
+#### DeepL Cloud Translation API
+
+Insert this into your Lit initializer:
+```
+require 'lit/cloud_translation/providers/deepl_translator'
+
+Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::DeeplTranslator
+Lit::CloudTranslation.configure do |config|
+  config.api_key = HashWithIndifferentAccess.new(Rails.application.credentials.config[:deepl_api])
+end
+```
+
+...and make sure you have this in your Gemfile:
+
+```
+gem "deepl-rb", require: "deepl"
+```
+
 #### Google Cloud Translation API
 
 Insert this into your Lit initializer:
