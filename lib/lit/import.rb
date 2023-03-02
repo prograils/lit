@@ -144,8 +144,8 @@ module Lit
         
         unless existing_translation
           locale = Lit::Locale.find_or_create_by locale: locale
-          l_k = Lit::LocalizationKey.create localization_key: key
-          existing_translation = Lit::Localization.create locale: locale, localization_key: l_k, translated_value: value
+          lkey = Lit::LocalizationKey.find_or_create_by localization_key: key
+          existing_translation = Lit::Localization.create locale: locale, localization_key: lkey, translated_value: value
         end
 
         if @raw
