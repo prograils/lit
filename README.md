@@ -102,7 +102,7 @@ $ rake lit:import FILE=stuff.csv LOCALES=en,pl SKIP_NIL=1
 
 Additionally, there is the `lit:warm_up_keys` task (temporarily aliased as `lit:raw_import` for compatibility) which serves a different purpose: rather than for actual import of translations, it is intended to pre-load into database translations from a specific locale's YAML file **when the application is first deployed to a server and not all translation keys are present in the database yet**. This task also takes the `SKIP_NIL` option in a similar way as the import task.
 ```bash
-$ rake lit:warm_up_keys FILES=config/locales/en.yml LOCALES=en
+$ rake lit:warm_up_keys FILES=en.yml LOCALE=en
 ```
 In this case, when the `config/locales/en.yml` contains a translation for `foo` which doesn't have a key in the DB yet, it will be created, but if it already exists in the DB with a translation, it won't be overridden.
 
