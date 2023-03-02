@@ -56,7 +56,6 @@
                   <%= render partial: 'localization_row', locals: {localization: Lit.init.cache["#{locale}.#{lk.localization_key}"]} %>
                 </td>
                 <td class="locale_row text-center">
-                  <%= EmojiFlag.new(locale) %>
                   <%= locale %>
                 </td>
                 <% unless lk.is_deleted? %>

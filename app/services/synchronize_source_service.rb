@@ -1,6 +1,7 @@
 class SynchronizeSourceService
-  def initialize(source)
+  def initialize(source, auto_accept = false)
     @source = source
+    @auto_accept = auto_accept
   end
 
   def execute
@@ -29,6 +30,7 @@ class SynchronizeSourceService
     return if inc_loc.duplicated?(loc['value'])
 
     inc_loc.save!
+    inc_loc.accept if @auto_accept
   end
 
   def find_incomming_localization(localization)
