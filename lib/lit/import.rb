@@ -141,8 +141,12 @@ module Lit
         existing_translation =
         Lit::Localization.joins(:locale, :localization_key)
                          .find_by('localization_key = ? and locale = ?', key, locale)
-
-        return unless existing_translation
+        
+        unless existing_translation
+          locale = Lit::Locale.find_or_create_by locale: locale
+          l_k = Lit::LocalizationKey.create localization_key: key
+          existing_translation = Lit::Localization.create locale: locale, localization_key: l_k, translated_value: value
+        end
 
         if @raw
           existing_translation.update(default_value: value)
