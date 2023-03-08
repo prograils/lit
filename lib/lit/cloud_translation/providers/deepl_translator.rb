@@ -19,15 +19,21 @@ module Lit::CloudTranslation::Providers
     def translate(text:, from: nil, to:, **opts)
       configure_api_key
 
-      res = ::DeepL.translate(text, to_deepl_source_locale(from), to_deepl_target_locale(to), opts)
-      if res.is_a?(DeepL::Resources::Text)
-        res.text
-      else
-        res.map(&:text)
-      end
+      opts.merge!(ignore_tags: "i18n", tag_handling: :xml)
+
+      res = ::DeepL.translate(convert_ignore_tags(text), to_deepl_source_locale(from), to_deepl_target_locale(to), opts)
+      revert_ignore_tags(res.text) if res.is_a?(DeepL::Resources::Text)
     end
 
     private
+
+    def convert_ignore_tags(text)
+      text.gsub(/%{(\w+)}/) { "<i18n>#{Regexp.last_match[1]}</i18n>" }
+    end
+
+    def revert_ignore_tags(text)
+      text.gsub(/<i18n>(\w+)<\/i18n>/) { "%{#{Regexp.last_match[1]}}" }
+    end
 
     # Convert 'es-ES' to 'ES', en-us to EN
     def to_deepl_source_locale(locale)
