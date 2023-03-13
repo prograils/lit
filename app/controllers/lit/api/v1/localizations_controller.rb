@@ -1,5 +1,5 @@
 module Lit
-  class Api::V1::LocalizationsController < Api::V1::BaseController
+  class Api::V1::LocalizationsController < Api::V1::BaseLitController
     def index
       @localizations = fetch_localizations
       render json:
@@ -7,7 +7,7 @@ module Lit
                  root: false,
                  only: %i[id localization_key_id locale_id],
                  methods: %i[value localization_key_str locale_str localization_key_is_deleted],
-               )
+               ).to_json
     end
 
     def last_change

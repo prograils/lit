@@ -1,6 +1,7 @@
 class SynchronizeSourceService
-  def initialize(source)
+  def initialize(source, auto_accept = false)
     @source = source
+    @auto_accept = auto_accept
   end
 
   def execute
@@ -11,7 +12,7 @@ class SynchronizeSourceService
   private
 
   def synchronize_localizations
-    after_date = @source.last_updated_at&.to_s(:db)
+    after_date = @source.last_updated_at&.to_fs(:db)
     result = interactor.send_request Lit::Source::LOCALIZATIONS_PATH, after: after_date
     return unless result&.is_a?(Array)
     result.each { |loc| synchronize_localization loc }
@@ -29,6 +30,7 @@ class SynchronizeSourceService
     return if inc_loc.duplicated?(loc['value'])
 
     inc_loc.save!
+    inc_loc.accept if @auto_accept
   end
 
   def find_incomming_localization(localization)

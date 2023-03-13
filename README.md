@@ -102,7 +102,7 @@ $ rake lit:import FILE=stuff.csv LOCALES=en,pl SKIP_NIL=1
 
 Additionally, there is the `lit:warm_up_keys` task (temporarily aliased as `lit:raw_import` for compatibility) which serves a different purpose: rather than for actual import of translations, it is intended to pre-load into database translations from a specific locale's YAML file **when the application is first deployed to a server and not all translation keys are present in the database yet**. This task also takes the `SKIP_NIL` option in a similar way as the import task.
 ```bash
-$ rake lit:warm_up_keys FILES=config/locales/en.yml LOCALES=en
+$ rake lit:warm_up_keys FILES=en.yml LOCALE=en
 ```
 In this case, when the `config/locales/en.yml` contains a translation for `foo` which doesn't have a key in the DB yet, it will be created, but if it already exists in the DB with a translation, it won't be overridden.
 
@@ -121,6 +121,24 @@ Currently, Google and Yandex translation providers are supported, but extending 
 
 Configure your translation provider using one of routines described below. When a translation provider is configured, each localization in Lit web UI will have a "Translate using _Provider Name_" button next to it, which by default translates to the localization's language from the localization currently saved for the app's `I18n.default_locale`.
 Next to the button, there is a dropdown that allows translating from the key's localization in a language different than the default one.
+
+#### DeepL Cloud Translation API
+
+Insert this into your Lit initializer:
+```
+require 'lit/cloud_translation/providers/deepl_translator'
+
+Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::DeeplTranslator
+Lit::CloudTranslation.configure do |config|
+  config.api_key = HashWithIndifferentAccess.new(Rails.application.credentials.config[:deepl_api])
+end
+```
+
+...and make sure you have this in your Gemfile:
+
+```
+gem "deepl-rb", require: "deepl"
+```
 
 #### Google Cloud Translation API
 
@@ -296,7 +314,7 @@ Lit.store_request_keys = true
 1. `gem install bundler && bundle install` - ensure Bundler and all required gems are installed
 2. `bundle exec appraisal install` - install gems from appraisal's gemfiles
 3. `cp test/dummy/config/database.yml.sample test/dummy/config/database.yml` - move a database.yml in place (remember to fill your DB credentials in it)
-4. `RAILS_ENV=test bundle exec appraisal rails-5.2 rake db:setup` - setup lit DB (see test/config/database.yml); do it
+4. `RAILS_ENV=test bundle exec appraisal rails-7.0 rake db:setup` - setup lit DB (see test/config/database.yml); do it
  only once, it does not matter which Rails version you use for `appraisal`
 5. `bundle exec appraisal rake` - run the tests!
 
