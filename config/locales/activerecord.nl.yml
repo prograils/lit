@@ -1,0 +1,26 @@
+---
+nl:
+  errors:
+    attributes:
+      localization:
+        required: mandatory
+      localization_key:
+        required: mandatory
+  activerecord:
+    attributes:
+      lit/incomming_localization:
+        localization: Localization
+        localization_key: Localization key
+    errors:
+      models:
+        lit/incomming_localization:
+          attributes:
+            localization:
+              format: "%{attribute} %{message}"
+              required:
+            localization_key:
+              format: "%{attribute} %{message}"
+              required:
+          required:
+    models:
+      lit/incomming_localization: Incomming localization
