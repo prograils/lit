@@ -1,6 +1,6 @@
 var $row = $('td.localization_row[data-id="<%= @localization.id %>"]');
 $row.data('editing', 0);
-$row.html("<%= ejs render(:partial=>"/lit/localization_keys/localization_row", formats: ['html'], :locals=>{:localization=>@localization.translated_value }) %>");
+$row.html("<%= ejs render(:partial=>"/lit/localization_keys/localization_row", formats: [:html], :locals=>{:localization=>@localization.translated_value }) %>");
 $row.siblings().find('.js-show_prev_versions').removeClass('hidden');
 $('a.change_completed_<%= @localization.id %> input[type=checkbox]').prop("checked", true);
 

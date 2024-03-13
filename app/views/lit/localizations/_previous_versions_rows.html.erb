@@ -7,7 +7,7 @@
   <% @versions.each do |v| %>
     <tr>
       <td>
-        <%= render :partial=>"/lit/localization_keys/localization_row", formats: ['html'], :locals=>{:localization=>v.translated_value} %>
+        <%= render :partial=>"/lit/localization_keys/localization_row", formats: [:html], :locals=>{:localization=>v.translated_value} %>
       </td>
       <td><%= I18n.l v.created_at, format: :long %></td>
     </tr>

@@ -1,6 +1,6 @@
 var $row = $('td.localization_row[data-id="<%= @localization.id %>"]');
 $row.data('editing', 1);
-$row.html("<%= ejs render(partial: 'form', formats: ['html']) %>");
+$row.html("<%= ejs render(partial: 'form', formats: [:html]) %>");
 $row.find('textarea').focus();
 <% if @localization.full_key.ends_with?('_html') -%>
   $row.find('.wysiwyg_switch').click();
