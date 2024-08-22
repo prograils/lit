@@ -2,11 +2,11 @@ Lit::Engine.routes.draw do
   if Lit.api_enabled
     namespace :api do
       namespace :v1 do
-        get '/last_change' => 'localizations#last_change'
+        get "/last_change" => "localizations#last_change"
         resources :locales, only: [:index]
         resources :localization_keys, only: [:index]
         resources :localizations, only: [:index] do
-          get 'last_change', on: :collection
+          get "last_change", on: :collection
         end
       end
     end
@@ -53,5 +53,5 @@ Lit::Engine.routes.draw do
 
   resource :cloud_translation, only: :show
 
-  root to: 'dashboard#index'
+  root to: "dashboard#index"
 end

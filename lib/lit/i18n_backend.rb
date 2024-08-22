@@ -1,10 +1,12 @@
-require 'i18n'
-require 'lit/services/humanize_service'
+require "i18n"
+require "lit/services/humanize_service"
 
 module Lit
   class I18nBackend
     include I18n::Backend::Simple::Implementation
     include I18n::Backend::Pluralization
+
+    MISSING_TRANSLATION = -(2**60) # :nodoc:
 
     attr_reader :cache
 
@@ -23,14 +25,12 @@ module Lit
     ## Any calls in Lit to `super` go straight to I18n
     def translate(locale, key, options = {})
       options[:lit_default_copy] = options[:default].dup if can_dup_default(options)
-      content = super(locale, key, options)
+      content = super
 
-      if on_rails_6_1_or_higher?
-        @untranslated_key = key if key.present? && options[:default].instance_of?(Object)
+      @untranslated_key = key if key.present? && (options[:default].instance_of?(Object) || options[:default] == MISSING_TRANSLATION)
 
-        if key.nil? && options[:lit_default_copy].present?
-          update_default_localization(locale, options)
-        end
+      if key.nil? && options[:lit_default_copy].present?
+        update_default_localization(locale, options)
       end
 
       if Lit.all_translations_are_html_safe && content.respond_to?(:html_safe)
@@ -43,10 +43,10 @@ module Lit
     def available_locales
       return @available_locales_cache unless @available_locales_cache.nil?
       @locales ||= ::Rails.configuration.i18n.available_locales
-      if @locales && !@locales.empty?
-        @available_locales_cache = @locales.map(&:to_sym)
+      @available_locales_cache = if @locales && !@locales.empty?
+        @locales.map(&:to_sym)
       else
-        @available_locales_cache = Lit::Locale.ordered.visible.map { |l| l.locale.to_sym }
+        Lit::Locale.ordered.visible.map { |l| l.locale.to_sym }
       end
       @available_locales_cache
     end
@@ -61,21 +61,18 @@ module Lit
     # @param [Hash] data nested key-value pairs to be added as blurbs
     def store_translations(locale, data, options = {})
       super
-      ActiveRecord::Base.transaction do
-        store_item(locale, data)
-      end if store_items? && valid_locale?(locale)
+      if store_items? && valid_locale?(locale)
+        ActiveRecord::Base.transaction do
+          store_item(locale, data)
+        end
+      end
     end
 
     private
 
-    def on_rails_6_1_or_higher?
-      "#{::Rails::VERSION::MAJOR}#{::Rails::VERSION::MINOR}".to_i == 61 ||
-        ::Rails::VERSION::MAJOR >= 7
-    end
-
     def update_default_localization(locale, options)
       parts = I18n.normalize_keys(locale, @untranslated_key, options[:scope], options[:separator])
-      key_with_locale = parts.join('.')
+      key_with_locale = parts.join(".")
       content = options[:lit_default_copy]
       # we do not force array on singular strings packed into Array
       @cache.update_locale(key_with_locale, content, content.is_a?(Array) && content.length > 1)
@@ -84,10 +81,10 @@ module Lit
     def can_dup_default(options = {})
       return false unless options.key?(:default)
       return true if options[:default].is_a?(String)
-      return true if options[:default].is_a?(Array) && \
-                     (options[:default].first.is_a?(String) || \
-                      options[:default].first.is_a?(Symbol) || \
-                      options[:default].first.is_a?(Array))
+      return true if options[:default].is_a?(Array) &&
+        (options[:default].first.is_a?(String) ||
+         options[:default].first.is_a?(Symbol) ||
+         options[:default].first.is_a?(Array))
       false
     end
 
@@ -95,7 +92,7 @@ module Lit
       init_translations unless initialized?
 
       parts = I18n.normalize_keys(locale, key, scope, options[:separator])
-      key_with_locale = parts.join('.')
+      key_with_locale = parts.join(".")
 
       # we might want to return content later, but we first need to check if it's in cache.
       # it's important to rememver, that accessing non-existen key modifies cache by creating one
@@ -118,13 +115,13 @@ module Lit
           # check if default was provided
           if options[:lit_default_copy].present?
             # default most likely will be an array
-            if options[:lit_default_copy].is_a?(Array)
-              default = options[:lit_default_copy].map do |key_or_value|
+            default = if options[:lit_default_copy].is_a?(Array)
+              options[:lit_default_copy].map do |key_or_value|
                 if key_or_value.is_a?(Symbol)
                   normalized = I18n.normalize_keys(
                     nil, key_or_value.to_s, options[:scope], options[:separator]
-                  ).join('.')
-                  if on_rails_6_1_or_higher? && Lit::Services::HumanizeService.should_humanize?(key)
+                  ).join(".")
+                  if Lit::Services::HumanizeService.should_humanize?(key)
                     Lit::Services::HumanizeService.humanize(normalized)
                   else
                     normalized.to_sym
@@ -134,19 +131,19 @@ module Lit
                 end
               end
             else
-              default = options[:lit_default_copy]
+              options[:lit_default_copy]
             end
             content = default
           end
           # if we have content now, let's store it in cache
           if content.present?
-            content = Array.wrap(content).compact.reject(&:empty?).reverse.find do |default_cand|
+            content = Array.wrap(content).compact.reject { |e| e == MISSING_TRANSLATION }.reject(&:empty?).reverse.find do |default_cand|
               @cache[key_with_locale] = default_cand
               @cache[key_with_locale]
             end
           end
 
-          if content.nil? && !on_rails_6_1_or_higher? && Lit::Services::HumanizeService.should_humanize?(key)
+          if content.nil? && Lit::Services::HumanizeService.should_humanize?(key)
             @cache[key_with_locale] = Lit::Services::HumanizeService.humanize(key)
             content = @cache[key_with_locale]
           end
@@ -157,20 +154,20 @@ module Lit
     end
 
     def store_item(locale, data, scope = [], startup_process = false)
-      key = ([locale] + scope).join('.')
+      key = ([locale] + scope).join(".")
       if data.respond_to?(:to_hash)
         # ActiveRecord::Base.transaction do
-          data.to_hash.each do |k, value|
-            store_item(locale, value, scope + [k], startup_process)
-          end
+        data.to_hash.each do |k, value|
+          store_item(locale, value, scope + [k], startup_process)
+        end
         # end
       elsif data.respond_to?(:to_str) || data.is_a?(Array)
-        key = ([locale] + scope).join('.')
+        key = ([locale] + scope).join(".")
         return if startup_process && Lit.ignore_yaml_on_startup && (Thread.current[:lit_cache_keys] || @cache.keys).member?(key)
         @cache.update_locale(key, data, data.is_a?(Array), startup_process)
       elsif data.nil?
         return if startup_process
-        key = ([locale] + scope).join('.')
+        key = ([locale] + scope).join(".")
         @cache.delete_locale(key)
       end
     end
@@ -215,7 +212,7 @@ module Lit
     end
 
     def is_ignored_key(key_without_locale)
-      Lit.ignored_keys.any?{ |k| key_without_locale.start_with?(k) }
+      Lit.ignored_keys.any? { |k| key_without_locale.start_with?(k) }
     end
 
     # checks if should cache. `had_key` is passed, as once cache has been accesed, it's already modified and key exists

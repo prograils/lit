@@ -23,15 +23,18 @@ Lit.key_value_engine = '<%= @key_value_engine %>'
 # If true all translations are returned as html_safe strings
 Lit.all_translations_are_html_safe = false
 
-# Translations without default will be humanized (default string will be added)
+# Translations without default will be humanized always. Setting this to true
+# will set default value to humanized version, rather than leaving it as nil
 # ie. scope.page_header will become "Page header"
-# If `false` then will serve nil instead (but translation will be wrapped in
-# <span title="translation missing string"></span>
-Lit.humanize_key = false
+# If `false` then will serve humanized version anyway (wrapped in span) and store nil value
+Lit.store_humanized_key = false
+
+# Key prefixes in this array won't ever be humanized
+# Lit.store_humanized_key_ignored_keys = ['welcome']
 
 # If set to `false` will always parse yaml files upon startup and update cached
 # values with ones with yaml (but only, if those keys haven't been changed via
-# web ui before)
+# web ui before). To add those keys, import them via rake command
 Lit.ignore_yaml_on_startup = true
 
 # Array of ignored keys or key prefixes
@@ -59,6 +62,8 @@ Lit.store_request_info = false
 Lit.store_request_keys = false
 
 # Initialize lit
-Lit.init
+Rails.application.config.after_initialize do
+  Lit.init
+end
 
 

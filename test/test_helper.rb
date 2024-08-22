@@ -1,5 +1,5 @@
 # Configure Rails Environment
-ENV['RAILS_ENV'] = 'test'
+ENV["RAILS_ENV"] = "test"
 
 # We get a whole bunch of method redefinition warnings, mostly coming
 # from Devise - e.g. when routes are reloaded in controller tests.
@@ -7,18 +7,19 @@ ENV['RAILS_ENV'] = 'test'
 # when using `rails test` instead of `rake` is `false`)
 $VERBOSE = false # equivalent to `ruby -W1`
 
-require File.expand_path('../dummy/config/environment.rb',  __FILE__)
-require 'rails/test_help'
-require 'capybara/rails'
-require 'database_cleaner'
-require 'test_declarative'
-require 'mocha/setup'
-require 'webmock'
-require 'vcr'
-require 'minitest-vcr'
+require File.expand_path("dummy/config/environment.rb", __dir__)
+require "rails/test_help"
+require "capybara/rails"
+require "database_cleaner"
+require "test_declarative"
+require "minitest/autorun"
+require "mocha/minitest"
+require "vcr"
+require "minitest-vcr"
+require "webmock"
 
 begin
-  require 'rails-controller-testing'
+  require "rails-controller-testing"
   Rails::Controller::Testing.install
 rescue LoadError
 end
@@ -35,7 +36,7 @@ def load_sample_yml(fname)
   I18n.load_path << "#{File.dirname(__FILE__)}/support/#{fname}"
 end
 
-ActiveSupport::TestCase.fixture_path = File.expand_path('../fixtures', __FILE__)
+ActiveSupport::TestCase.fixture_path = File.expand_path("fixtures", __dir__)
 
 ## do not enforce available locales
 I18n.config.enforce_available_locales = false
@@ -109,20 +110,22 @@ class ActionController::TestCase
   # @example
   #   call_action :get, :show, params: { ... }
   def call_action(verb, action, params: {})
-    send verb, action, params: params
+    send verb, action, params:
   end
 end
 
 VCR.configure do |config|
-  config.cassette_library_dir = 'test/cassettes'
+  # config.allow_http_connections_when_no_cassette = true
+  config.cassette_library_dir = "test/cassettes"
   config.hook_into :webmock
+  config.ignore_localhost = true
 end
 
 MinitestVcr::Spec.configure!
 
 def assert_no_database_queries
-  ActiveRecord::Base.connection.stubs(:execute).
-    raises(Minitest::Assertion, 'The block should not make any database calls')
+  ActiveRecord::Base.connection.stubs(:execute)
+    .raises(Minitest::Assertion, "The block should not make any database calls")
   yield
   ActiveRecord::Base.connection.unstub(:execute)
 end

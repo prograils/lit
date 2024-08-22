@@ -8,14 +8,14 @@ module Lit
     scope :not_changed, -> { where is_changed: false }
 
     # @HACK: dirty, find a way to round date to full second
-    scope :after, lambda { |dt| where('updated_at >= ?', dt + 1.second).where(is_changed: true) }
-    scope :active, lambda { joins(:localization_key).where(Lit::LocalizationKey.table_name => { is_deleted: false }) }
+    scope :after, ->(dt) { where("updated_at >= ?", dt + 1.second).where(is_changed: true) }
+    scope :active, -> { joins(:localization_key).where(Lit::LocalizationKey.table_name => {is_deleted: false}) }
 
     ## ASSOCIATIONS
     belongs_to :locale, required: true
     belongs_to :localization_key, touch: true, required: true
     has_many :localization_versions, dependent: :destroy
-    has_many :versions, class_name: '::Lit::LocalizationVersion'
+    has_many :versions, class_name: "::Lit::LocalizationVersion"
 
     ## DELEGATIONS
     delegate :is_deleted, to: :localization_key
@@ -39,11 +39,11 @@ module Lit
     end
 
     def full_key
-      full_key_str || [locale.locale, localization_key.localization_key].join('.')
+      full_key_str || [locale.locale, localization_key.localization_key].join(".")
     end
 
     def translation
-      is_changed? && !translated_value.nil? ? translated_value : default_value
+      (is_changed? && !translated_value.nil?) ? translated_value : default_value
     end
 
     def value
@@ -63,11 +63,12 @@ module Lit
     end
 
     def last_change
-      updated_at.to_s(:db)
+      updated_at.to_fs(:db)
     end
 
     def update_default_value(value)
       return true if persisted? && default_value == value
+
       if persisted?
         update(default_value: value)
       else
@@ -84,8 +85,9 @@ module Lit
 
     def create_version
       return if translated_value.blank?
+
       translated_value = translated_value_was || default_value
-      localization_versions.new(translated_value: translated_value)
+      localization_versions.new(translated_value:)
     end
   end
 end

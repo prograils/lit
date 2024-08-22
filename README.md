@@ -2,7 +2,7 @@
 ### Rails i18n web interface
 
 Translate your apps with pleasure (sort of...) and for free. It's simple i18n
-web interface, build on top of twitter bootstrap, that one may find helpful in
+web interface,that one may find helpful in
 translating app by non-technicals.
 
 Highly inspired by Copycopter by thoughtbot.
@@ -40,6 +40,10 @@ gem 'lit'
 
   For Ruby < 1.9 use `gem 'lit', '= 0.2.4'`, as next versions introduced new ruby hash syntax.
 
+  For Ruby < 3.x use `gem 'lit', '< 2.0'`
+
+  Starting with version 2.x support for Rails < 7.0 and Ruby < 3.2.5 has been dropped. 
+
 2. run `bundle install`
 
 3. Add `config.i18n.available_locales = [...]` to `application.rb` - it's required to precompile appropriate language flags in lit backend.
@@ -53,6 +57,8 @@ gem 'lit'
 
 
 You may want to take a look at generated initializer in `config/initializers/lit.rb` and change some default configuration options.
+
+Note `Lit.ignore_yaml_on_startup = true` setting - when it's set to true, Lit won't automatically import translations from yaml and add them to interface. Either change this to `false` or import using rake task
 
 ### So... again - what is it and how to use it?
 *Lit* is Rails engine - it runs in it's own namespace, by default it's available under `/lit`. It provides UI for managing translations of your app.
@@ -133,10 +139,6 @@ Lit::CloudTranslation.provider = Lit::CloudTranslation::Providers::Google
 
 ...and make sure you have this in your Gemfile:
 ```
-gem 'google-cloud-translate', '~> 1.2.4'
-```
-...we also support V2 of Google Cloud Translate gem, should you need it:
-```
 gem 'google-cloud-translate', '~> 2.1.2'
 ```
 
@@ -184,6 +186,12 @@ Lit::CloudTranslation.configure do |config|
   config.api_key = 'the_api_key'
 end
 ```
+
+### 1.x -> 2.0.x upgrade guide
+
+Also applies to upgrading from `1.x` versions.
+
+1. Specify `gem 'lit', '~> 2.0.0'` in your Gemfile and run `bundle update lit`.
 
 ### 0.3 -> 1.0 upgrade guide
 

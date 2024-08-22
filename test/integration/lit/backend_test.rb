@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'test_helper'
+require "test_helper"
 
 class BackendTest < ActionDispatch::IntegrationTest
   def setup
@@ -11,13 +10,13 @@ class BackendTest < ActionDispatch::IntegrationTest
     I18n.locale = @old_locale
   end
 
-  test 'when generating locale while listing localizations it should copy default_value' do
+  test "when generating locale while listing localizations it should copy default_value" do
     Lit.authentication_function = nil
-    Lit::Locale.where(locale: 'en').first_or_create
-    I18n.t('prograils.swag', default: 'Prograils codelovers')
-    lk = Lit::LocalizationKey.find_by(localization_key: 'prograils.swag')
+    Lit::Locale.where(locale: "en").first_or_create
+    I18n.t("prograils.swag", default: "Prograils codelovers")
+    lk = Lit::LocalizationKey.find_by(localization_key: "prograils.swag")
     assert lk.present?
-    visit('/lit/localization_keys')
+    visit("/lit/localization_keys")
     lk.reload
     assert lk.localizations.map(&:default_value).compact.count == Lit::Locale.all.count
   end

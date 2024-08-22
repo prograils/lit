@@ -46,7 +46,7 @@
               <tr>
                 <td>
                   <% if localization %>
-                    <%= draw_icon 'clock-o', title: "Last updated at #{localization.updated_at.to_s(:db)}" %>
+                    <%= draw_icon 'clock-o', title: "Last updated at #{localization.updated_at.to_fs(:db)}" %>
                     <%= link_to lit.previous_versions_localization_key_localization_path(lk, localization, format: :js), class: "js-show_prev_versions #{'hidden' unless versions?(localization)}", remote: true do %>
                       <%= draw_icon 'random', title: I18n.t('lit.common.previous_versions', default: 'Previous versions') %>
                     <% end %>
@@ -78,7 +78,7 @@
                   <ul>
                     <% Lit.init.cache.get_request_info(lk.localization_key).split(' ').reverse.each do |l| %>
                       <li><%= link_to l, l %></li>
-                   <% end %>
+                    <% end %>
                   </ul>
                   <em>Note: you might not have access to those pages!</em>
                 </td>

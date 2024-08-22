@@ -1,8 +1,7 @@
-class LitCreateLitSources < Rails::VERSION::MAJOR >= 5   ?
-                            ActiveRecord::Migration[4.2] :
-                            ActiveRecord::Migration
+class LitCreateLitSources < ActiveRecord::Migration[7.0]
   def up
     return if table_exists?(:lit_sources)
+
     create_table :lit_sources do |t|
       t.string :identifier
       t.string :url

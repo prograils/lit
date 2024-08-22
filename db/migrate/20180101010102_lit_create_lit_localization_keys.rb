@@ -1,8 +1,7 @@
-class LitCreateLitLocalizationKeys < Rails::VERSION::MAJOR >= 5   ?
-                                     ActiveRecord::Migration[4.2] :
-                                     ActiveRecord::Migration
+class LitCreateLitLocalizationKeys < ActiveRecord::Migration[7.0]
   def up
     return if table_exists?(:lit_localization_keys)
+
     create_table :lit_localization_keys do |t|
       t.string :localization_key
 

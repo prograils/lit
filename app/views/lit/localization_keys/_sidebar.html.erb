@@ -36,7 +36,7 @@
           deleted and visited again
         <% end %>
       </li>
-      <li class="nav-header"><%= I18n.t(".order_by", :default => "Order by") %>:</li>
+      <li class="nav-header"><%= I18n.t("lit.sidebar.order_by", :default => "Order by") %>:</li>
       <% Lit::LocalizationKey.order_options.each do |order| %>
         <li class="<%= "active" if order == @search_options[:order]  %>">
           <%= link_to url_for(@search_options.merge(:order => order)) do %>
@@ -55,10 +55,10 @@
       <% end %>
       <% @prefixes.each do |p| %>
         <li class="key_prefix">
-        <%= link_to url_for(@search_options.merge(:key_prefix=>p)) do %>
-          <%= draw_icon('chevron-right') %>
-          <%=  p.split('.').last %>
-        <% end %>
+          <%= link_to url_for(@search_options.merge(:key_prefix=>p)) do %>
+            <%= draw_icon('chevron-right') %>
+            <%=  p.split('.').last %>
+          <% end %>
         </li>
       <% end %>
     </ul>

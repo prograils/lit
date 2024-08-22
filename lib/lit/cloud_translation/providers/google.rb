@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'base'
+require_relative "base"
 begin
-  require 'google/cloud/translate'
+  require "google/cloud/translate"
 rescue LoadError
-  raise StandardError, 'You need to add "gem \'google-cloud-translate\'" to your Gemfile to support Google Cloud Translation'
+  raise StandardError,
+    'You need to add "gem \'google-cloud-translate\'" to your Gemfile to support Google Cloud Translation'
 end
 
 module Lit::CloudTranslation::Providers
@@ -44,8 +45,8 @@ module Lit::CloudTranslation::Providers
   #     }
   #   end
   class Google < Base
-    def translate(text:, from: nil, to:, **opts)
-      result = client.translate(sanitize_text(text), from: from, to: to, **opts)
+    def translate(text:, to:, from: nil, **)
+      result = client.translate(sanitize_text(text), from:, to:, **)
       unsanitize_text(
         case result
         when translation_class then result.text
@@ -54,10 +55,10 @@ module Lit::CloudTranslation::Providers
       )
     rescue Signet::AuthorizationError => e
       error_description =
-        'Google credentials error: ' + # rubocop:disable Style/RescueModifier
-        JSON.parse(e.response.body)['error_description'] rescue 'Unknown error'
+        "Google credentials error: " + # rubocop:disable Style/RescueModifier
+        JSON.parse(e.response.body)["error_description"] rescue "Unknown error"
       raise ::Lit::CloudTranslation::TranslationError, error_description,
-            cause: e
+        cause: e
     rescue ::Google::Cloud::Error => e
       raise ::Lit::CloudTranslation::TranslationError, e.message, cause: e
     end
@@ -67,28 +68,21 @@ module Lit::CloudTranslation::Providers
     def client
       @client ||= begin
         args = {
-          project_id: config.keyfile_hash['project_id'], credentials: config.keyfile_hash,
+          project_id: config.keyfile_hash["project_id"], credentials: config.keyfile_hash,
           version: :v2
         }
-        if Gem.loaded_specs['google-cloud-translate'].version < Gem::Version.create('2.0')
-          args = args.tap { |hs| hs.delete(:version) }
-        end
         ::Google::Cloud::Translate.new(**args)
       end
     end
 
     def translation_class
-      if Gem.loaded_specs['google-cloud-translate'].version < Gem::Version.create('2.0')
-        ::Google::Cloud::Translate::Translation
-      else
-        ::Google::Cloud::Translate::V2::Translation
-      end
+      ::Google::Cloud::Translate::V2::Translation
     end
 
     def default_config
-      if ENV['GOOGLE_TRANSLATE_API_KEYFILE'].blank?
+      if ENV["GOOGLE_TRANSLATE_API_KEYFILE"].blank?
         env_keys = ENV.keys.grep(/\AGOOGLE_TRANSLATE_API_/)
-        keyfile_keys = env_keys.map(&:downcase).map { |k| k.gsub('google_translate_api_', '') }
+        keyfile_keys = env_keys.map(&:downcase).map { |k| k.gsub("google_translate_api_", "") }
         keyfile_key_to_env_key_mapping = keyfile_keys.zip(env_keys).to_h
         return {
           keyfile_hash: keyfile_key_to_env_key_mapping.transform_values do |env_key|
@@ -96,26 +90,27 @@ module Lit::CloudTranslation::Providers
           end
         }
       end
-      { keyfile_hash: JSON.parse(File.read(ENV['GOOGLE_TRANSLATE_API_KEYFILE'])) }
+      {keyfile_hash: JSON.parse(File.read(ENV["GOOGLE_TRANSLATE_API_KEYFILE"]))}
     rescue JSON::ParserError
       raise
     rescue Errno::ENOENT
-      { keyfile_hash: nil }
+      {keyfile_hash: nil}
     end
 
     def require_config!
       return if config.keyfile_hash.present?
-      raise 'GOOGLE_TRANSLATE_API_KEYFILE env or `config.keyfile_hash` not given'
+
+      raise "GOOGLE_TRANSLATE_API_KEYFILE env or `config.keyfile_hash` not given"
     end
 
     def sanitize_text(text_or_array)
       case text_or_array
       when String
-        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>').gsub(/\r\n/, '<code>0</code>')
+        text_or_array.gsub(/%{(.+?)}/, '<code>__LIT__\1__LIT__</code>').gsub("\r\n", "<code>0</code>")
       when Array
         text_or_array.map { |s| sanitize_text(s) }
       when nil
-        ''
+        ""
       else
         raise TypeError
       end

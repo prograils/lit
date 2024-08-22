@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PureI18nCompatibilityTest < ActiveSupport::TestCase
   class Backend < Lit::I18nBackend
@@ -11,17 +11,17 @@ class PureI18nCompatibilityTest < ActiveSupport::TestCase
     Lit::LocalizationVersion.delete_all
 
     @old_load_path = I18n.load_path
-    @old_humanize_key = Lit.humanize_key
+    @old_humanize_key = Lit.store_humanized_key
     @old_backend = I18n.backend
 
     I18n.load_path = []
-    Lit.humanize_key = false
+    Lit.store_humanized_key = false
     I18n.backend = Backend.new(Lit.loader.cache)
     super
   end
 
   def teardown
-    Lit.humanize_key = @old_humanize_key
+    Lit.store_humanized_key = @old_humanize_key
     I18n.backend = @old_backend
     I18n.load_path = @old_load_path
     super
@@ -39,7 +39,7 @@ class PureI18nCompatibilityTest < ActiveSupport::TestCase
   include I18n::Tests::Localization::Time
   include I18n::Tests::Localization::Procs
 
-  test 'make sure we use the Lit::I18n backend' do
+  test "make sure we use the Lit::I18n backend" do
     assert_equal Backend, I18n.backend.class
   end
 end

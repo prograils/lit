@@ -1,8 +1,7 @@
-class LitCreateLitIncommingLocalizations < Rails::VERSION::MAJOR >= 5  ?
-                                          ActiveRecord::Migration[4.2] :
-                                          ActiveRecord::Migration
+class LitCreateLitIncommingLocalizations < ActiveRecord::Migration[7.0]
   def up
     return if table_exists?(:lit_incomming_localizations)
+
     create_table :lit_incomming_localizations do |t|
       t.text :translated_value
       t.integer :locale_id

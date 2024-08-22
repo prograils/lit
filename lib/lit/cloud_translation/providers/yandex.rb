@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'base'
-require 'net/http'
+require_relative "base"
+require "net/http"
 
 module Lit::CloudTranslation::Providers
   # Yandex Translate API provider for Lit translation suggestions.
@@ -20,14 +20,14 @@ module Lit::CloudTranslation::Providers
   #     config.api_key = 'the_api_key'
   #   end
   class Yandex < Base
-    def translate(text:, from: nil, to:, **opts) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
+    def translate(text:, to:, from: nil, **opts) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
       # puts "api key is: #{config.api_key}"
       # puts "translating #{text} from #{from} to #{to}"
-      uri = URI('https://translate.yandex.net/api/v1.5/tr.json/translate')
+      uri = URI("https://translate.yandex.net/api/v1.5/tr.json/translate")
       params = {
         key: config.api_key,
         text: sanitize_text(text),
-        lang: [from, to].compact.join('-'),
+        lang: [from, to].compact.join("-"),
         format: opts[:format],
         options: opts[:options]
       }.compact
@@ -37,11 +37,11 @@ module Lit::CloudTranslation::Providers
       unsanitize_text(
         case res
         when Net::HTTPOK
-          translations = JSON.parse(res.body)['text']
-          translations.size == 1 ? translations.first : translations
+          translations = JSON.parse(res.body)["text"]
+          (translations.size == 1) ? translations.first : translations
         else
           raise ::Lit::CloudTranslation::TranslationError,
-                (JSON.parse(res.body)['message'] rescue "Unknown error: #{res.body}") # rubocop:disable Style/RescueModifier, Metrics/LineLength
+            (JSON.parse(res.body)["message"] rescue "Unknown error: #{res.body}") # rubocop:disable Style/RescueModifier, Metrics/LineLength
         end
       )
     end
@@ -49,12 +49,12 @@ module Lit::CloudTranslation::Providers
     private
 
     def default_config
-      { api_key: ENV['YANDEX_TRANSLATE_API_KEY'] }
+      {api_key: ENV["YANDEX_TRANSLATE_API_KEY"]}
     end
 
     def require_config!
       return if config.api_key.present?
-      raise 'YANDEX_TRANSLATE_API_KEY env or `config.api_key` not given'
+      raise "YANDEX_TRANSLATE_API_KEY env or `config.api_key` not given"
     end
 
     def sanitize_text(text_or_array)
@@ -64,7 +64,7 @@ module Lit::CloudTranslation::Providers
       when Array
         text_or_array.map { |s| sanitize_text(s) }
       when nil
-        ''
+        ""
       else
         raise TypeError
       end

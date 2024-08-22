@@ -1,5 +1,4 @@
 <p id="notice"><%= notice %></p>
-
 <strong>Indetifier:</strong>
 <%= @source.identifier %>
 <br/>
@@ -10,10 +9,8 @@
 <%= @source.api_key %>
 <br/>
 <strong>Last updated at:</strong>
-<%= @source.last_updated_at.to_s(:db) unless @source.last_updated_at.nil? %>
+<%= @source.last_updated_at.to_fs(:db) unless @source.last_updated_at.nil? %>
 <%= link_to '(touch!)', touch_source_path(@source), :method => :put, :data => { :confirm => 'Are you sure?' } %>
 <br/>
-
-
 <%= link_to 'Edit', edit_source_path(@source) %> |
 <%= link_to 'Back', sources_path %>

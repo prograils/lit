@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module Lit
   class Api::V1::LocalizationsControllerTest < ActionController::TestCase
@@ -8,11 +8,11 @@ module Lit
       Lit::LocalizationVersion.delete_all
       Lit.loader = nil
       Lit.api_enabled = true
-      Lit.api_key = 'test'
+      Lit.api_key = "test"
       Lit::Engine.routes.clear!
       Dummy::Application.reload_routes!
       @routes = Lit::Engine.routes
-      request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials('test')
+      request.env["HTTP_AUTHORIZATION"] = ActionController::HttpAuthentication::Token.encode_credentials("test")
       Lit.ignore_yaml_on_startup = false
       Lit.init
     end
@@ -21,35 +21,34 @@ module Lit
       Lit.ignore_yaml_on_startup = nil
     end
 
-    test 'should get index' do
+    test "should get index" do
       get :index, format: :json
       assert_response :success
     end
 
-    test 'should only changed records' do
+    test "should only changed records" do
       I18n.l(Time.now)
-      Lit::Localization.update_all ['updated_at=?', 2.hours.ago]
+      Lit::Localization.update_all ["updated_at=?", 2.hours.ago]
       l = Lit::Localization.last
-      l.translated_value = 'test'
+      l.translated_value = "test"
       l.is_changed = true
       l.save
-      get :index, params: { format: :json, after: 2.seconds.ago.to_s(:db) }
+      get :index, params: {format: :json, after: 2.seconds.ago.to_fs(:db)}
       assert_response :success
       assert_equal 1, assigns(:localizations).count
       assert response.body =~ /#{l.value}/
     end
 
-    test 'should return last update date' do
+    test "should return last update date" do
       I18n.l(Time.now)
-      Lit::Localization.update_all ['updated_at=?', 2.hours.ago]
+      Lit::Localization.update_all ["updated_at=?", 2.hours.ago]
       l = Lit::Localization.last
-      l.translated_value = 'test'
+      l.translated_value = "test"
       l.save
       get :last_change, format: :json
       assert_response :success
       assert_equal l, assigns(:localization)
-      assert response.body =~ /#{l.updated_at.to_s(:db)}/
-
+      assert response.body =~ /#{l.updated_at.to_fs(:db)}/
     end
   end
 end

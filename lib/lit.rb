@@ -1,6 +1,6 @@
-require 'lit/engine'
-require 'lit/loader'
-require 'lit/adapters'
+require "lit/engine"
+require "lit/loader"
+require "lit/adapters"
 
 module Lit
   mattr_accessor :authentication_function
@@ -8,8 +8,8 @@ module Lit
   mattr_accessor :key_value_engine
   mattr_accessor :redis_url
   mattr_accessor :storage_options
-  mattr_accessor :humanize_key
-  mattr_accessor :humanize_key_ignored_keys
+  mattr_accessor :store_humanized_key
+  mattr_accessor :store_humanized_key_ignored_keys
   mattr_accessor :humanize_key_ignored
   mattr_accessor :ignored_keys
   mattr_accessor :ignore_yaml_on_startup
@@ -29,14 +29,14 @@ module Lit
     @@table_exists ||= check_if_table_exists
     if loader.nil? && @@table_exists
       self.loader ||= Loader.new
-      Lit.humanize_key = false if Lit.humanize_key.nil?
-      Lit.humanize_key_ignored_keys = [] if Lit.humanize_key_ignored_keys.nil?
+      Lit.store_humanized_key = false if Lit.store_humanized_key.nil?
+      Lit.store_humanized_key_ignored_keys = [] if Lit.store_humanized_key_ignored_keys.nil?
       Lit.humanize_key_ignored = %w[i18n date datetime number time support]
-      Lit.humanize_key_ignored |= Lit.humanize_key_ignored_keys
-      Lit.humanize_key_ignored = Regexp.new("(#{Lit.humanize_key_ignored.join('|')}).*")
+      Lit.humanize_key_ignored |= Lit.store_humanized_key_ignored_keys
+      Lit.humanize_key_ignored = Regexp.new("(#{Lit.humanize_key_ignored.join("|")}).*")
       Lit.ignore_yaml_on_startup = true if Lit.ignore_yaml_on_startup.nil?
 
-      Lit.ignored_keys = Lit.ignored_keys.split(',').map(&:strip) if Lit.ignored_keys.is_a?(String)
+      Lit.ignored_keys = Lit.ignored_keys.split(",").map(&:strip) if Lit.ignored_keys.is_a?(String)
       Lit.ignored_keys = [] unless Lit.ignored_keys.is_a?(Array)
       Lit.ignored_keys = Lit.ignored_keys.map(&:freeze).freeze
 
@@ -68,18 +68,23 @@ module Lit
 
   def self.get_key_value_engine
     case Lit.key_value_engine
-    when 'redis'
-      require 'lit/adapters/redis_storage'
-      return ::Lit::Adapters::RedisStorage.new
+    when "redis"
+      require "lit/adapters/redis_storage"
+      ::Lit::Adapters::RedisStorage.new
     else
-      require 'lit/adapters/hash_storage'
-      return ::Lit::Adapters::HashStorage.new
+      require "lit/adapters/hash_storage"
+      ::Lit::Adapters::HashStorage.new
     end
   end
 
   def self.fallback=(_value)
-    ::Rails.logger.error '[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead'
+    ::Rails.logger.error "[DEPRECATION] Lit.fallback= has been deprecated, please use `config.i18n.fallbacks` instead"
+  end
+
+  def self.humanize_key=(value)
+    ::Rails.logger.error "[DEPRECATION] Lit.humanize_key= has been deprecated, please use `Lit.store_humanized_key` instead"
+    Lit.store_humanized_key = value
   end
 end
 
-require 'lit/rails' if defined?(Rails)
+require "lit/rails" if defined?(Rails)
