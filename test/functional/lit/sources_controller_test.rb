@@ -8,7 +8,7 @@ module Lit
       Lit.authentication_function = nil
       @routes = Lit::Engine.routes
       stub_request(:get, 'http://testhost.com/lit/api/v1/last_change.json').
-        to_return(body: { last_change: 1.hour.ago.to_s(:db) }.to_json)
+        to_return(body: { last_change: 1.hour.ago.to_fs(:db) }.to_json)
       @source = lit_sources(:test)
     end
 

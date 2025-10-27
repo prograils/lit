@@ -1,12 +1,12 @@
-require_dependency 'lit/api/v1/base_controller'
+require_dependency 'lit/api/v1/base_lit_controller'
 
 module Lit
-  class Api::V1::LocalizationKeysController < Api::V1::BaseController
+  class Api::V1::LocalizationKeysController < Api::V1::BaseLitController
     def index
       @localization_keys = fetch_localization_keys
       render json: @localization_keys.as_json(
         root: false, only: %i[id localization_key is_deleted]
-      )
+      ).to_json
     end
 
     private

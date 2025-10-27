@@ -1,9 +1,8 @@
 module Lit
   module Api
     module V1
-      class BaseController < ActionController::Base
+      class BaseLitController < ActionController::Base
         layout nil
-        respond_to :json if ::Rails::VERSION::MAJOR < 5
         before_action :authenticate_requests!
 
         private

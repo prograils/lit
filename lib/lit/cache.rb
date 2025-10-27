@@ -177,7 +177,7 @@ module Lit
     end
 
     def restore_hits_counter
-      @hits_counter_working = true
+      @hits_counter_working = Lit.hits_counter_enabled
     end
 
     def localization_cache

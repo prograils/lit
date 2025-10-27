@@ -5,7 +5,7 @@ module Lit
   extend self
   def redis
     $redis ||= nil
-    $redis = Redis.new(url: determine_redis_provider) unless $redis
+    $redis = Redis.new(url: determine_redis_provider, ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }) unless $redis
     $redis
   end
 

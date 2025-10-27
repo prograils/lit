@@ -23,6 +23,8 @@ module Lit
     ## VALIDATIONS
     validates :locale, :localization_key, presence: true
 
+    validate :correct_interpolation_keys
+
     ## ACCESSORS
     attr_accessor :full_key_str
 
@@ -63,7 +65,7 @@ module Lit
     end
 
     def last_change
-      updated_at.to_s(:db)
+      updated_at.to_fs(:db)
     end
 
     def update_default_value(value)
@@ -86,6 +88,31 @@ module Lit
       return if translated_value.blank?
       translated_value = translated_value_was || default_value
       localization_versions.new(translated_value: translated_value)
+    end
+
+    def correct_interpolation_keys
+      return if locale_str == "en"
+
+      english_translation = find_english_translation
+      return unless english_translation
+
+      english_interpolation_keys = interpolation_keys(english_translation.translation)
+      interpolation_keys = interpolation_keys(self.translated_value)
+      if interpolation_keys != english_interpolation_keys
+        errors.add(:base, "Interpolation keys do not match: please do not touch variables such as: %{example}.")
+      end
+    end
+
+    def find_english_translation
+      self.class.joins(:locale, :localization_key).find_by(localization_key: { localization_key: self.localization_key_str }, locale: { locale: "en" })
+    end
+
+    def interpolation_keys(text)
+      return [] unless text
+
+      keys = []
+      text % Hash.new { |_, k| keys << k ; 0 }
+      keys
     end
   end
 end

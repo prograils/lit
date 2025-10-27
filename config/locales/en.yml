@@ -1,0 +1,23 @@
+en:
+  order_by: Order by
+  lit:
+    common:
+      browse_incomming: Browse incomming localizations
+      delete: Delete
+      edit: Edit
+      previous_versions: Previous versions
+      show: Show
+      synchronize: Synchronize
+      touch: Touch (update) last_updated_at
+      you_sure: Are you sure?
+    not_translated_header: Not translated localization keys
+    order_options:
+      created_at_asc: Created at asc
+      created_at_desc: Created at desc
+      localization_key_asc: Localization key asc
+      localization_key_desc: Localization key desc
+      updated_at_asc: Updated at asc
+      updated_at_desc: Updated at desc
+      lit/incomming_localization:
+        localization: Localization
+        localization_key: Localization key
